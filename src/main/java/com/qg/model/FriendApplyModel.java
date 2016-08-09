@@ -1,6 +1,6 @@
 package com.qg.model;
 
-public class FriendApplyModel {
+public final class FriendApplyModel {
 	
 	private int friendId;
 	private int requesterId;

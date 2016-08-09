@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.qg.model.AlbumModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.NowTime;
 import com.qg.util.SimpleConnectionPool;
 
@@ -18,7 +20,8 @@ import com.qg.util.SimpleConnectionPool;
  */
 
 public class AlbumDao {
-	
+	private static final Logger LOGGER = Logger.getLogger(AlbumDao.class);
+
 	private Connection con = null;
 	private PreparedStatement pStatement = null;
 	
@@ -38,7 +41,8 @@ public class AlbumDao {
 			}
 		} catch (SQLException e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "sql语句错误", e);
+			LOGGER.log(Level.ERROR, "sql语句错误 {0} {1}", 1, 2, e);
 		}
 	}
 	
@@ -47,6 +51,7 @@ public class AlbumDao {
 	 * @param album 相册实体类
 	 */
 	public void createAlbum(AlbumModel album){
+		LOGGER.log(Level.DEBUG, "创建相册信息 相册名: {0}, 创建时间{1}", album.getAlbumName(), album.getAlbumUploadTime());
 		try {
 			con = SimpleConnectionPool.getConnection();
 			String strSql = "insert into albums(user_id, album_name, album_state, "
