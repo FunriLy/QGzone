@@ -3,14 +3,14 @@ package com.qg.model;
 import java.util.List;
 
 public class TwitterModel {
-	private int twitterId;
-	private String twitterWord;
-	private int twitterPicture;
-	private int talkId;
-	private String talkerName;
-	private String time;
-	private List<String> supporterName;
-	private List<TwitterCommentModel> comment;
+	private int twitterId;//说说id
+	private String twitterWord;//说说文字内容
+	private int twitterPicture;//说说图片的张数
+	private int talkId;//说说的发表者id
+	private String talkerName;//说说的发表者昵称
+	private String time;//说说发表时间
+	private List<String> supporterName;//该条说说的点赞者的昵称集合
+	private List<TwitterCommentModel> comment;//该条说说的评论集合
 	public TwitterModel(int twitterId, String twitterWord, int twitterPicture, int talkId, String talkerName,
 			String time, List<String> supporterName, List<TwitterCommentModel> comment) {
 		this.twitterId = twitterId;

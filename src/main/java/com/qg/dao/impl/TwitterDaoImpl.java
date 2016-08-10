@@ -15,9 +15,12 @@ import com.qg.dao.SupportDao;
 import com.qg.dao.TwitterCommentDao;
 import com.qg.dao.TwitterDao;
 import com.qg.model.TwitterModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
 
 public class TwitterDaoImpl implements TwitterDao{
+	private static final Logger LOGGER = Logger.getLogger(TwitterDaoImpl.class);
 	private Connection conn = null;
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
@@ -33,8 +36,9 @@ public class TwitterDaoImpl implements TwitterDao{
        }
 }
 
-    public boolean addTwitter(TwitterModel twitter) {
-		boolean result = true;
+    public int addTwitter(TwitterModel twitter) {
+		int tiwtterId = 0;
+		Date newTime = new Date();
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into twitter(twitter_word, twitter_picture, talker_id, "
@@ -44,24 +48,38 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement.setInt(2, twitter.getTwitterPicture());
 			pStatement.setInt(3, twitter.getTalkId());
 			pStatement.setInt(4, 0);
-			pStatement.setTimestamp(5,new Timestamp(new Date().getTime()));
+			pStatement.setTimestamp(5,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
+			conn.close();
+			
+			conn = SimpleConnectionPool.getConnection();
+			String SQL = "SELECT twitter_id FROM twitter WHERE time=?";
+			pStatement = conn.prepareStatement(SQL);
+			pStatement.setTimestamp(1,new Timestamp(newTime.getTime()));
+			rs=pStatement.executeQuery();
+			tiwtterId=rs.getInt("twitter_id");
 		} catch (SQLException e) {
-			e.printStackTrace();
-			result=false;
+			LOGGER.log(Level.ERROR, "添加说说异常！", e);
 		} finally {
 				close(null, pStatement, conn);
 			}
-    	return result;
+    	return tiwtterId;
     }
-	public List<TwitterModel>getTwitter(int pageNumber){
+	public List<TwitterModel>getTwitter(int pageNumber,int userId){
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		 try {
 			 int number=(pageNumber-1)*16;
-			 String sql = "SELECT * FROM twitter ORDER BY twitter_id DESC LIMIT ?,16";
+			 String sql = 	"SELECT DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time FROM twitter"
+					 		+"INNER JOIN friends ON" 
+					 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
+					 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
+					 		+"ORDER BY twitter_id DESC LIMIT ?,16";
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
-			 pStatement.setInt(1, number);
+			 pStatement.setInt(1, userId);
+			 pStatement.setInt(2, userId);
+			 pStatement.setInt(3, userId);
+			 pStatement.setInt(4, number);
 			 rs=pStatement.executeQuery();
 			 UserDao userDao = new UserDao();
 				SupportDaoImpl supportDao = new SupportDaoImpl();
@@ -73,8 +91,7 @@ public class TwitterDaoImpl implements TwitterDao{
 				twitters.add(twitterModel);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "获取说说异常！", e);
 		}finally{
 			close(rs, pStatement, conn);
 		}
@@ -95,7 +112,7 @@ public class TwitterDaoImpl implements TwitterDao{
 						  supportDao.getSupporterByTwitterId(rs.getInt("twitter_id")),new TwitterCommentDaoImpl().getTwitterCommentByTwitterId(rs.getInt("twitter_id")));
 				}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "获取某条说说异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -111,8 +128,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			new TwitterCommentDaoImpl().deleteComments(twitterId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "删除某条说说异常！", e);
 			result=false;
 		}finally{
 			close(null, pStatement, conn);
@@ -128,8 +144,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "点赞某条说说异常！", e);
 			result= false;
 		}finally{
 			close(null, pStatement, conn);
@@ -145,12 +160,29 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "取消赞某条说说异常！", e);
 			result=false;
 		}finally{
 			close(null, pStatement, conn);
 		}
     	return result;
     }
+
+	@Override
+	public int twitterPicture(int twitterId) {
+		int twitterPicture=0;
+				try {
+					conn = SimpleConnectionPool.getConnection();
+					String sql = "SELECT twitter_picture FROM twitter WHERE twitterId=?";
+					pStatement = conn.prepareStatement(sql);
+					pStatement.setInt(1, twitterId);
+					rs=pStatement.executeQuery();
+					twitterPicture=rs.getInt("twitter_picture");
+				} catch (SQLException e) {
+					LOGGER.log(Level.ERROR, "获取图片张数异常！", e);
+				} finally {
+						close(null, pStatement, conn);
+					}
+		    	return twitterPicture;
+		    }
 }

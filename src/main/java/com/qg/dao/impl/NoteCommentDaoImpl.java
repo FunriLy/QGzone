@@ -16,6 +16,8 @@ import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
 import com.qg.dao.NoteCommentDao;
 import com.qg.model.NoteCommentModel;
 import com.qg.model.TwitterCommentModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
 /***
  * 
@@ -25,6 +27,7 @@ import com.qg.util.SimpleConnectionPool;
  * </pre>
  */
 public class NoteCommentDaoImpl implements NoteCommentDao{
+	private static final Logger LOGGER = Logger.getLogger(NoteCommentDaoImpl.class);
 	private Connection conn = null;
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
@@ -45,7 +48,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 							rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time"))));
 					}
 	    	} catch (SQLException e) {
-				e.printStackTrace();
+	    		LOGGER.log(Level.ERROR, "取出留言评论集合发生异常！", e);
 			} finally {
 				close(rs, pStatement, conn);
 			}
@@ -68,7 +71,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 			pStatement.setTimestamp(5,new Timestamp(new Date().getTime()));
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "添加留言评论异常！", e);
 			result = false;
 		} finally {
 			close(null, pStatement, conn);
@@ -91,7 +94,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time")));
 				}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "根据留言评论id获取评论异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -108,8 +111,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 			pStatement.setInt(1, commentId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "根据评论id删除留言评论异常！", e);
 			result = false;
 		}finally{
 			close(null, pStatement, conn);
@@ -127,8 +129,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 			pStatement.setInt(1, noteId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "根据留言id删除留言评论异常！", e);
 			result = false;
 		}finally{
 			close(null, pStatement, conn);
@@ -143,7 +144,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
             if(stat!=null)stat.close();
             if(conn!=null)SimpleConnectionPool.pushConnectionBackToPool(conn);
         } catch (SQLException e) {
-            e.printStackTrace();
+        	LOGGER.log(Level.ERROR, "关闭流失败！", e);
        }
 }
 

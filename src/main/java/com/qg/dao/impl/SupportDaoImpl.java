@@ -10,10 +10,12 @@ import java.util.List;
 
 import com.qg.dao.SupportDao;
 import com.qg.dao.TwitterDao;
-import com.qg.dao.UserDao;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
 
 public class SupportDaoImpl implements SupportDao{
+	private static final Logger LOGGER = Logger.getLogger(SupportDaoImpl.class);
 	private Connection conn = null;
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
@@ -35,9 +37,9 @@ public class SupportDaoImpl implements SupportDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.setInt(2, supporterId);
 			pStatement.executeUpdate();
-			new TwitterDao().addSupport(twitterId);
+			new TwitterDaoImpl().addSupport(twitterId);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "点赞异常！", e);
 			result = false;
 		} finally {
 			close(null, pStatement, conn);
@@ -53,9 +55,9 @@ public class SupportDaoImpl implements SupportDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.setInt(2, supporterId);
 			pStatement.executeUpdate();
-			new TwitterDao().deleteSupport(twitterId);
+			new TwitterDaoImpl().deleteSupport(twitterId);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "取消赞异常！", e);
 			result = false;
 		} finally {
 			close(null, pStatement, conn);
@@ -76,7 +78,7 @@ public class SupportDaoImpl implements SupportDao{
 				result=(rs.getInt(1)==1);
 				}
     	} catch (SQLException e) {
-			e.printStackTrace();
+    		LOGGER.log(Level.ERROR, "查询用户是否点赞异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -95,7 +97,7 @@ public class SupportDaoImpl implements SupportDao{
 				supporters.add(userDao.getNameById(rs.getInt("supporter_id")));
 				}
     	} catch (SQLException e) {
-			e.printStackTrace();
+    		LOGGER.log(Level.ERROR, "获取点赞用户异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}

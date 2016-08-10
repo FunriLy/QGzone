@@ -14,9 +14,12 @@ import java.util.List;
 import com.qg.dao.NoteDao;
 import com.qg.model.NoteModel;
 import com.qg.model.TwitterModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
 
 public class NoteDaoImpl implements NoteDao {
+	private static final Logger LOGGER = Logger.getLogger(NoteDaoImpl.class);
 	private Connection conn = null;
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
@@ -35,8 +38,7 @@ public class NoteDaoImpl implements NoteDao {
 			pStatement.setTimestamp(4,new Timestamp(new Date().getTime()));
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			result=false;
+			LOGGER.log(Level.ERROR, "添加留言异常！", e);
 		} finally {
 				close(null, pStatement, conn);
 			}
@@ -63,8 +65,7 @@ public class NoteDaoImpl implements NoteDao {
 				notes.add(note);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "获得留言集合异常！", e);
 		}finally{
 			close(rs, pStatement, conn);
 		}
@@ -87,7 +88,7 @@ public class NoteDaoImpl implements NoteDao {
 				  new NoteCommentDaoImpl().getNoteCommentByNoteId(rs.getInt("note_id")));
 				}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "根据留言id获取留言异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -105,8 +106,7 @@ public class NoteDaoImpl implements NoteDao {
 			new NoteCommentDaoImpl().deleteComments(noteId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "删除留言异常！", e);
 			result=false;
 		}finally{
 			close(null, pStatement, conn);

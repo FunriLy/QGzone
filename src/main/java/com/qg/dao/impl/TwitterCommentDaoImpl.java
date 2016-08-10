@@ -14,9 +14,12 @@ import java.util.List;
 import com.qg.dao.TwitterCommentDao;
 import com.qg.dao.UserDao;
 import com.qg.model.TwitterCommentModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
 
 public class TwitterCommentDaoImpl implements TwitterCommentDao{
+	private static final Logger LOGGER = Logger.getLogger(TwitterCommentDaoImpl.class);
 	private Connection conn = null;
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
@@ -46,7 +49,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time"))));
 				}
     	} catch (SQLException e) {
-			e.printStackTrace();
+    		LOGGER.log(Level.ERROR, "获取说说评论异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -66,7 +69,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.setTimestamp(5,new Timestamp(new Date().getTime()));
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "添加说说评论异常！", e);
 			result = false;
 		} finally {
 			close(null, pStatement, conn);
@@ -87,7 +90,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time")));
 				}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.ERROR, "获取某条说说评论异常！", e);
 		} finally {
 			close(rs, pStatement, conn);
 		}
@@ -102,8 +105,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.setInt(1, commentId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "删除某条说说评论异常！", e);
 			result = false;
 		}finally{
 			close(null, pStatement, conn);
@@ -119,8 +121,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("失败");
+			LOGGER.log(Level.ERROR, "删除某条说说全部评论异常！", e);
 			result = false;
 		}finally{
 			close(null, pStatement, conn);
