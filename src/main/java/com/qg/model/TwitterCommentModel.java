@@ -1,14 +1,14 @@
 package com.qg.model;
 
 public class TwitterCommentModel {
-	private int commentId;//说说评论id
-	private String comment;//说说评论内容
-	private int  twitterId;//说说id
-	private int commenterId;//说说评论者id
-	private String commenterName;//说说评论者昵称
-	private int targetId;//说说被评论者id
-	private String targetName;//说说被评论者昵称
-	private String time;//说说评论的时间
+	private int commentId;
+	private String comment;
+	private int  twitterId;
+	private int commenterId;
+	private String commenterName;
+	private int targetId;
+	private String targetName;
+	private String time;
 	public TwitterCommentModel(int commentId, String comment, int twitterId, int commenterId, String commenterName,
 			int targetId, String targetName, String time) {
 		super();

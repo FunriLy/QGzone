@@ -38,4 +38,11 @@ public interface PhotoDao {
 	 * @return PhotoModel实体对象
 	 */
 	PhotoModel getPhotoByPhotoId(int photoId);
+	
+	/**
+	 * 根据相册编号获取相片数量
+	 * @param albumId
+	 * @return
+	 */
+	int getPhotoCountByAlbumId(int albumId);
 }

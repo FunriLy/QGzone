@@ -8,7 +8,16 @@ public class AlbumModel {
 	private String albumPassword;  //相册密码
 	private int albumState;   //相册权限
 	private String albumUploadTime;  //相册上传时间
+	private int photoCount; //图片数量
 	
+	public int getPhotoCount() {
+		return photoCount;
+	}
+
+	public void setPhotoCount(int photoCount) {
+		this.photoCount = photoCount;
+	}
+
 	public AlbumModel(){}
 	
 	public AlbumModel(int userId, String albumName, int albumState, String albumPassword){

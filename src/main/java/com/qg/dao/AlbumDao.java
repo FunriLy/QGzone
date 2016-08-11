@@ -18,7 +18,7 @@ public interface AlbumDao {
 	/**
 	 * 将AlbumModel实体存进数据库
 	 * @param album 存进数据库的AlbumModel实体
-	 * @return 返回AlbumModel实体的编码
+	 * @return 操作成功返回AlbumModel实体的编码，否则返回fail
 	 */
 	int createAlbum(AlbumModel album);
 	
@@ -38,7 +38,7 @@ public interface AlbumDao {
 	AlbumModel getAlbumByAlbumId(int albumId);
 	
 	/**
-	 * 修改相册的信息，包括相册名、相册权限、相册密码
+	 * 修改相册的信息，包括相册权限、相册密码
 	 * @param album 传入的相册实体
 	 * @return 若修改成功返回success，否则返回fail。
 	 */
@@ -49,4 +49,19 @@ public interface AlbumDao {
 	 * @param albumId
 	 */
 	void deleteAlbumByAlbumId(int albumId);
+	
+	/**
+	 * 根据相册编号重命名相册
+	 * @param albumId 相册编号
+	 * @param albumName 新相册名
+	 * @return 操作成功返回success，否则返回fail
+	 */
+	int uplateAlbumName(int albumId, String albumName);
+	
+	/**
+	 * 根据用户编号获取用户相册编号
+	 * @param userId 用户编号
+	 * @return 用户相册编号集合
+	 */
+	public List<Integer> getAllAlbumIdByUserId(int userId);
 }

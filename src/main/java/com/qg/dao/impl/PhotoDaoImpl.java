@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,11 +71,11 @@ public class PhotoDaoImpl implements PhotoDao {
 
 	@Override
 	public List<PhotoModel> getAllPhotoByAlbumId(int albumId) {
-		List<PhotoModel> allPhoto = null;
+		List<PhotoModel> allPhoto = new ArrayList<PhotoModel>();
 		PhotoModel photo = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "";
+			String strSql = "select * from photos where album_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, albumId);
 			ResultSet rSet = pStatement.executeQuery();
@@ -85,6 +86,7 @@ public class PhotoDaoImpl implements PhotoDao {
 				photo = new PhotoModel(albumId);
 				photo.setPhotoId(photo_id);
 				photo.setPhotoUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
+				allPhoto.add(photo);
 			}
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -92,25 +94,82 @@ public class PhotoDaoImpl implements PhotoDao {
 		} finally {
 			daoClose();
 		}
-		return null;
+		return allPhoto;
 	}
 
 	@Override
 	public void deletePhotoByPhotoId(int photoId) {
 		// TODO Auto-generated method stub
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "delete from photos where photo_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, photoId);
+			pStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "删除相片实现类发生异常！", e);
+		} finally {
+			daoClose();
+		}
 
 	}
 
 	@Override
 	public void deleteAllPhotoByAlbumId(int albumId) {
 		// TODO Auto-generated method stub
-
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "delete from photos where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, albumId);
+			pStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "删除相册中所有相片的实现类发生异常！", e);
+		} finally {
+			daoClose();
+		}
 	}
 
 	@Override
 	public PhotoModel getPhotoByPhotoId(int photoId) {
-		// TODO Auto-generated method stub
-		return null;
+		PhotoModel photo = null;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, photoId);
+			ResultSet rSet = pStatement.executeQuery();
+			if(rSet.next()){
+				int album_id = rSet.getInt("album_id");
+				Timestamp upload_time = rSet.getTimestamp("photo_upload_time");
+				photo = new PhotoModel(album_id);
+				photo.setPhotoId(photoId);
+				photo.setPhotoUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "通过编号获得相片实体实现类发送异常！", e);
+		}
+		return photo;
+	}
+
+	@Override
+	public int getPhotoCountByAlbumId(int albumId) {
+		int result = fail;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "select count(album_id) as photo_count from photos where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, albumId);
+			ResultSet rSet = pStatement.executeQuery();
+			if (rSet.next()) {
+				result = rSet.getInt("photo_count");
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "查询相册中相片数量发送异常！", e);
+		}
+		return result;
 	}
 
 }

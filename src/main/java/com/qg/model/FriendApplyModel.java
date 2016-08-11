@@ -2,11 +2,13 @@ package com.qg.model;
 
 public final class FriendApplyModel {
 	
-	private int friendId;
-	private int requesterId;
-	private int responserId;
-	private String applyTime;
-	private int applyState;
+	private int friendApplyId;  //好友申请编号
+	private int requesterId;  //发送者账号
+	private int responserId;  // 接收者账号
+	private String applyTime;  //发送申请时间
+	private int applyState;  //申请的处理状态
+	
+	String requesterName; //发送者姓名
 	
 	public FriendApplyModel(){}
 	
@@ -15,19 +17,28 @@ public final class FriendApplyModel {
 		this.responserId = responserId;
 	}
 	
-	public FriendApplyModel(int requesterId, int responserId,int applyState){
+	public FriendApplyModel(int friendApplyId, int requesterId, int applyState){
+		this.friendApplyId = friendApplyId;
 		this.requesterId = requesterId;
-		this.responserId = responserId;
 		this.applyState = applyState;
 	}
-
-	public int getFriendId() {
-		return friendId;
+	
+	public String getRequesterName() {
+		return requesterName;
 	}
 
-	public void setFriendId(int friendId) {
-		this.friendId = friendId;
+	public void setRequesterName(String requesterName) {
+		this.requesterName = requesterName;
 	}
+
+	public void setFriendApplyId(int friendApplyId) {
+		this.friendApplyId = friendApplyId;
+	}
+
+	public int getFriendApplyId() {
+		return friendApplyId;
+	}
+
 
 	public int getRequesterId() {
 		return requesterId;

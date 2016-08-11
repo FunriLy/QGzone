@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.sql.Connection;
@@ -110,7 +111,7 @@ public class AlbumDaoImpl implements AlbumDao {
 			
 			if(rSet.next()){
 				int user_id = rSet.getInt("user_id");
-				String album_name = rSet.getString("album_id");
+				String album_name = rSet.getString("album_name");
 				int album_state = rSet.getInt("album_state");
 				String album_password = rSet.getString("album_password");
 				Timestamp upload_time = rSet.getTimestamp("album_upload_time");
@@ -133,12 +134,11 @@ public class AlbumDaoImpl implements AlbumDao {
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "update albums set album_name=?, album_state=?, album_password=? where album_id=? ";
+			String strSql = "update albums set album_state=?, album_password=? where album_id=?";
 			pStatement = con.prepareStatement(strSql);
-			pStatement.setString(1, album.getAlbumName());
-			pStatement.setInt(2, album.getAlbumState());
-			pStatement.setString(3, album.getAlbumPassword());
-			pStatement.setInt(4, album.getAlbumId());
+			pStatement.setInt(1, album.getAlbumState());
+			pStatement.setString(2, album.getAlbumPassword());
+			pStatement.setInt(3, album.getAlbumId());
 			pStatement.executeUpdate();
 			//修改成功
 			result = success;
@@ -163,6 +163,52 @@ public class AlbumDaoImpl implements AlbumDao {
 		} finally {
 			daoClose();
 		}
+	}
+
+	@Override
+	public int uplateAlbumName(int albumId, String albumName) {
+		// TODO Auto-generated method stub
+		int result = fail;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "update albums set album_name=? where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setString(1, albumName);
+			pStatement.setInt(2, albumId);
+			pStatement.executeUpdate();
+			//修改成功
+			result = success;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "用户修改相册名实现类发送异常！", e);
+		} finally {
+			daoClose();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Integer> getAllAlbumIdByUserId(int userId) {
+		// TODO Auto-generated method stub
+		List<Integer> allAlbumId = new ArrayList<Integer>();
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, userId);
+			ResultSet rSet = pStatement.executeQuery();
+			while(rSet.next()){
+				int album_id = rSet.getInt("album_id");
+				allAlbumId.add(new Integer(album_id));
+			}
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "用户获取所有相册编号实现类发送异常！", e);
+		} finally {
+			daoClose();
+		}
+		return allAlbumId;
 	}
 
 }
