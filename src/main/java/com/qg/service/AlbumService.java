@@ -20,12 +20,18 @@ public class AlbumService {
 	
 	/**
 	 * 创建相册文件夹
+	 * 
+	 * 
+	 * 还未测试
+	 * 
+	 * 
 	 * @param album 传入的AlbumModel实体
 	 * @return 创建成功返回success，否则返回fail
 	 */
 	public int createAlbum(AlbumModel album){
 		int result = fail;
 		AlbumDao albumDao = new AlbumDaoImpl();
+		//更新到数据库
 		result = albumDao.createAlbum(album);
 		/*
 		 * 创建文件夹
@@ -34,6 +40,22 @@ public class AlbumService {
 			
 			
 			
+			result = success;
+		}
+		return result;
+	}
+	
+	/**
+	 * 根据相册id判断密码是否正确
+	 * @param albumId 相册id
+	 * @param albumPassword 用户输入的密码
+	 * @return 若存在返回success，否则返回fail
+	 */
+	public int isPassword(int albumId, String albumPassword){
+		int result = fail;
+		AlbumDao albumDao = new AlbumDaoImpl();
+		String realPassword = albumDao.getPasswordByAlbumId(albumId);
+		if(realPassword.equals(albumPassword)){
 			result = success;
 		}
 		return result;
@@ -52,6 +74,7 @@ public class AlbumService {
 	
 	/**
 	 * 通过相册编号获取相册对象
+	 * 该相册信息包括相片数量
 	 * @param albumId 相册编号
 	 * @return 操作成功返回AlbumModel实体对象，否则返回null
 	 */

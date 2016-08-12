@@ -187,10 +187,9 @@ public class FriendDaoImpl implements FriendDao {
 		FriendApplyModel friendApply = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "select * from f_apply where responser_id=? and apply_state=?";
+			String strSql = "select * from f_apply where responser_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, userId);
-			pStatement.setInt(2, 0);
 			ResultSet rSet = pStatement.executeQuery();
 			
 			while(rSet.next()){
@@ -213,36 +212,6 @@ public class FriendDaoImpl implements FriendDao {
 	}
 
 	
-	@Override
-	public List<FriendApplyModel> getMyAllFriendApply(int userId) {
-		List<FriendApplyModel> allFriendApply = new ArrayList<FriendApplyModel>();
-		FriendApplyModel friendApply = null;
-		try {
-			con = SimpleConnectionPool.getConnection();
-			String strSql = "select * from f_apply where responser_id=? and apply_state<>?";
-			pStatement = con.prepareStatement(strSql);
-			pStatement.setInt(1, userId);
-			pStatement.setInt(2, 0);
-			ResultSet rSet = pStatement.executeQuery();
-			
-			while(rSet.next()){
-				int f_apply_id = rSet.getInt("f_apply_id");
-				int requester_id = rSet.getInt("requester_id");
-				int apply_state = rSet.getInt("apply_state");
-				Timestamp time = rSet.getTimestamp("apply_time");
-				
-				friendApply = new FriendApplyModel(f_apply_id, requester_id, apply_state);
-				friendApply.setApplyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time));
-				allFriendApply.add(friendApply);
-			}
-		} catch (SQLException e) {
-			// TODO: handle exception
-			LOGGER.log(Level.ERROR, "获得用户已读好友申请列表实现类发生异常！", e);
-		} finally {
-			daoClose();
-		}
-		return allFriendApply;
-	}
 
 	@Override
 	public int deleteFriendApply(int friendApplyId) {
@@ -263,14 +232,14 @@ public class FriendDaoImpl implements FriendDao {
 	}
 
 	@Override
-	public int conductFriendApply(FriendApplyModel friendApply) {
+	public int conductFriendApply(int friendApplyId) {
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
 			String strSql = "update f_apply set apply_state=? where f_apply_id=?";
 			pStatement = con.prepareStatement(strSql);
-			pStatement.setInt(1, friendApply.getApplyState());;
-			pStatement.setInt(2, friendApply.getFriendApplyId());
+			pStatement.setInt(1, 1);;
+			pStatement.setInt(2, friendApplyId);
 			pStatement.executeUpdate();
 			result = success;
 		} catch (Exception e) {

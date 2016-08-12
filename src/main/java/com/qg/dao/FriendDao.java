@@ -53,29 +53,23 @@ public interface FriendDao {
 	int sendFriendApply(int requesterId, int responserId );
 	
 	/**
-	 * 判断好友申请是否存在
+	 * 根据申请编号判断好友申请是否存在
 	 * @param friendApplyId 好友申请编号
 	 * @return 若存在返回success，否则返回fail
 	 */
 	int friendApplyIsExist(int friendApplyId);
 	
 	/**
-	 * 获得用户未读好友申请列表
+	 * 获得用户好友申请列表
 	 * @param userId 用户账号
 	 * @return 返回未读好友申请列表
 	 */
 	List<FriendApplyModel> getMyFriendApplies(int userId);
 	
 	/**
-	 * 获得用户的已读好友申请列表
-	 * @param userId 用户账号
-	 * @return 返回已读好友申请列表
-	 */
-	List<FriendApplyModel> getMyAllFriendApply(int userId);
-	
-	/**
-	 * 根据好友申请编号删除好友申请
-	 * @param friendApplyId
+	 * 根据好友申请编号删除申请
+	 * @param friendApplyId 好友申请编号
+	 * @return 成功返回success，失败返回fail
 	 */
 	int deleteFriendApply(int friendApplyId);
 	
@@ -84,7 +78,7 @@ public interface FriendDao {
 	 * @param friendModel 好友申请实体
 	 * @return 若处理成功返回success，否则返回fail
 	 */
-	int conductFriendApply(FriendApplyModel friendApply);
+	int conductFriendApply(int friendApplyId);
 	
 	/**
 	 * 查看用户是否有未处理的好友申请

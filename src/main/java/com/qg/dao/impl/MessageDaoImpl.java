@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.qg.dao.MessageDao;
 import com.qg.model.MessageModel;
@@ -15,14 +17,6 @@ import com.qg.util.SimpleConnectionPool;
 public class MessageDaoImpl implements MessageDao{
 
 	private static final Logger LOGGER = Logger.getLogger(MessageDaoImpl.class);
-	
-	public static void main(String[] args) {
-		MessageDaoImpl messageDao = new MessageDaoImpl();
-		MessageModel message = new MessageModel(123456, "haha");
-		message.setUserAddress("广东工业");
-		System.out.println(messageDao.changeMessage(message));
-		System.out.println(messageDao.getMessageById(123456));
-	}
 	
 	private Connection conn;//声明Connection对象
 	private PreparedStatement sql;//声明预处理语句
@@ -126,7 +120,8 @@ public class MessageDaoImpl implements MessageDao{
 				message.setUserSex(rs.getString("user_sex"));
 				message.setUserEmail(rs.getString("user_email"));
 				message.setUserImage(rs.getString("user_image"));
-				message.setUserPhone(rs.getString("user_birthday"));
+				message.setUserPhone(rs.getString("user_phone"));
+				message.setUserBirthday(rs.getString("user_birthday"));
 				message.setUserAddress(rs.getString("user_address"));
 				if(userId==message.getUserId()) {
 					flag = true; break;
@@ -146,6 +141,47 @@ public class MessageDaoImpl implements MessageDao{
 		else 
 			return null;
 	
+	}
+	
+	public List<MessageModel> getMessagesByName(String userName){
+		LOGGER.log(Level.DEBUG, "用户的信息 昵称:",userName);
+		List<MessageModel> messages = new ArrayList<MessageModel>();
+		conn = SimpleConnectionPool.getConnection();
+		try {
+
+			sql=conn.prepareStatement("select a.user_name,b.*" 
+					+" from user as a ,message as b "  
+					+" where a.user_id=b.user_id "
+					+ " and a.user_name=?;");
+			sql.setString(1, userName);
+			rs=sql.executeQuery();
+			while(rs.next()) {
+				MessageModel message = new MessageModel();
+				message.setUserId(rs.getInt("user_id"));
+				message.setUserName(rs.getString("user_name"));
+				message.setUserSex(rs.getString("user_sex"));
+				message.setUserEmail(rs.getString("user_email"));
+				message.setUserImage(rs.getString("user_image"));
+				message.setUserPhone(rs.getString("user_phone"));
+				message.setUserBirthday(rs.getString("user_birthday"));
+				message.setUserAddress(rs.getString("user_address"));
+				if(message.getUserName().equals(userName)) {
+					messages.add(message);
+					flag = true;
+				}
+			}
+				
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "获取用户信息集合发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return messages;
+		}
+		else 
+			return null;
 	}
 
 }

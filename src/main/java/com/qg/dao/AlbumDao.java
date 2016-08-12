@@ -64,4 +64,11 @@ public interface AlbumDao {
 	 * @return 用户相册编号集合
 	 */
 	public List<Integer> getAllAlbumIdByUserId(int userId);
+	
+	/**
+	 * 根据相册id获得相册密码
+	 * @param albumId 相册id
+	 * @return 相册密码
+	 */
+	public String getPasswordByAlbumId(int albumId);
 }

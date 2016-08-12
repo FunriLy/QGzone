@@ -14,11 +14,11 @@ public interface PhotoDao {
 	int savePhotoByAlbumId(int albumId);
 	
 	/**
-	 * 根据相册编号获得相册内所有相片的信息
+	 * 根据相册编号获得相册内所有相片的id
 	 * @param albumId 相册编号
 	 * @return 相册中所有相片的信息
 	 */
-	List<PhotoModel> getAllPhotoByAlbumId(int albumId);
+	List<Integer> getAllPhotoByAlbumId(int albumId);
 	
 	/**
 	 * 根据相片编号删除相片在数据库中的记录

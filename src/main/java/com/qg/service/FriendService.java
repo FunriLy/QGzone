@@ -3,9 +3,14 @@ package com.qg.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.attribute.standard.RequestingUserName;
+
 import com.qg.dao.FriendDao;
+import com.qg.dao.MessageDao;
 import com.qg.dao.impl.FriendDaoImpl;
+import com.qg.dao.impl.MessageDaoImpl;
 import com.qg.model.FriendApplyModel;
+import com.qg.model.MessageModel;
 import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -17,19 +22,28 @@ public class FriendService {
 	private static final int fail = 0;
 	
 	/**
-	 * 根据用户账号来获取用户好友列表
+	 * 根据用户账号来获取用户好友列表 
+	 * 还未测
 	 * @param userId 用户账号
 	 * @return 用户好友列表
 	 */
-	public List<UserModel> myAllFriend(int userId){
-		List<UserModel> myAllFriend = new ArrayList<UserModel>();
-		
+	public List<MessageModel> myAllFriend(int userId){
+		List<MessageModel> myAllFriend = new ArrayList<MessageModel>();
+		FriendDao friendDao = new FriendDaoImpl();
+		MessageDao messageDao = new MessageDaoImpl();
+		MessageModel message = null;
+		//所有获得好友id
+		List<Integer> friendsId = friendDao.getMyFriendId(userId);
+		//获得好友信息
+		for(Integer friendId : friendsId){
+			message = messageDao.getMessageById(friendId);
+			myAllFriend.add(message);
+		}
 		return myAllFriend;
 	}
 	
 	/**
 	 * 判断用户间是否好友关系
-	 * 测试完毕
 	 * @param userId 用户账号
 	 * @param t_userId 用户账号
 	 * @return 若存在返回success，否则返回fail
@@ -43,7 +57,6 @@ public class FriendService {
 	
 	/**
 	 * 用户删除好友
-	 * 测试完毕
 	 * @param userId 操作用户
 	 * @param t_userId 被删除用户
 	 * @return 若删除成功返回success，失败返回fail，若不存在好友关系返回3
@@ -70,7 +83,6 @@ public class FriendService {
 	
 	/**
 	 * 用户之间建立好友关系
-	 * 测试完毕
 	 * @param userId 用户账号
 	 * @param t_userId 用户账号
 	 * @return 若添加成功返回success，否则返回fail
@@ -88,44 +100,37 @@ public class FriendService {
 	/**
 	 * 好友申请处理
 	 * @param friendApply 好友申请实体对象(处理状态、好友申请编号)
-	 * @return 操作成功返回success，否则返回fail
+	 * @return 操作成功返回success，失败返回fail, 已经存在好友关系返回3，该条好友申请不存在返回4
 	 */
 	public int conductFriendApply(FriendApplyModel friendApply){
 		int result = fail;
 		if(success == isFriend(friendApply.getFriendApplyId(), friendApply.getResponserId())){
 			return 3;
 		}
+
 		FriendDao friendDao = new FriendDaoImpl();
-		friendDao.conductFriendApply(friendApply);
-		//如果存在好友申请
-		//如果同意好友申请
-		if(1==friendDao.friendApplyIsExist(friendApply.getFriendApplyId()) && 1 == friendApply.getApplyState()){
-			result = addFriend(friendApply.getFriendApplyId(), friendApply.getResponserId());
+		if(success != friendDao.friendApplyIsExist(friendApply.getFriendApplyId())){
+			return 4;
 		}
-//		//如果忽略好友申请
-//		if(1==friendDao.friendApplyIsExist(friendApply.getFriendApplyId()) && 2== friendApply.getApplyState()){
-//			/*
-//			 * 与我相关操作
-//			 */
-//		}
-		//拒绝好友申请
-		if(1==friendDao.friendApplyIsExist(friendApply.getFriendApplyId()) && 1 == friendApply.getApplyState()){
-			/*
-			 * 与我相关操作
-			 */
-		}
+		
+		result = friendDao.conductFriendApply(friendApply.getFriendApplyId());
+		/*
+		 * 与我相关
+		 */
 		return result;
 	}
 
 	/**
 	 * 用户根据好友申请编号删除好友申请
 	 * @param friendApplyId 好友申请编号
-	 * @return 成功返回success，否则返回fail
+	 * @return 成功返回success，失败返回fail，不存在申请返回3
 	 */
 	public int deleteFriendApply(int friendApplyId){
-		int result = fail;
+		int result = 3;
 		FriendDao friendDao = new FriendDaoImpl();
-		result = friendDao.deleteFriendApply(friendApplyId);
+		if(success == friendDao.friendApplyIsExist(friendApplyId)){
+			result = friendDao.deleteFriendApply(friendApplyId);
+		}
 		return result;
 	}
 	
@@ -151,7 +156,6 @@ public class FriendService {
 		List<FriendApplyModel> allFriendApply = null;
 		FriendDao friendDao = new FriendDaoImpl();
 		allFriendApply = friendDao.getMyFriendApplies(userId);
-		allFriendApply.addAll(friendDao.getMyAllFriendApply(userId));
 		return allFriendApply;
 	}
 	

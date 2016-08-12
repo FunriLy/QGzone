@@ -14,6 +14,7 @@ import java.util.List;
 import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
 
 import com.qg.dao.NoteCommentDao;
+import com.qg.dao.UserDao;
 import com.qg.model.NoteCommentModel;
 import com.qg.model.TwitterCommentModel;
 import com.qg.util.Level;
@@ -41,11 +42,12 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 				pStatement = conn.prepareStatement(sql);
 				pStatement.setInt(1, noteId);
 				rs = pStatement.executeQuery();
-				UserDao userDao = new UserDao();
+				UserDao userDao = new UserDaoImpl();
 				while(rs.next()){
 					noteComments.add(new NoteCommentModel(rs.getInt("comment_id"),rs.getString("comment"),
-							noteId,rs.getInt("commenter_id"),userDao.getNameById(rs.getInt("commenter_id")),
-							rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time"))));
+							noteId,rs.getInt("commenter_id"),userDao.getUserById(rs.getInt("commenter_id")).getUserName(),
+							rs.getInt("target_id"),userDao.getUserById(rs.getInt("target_id")).getUserName(),
+							Format.format(rs.getTimestamp("time"))));
 					}
 	    	} catch (SQLException e) {
 	    		LOGGER.log(Level.ERROR, "取出留言评论集合发生异常！", e);
@@ -88,10 +90,11 @@ public class NoteCommentDaoImpl implements NoteCommentDao{
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
 			if(rs.next()){
-				UserDao userDao = new UserDao();
+				UserDao userDao = new UserDaoImpl();
 				noteCommentModel=new NoteCommentModel(commentId,rs.getString("comment"),
-						rs.getInt("note_id"),rs.getInt("commenter_id"),userDao.getNameById(rs.getInt("commenter_id")),
-						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time")));
+						rs.getInt("note_id"),rs.getInt("commenter_id"),userDao.getUserById(rs.getInt("commenter_id")).getUserName(),
+						rs.getInt("target_id"),userDao.getUserById(rs.getInt("target_id")).getUserName(),
+						Format.format(rs.getTimestamp("time")));
 				}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "根据留言评论id获取评论异常！", e);

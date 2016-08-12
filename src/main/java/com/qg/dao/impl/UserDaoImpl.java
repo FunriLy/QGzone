@@ -25,18 +25,6 @@ public class UserDaoImpl implements UserDao{
 	private ResultSet rs;//声明结果集
 	private  boolean flag=false;//判断标志
 	
-	public static void main(String[] args) {
-		UserDaoImpl userDao = new UserDaoImpl();
-		System.out.println(userDao.getUsersByName("linhange"));
-		System.out.println(userDao.changePassword(100012, "M7"));
-//		UserModel user = new UserModel();
-//		user.setPassword("aaa");
-//		user.setUserId(1234567);
-//		user.setUserName("linhange");
-//		user.setUserSecretAnswer("fuck u");
-//		user.setUserSecretId(1);
-//		userDao.addUser(user);
-	}
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -211,5 +199,30 @@ public class UserDaoImpl implements UserDao{
 			return false;
 	}
 	
-	
+	public List<String> selcetUserId(){
+		LOGGER.log(Level.DEBUG, "用户的账户列表:");
+		List<String> list = new ArrayList<String>();
+		conn = SimpleConnectionPool.getConnection();
+		try {
+
+			sql=conn.prepareStatement("select user_id" 
+					+" from user");
+			rs=sql.executeQuery();
+			while(rs.next()) {
+				list.add(rs.getInt("user_id")+"");
+				flag = true;
+			}
+				
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "遍历账号发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return list;
+		}
+		else 
+			return null;
+	}
 }

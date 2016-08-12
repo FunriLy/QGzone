@@ -1,5 +1,7 @@
 package com.qg.dao;
 
+import java.util.List;
+
 import com.qg.model.MessageModel;
 
 /**
@@ -31,4 +33,11 @@ public interface MessageDao {
  	 * @return 个人信息对象
 	 */
 	MessageModel getMessageById(int userId);
+	
+	/**
+	 * 通过昵称获得个人信息对象集合
+	 * @param userName 昵称
+	 * @return 对象集合
+	 */
+	List<MessageModel> getMessagesByName(String userName);
 }

@@ -17,9 +17,9 @@ public final class FriendApplyModel {
 		this.responserId = responserId;
 	}
 	
-	public FriendApplyModel(int friendApplyId, int requesterId, int applyState){
+	public FriendApplyModel(int friendApplyId, int respnserId, int applyState){
 		this.friendApplyId = friendApplyId;
-		this.requesterId = requesterId;
+		this.responserId = respnserId;
 		this.applyState = applyState;
 	}
 	

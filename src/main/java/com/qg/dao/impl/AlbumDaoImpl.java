@@ -118,6 +118,7 @@ public class AlbumDaoImpl implements AlbumDao {
 				
 				album = new AlbumModel(user_id, album_name, album_state, album_password);
 				//将时间存进对象(格式：年-月-日 时-分-秒)
+				album.setAlbumId(albumId);
 				album.setAlbumUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
 			}
 		} catch (SQLException e) {
@@ -189,11 +190,10 @@ public class AlbumDaoImpl implements AlbumDao {
 
 	@Override
 	public List<Integer> getAllAlbumIdByUserId(int userId) {
-		// TODO Auto-generated method stub
 		List<Integer> allAlbumId = new ArrayList<Integer>();
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "";
+			String strSql = "select * from albums where user_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, userId);
 			ResultSet rSet = pStatement.executeQuery();
@@ -201,7 +201,6 @@ public class AlbumDaoImpl implements AlbumDao {
 				int album_id = rSet.getInt("album_id");
 				allAlbumId.add(new Integer(album_id));
 			}
-			
 		} catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "用户获取所有相册编号实现类发送异常！", e);
@@ -209,6 +208,25 @@ public class AlbumDaoImpl implements AlbumDao {
 			daoClose();
 		}
 		return allAlbumId;
+	}
+
+	@Override
+	public String getPasswordByAlbumId(int albumId) {
+		String result = null;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, albumId);
+			ResultSet rSet = pStatement.executeQuery();
+			if(rSet.next()){
+				result = rSet.getString("album_password");
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "获取相册密码实现类发送异常！", e);
+		}
+		return result;
 	}
 
 }

@@ -28,6 +28,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import com.google.gson.Gson;
 import com.qg.dao.impl.AlbumDaoImpl;
 import com.qg.model.TwitterModel;
+import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.Logger;
 import com.qg.util.JsonUtil;
@@ -54,7 +55,7 @@ public class TwitterAdd extends HttpServlet {
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		Gson gson = new Gson();
 		TwitterModel twitter = null;
-		int talkId = userModel(request.getSession().getAttribute("user")).getuserId;
+		int talkId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		twitter.setTalkId(talkId);
 		try {
 			// 构造工厂

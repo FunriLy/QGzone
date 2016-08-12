@@ -70,8 +70,8 @@ public class PhotoDaoImpl implements PhotoDao {
 	}
 
 	@Override
-	public List<PhotoModel> getAllPhotoByAlbumId(int albumId) {
-		List<PhotoModel> allPhoto = new ArrayList<PhotoModel>();
+	public List<Integer> getAllPhotoByAlbumId(int albumId) {
+		List<Integer> allPhoto = new ArrayList<Integer>();
 		PhotoModel photo = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
@@ -82,14 +82,13 @@ public class PhotoDaoImpl implements PhotoDao {
 			//获取集合
 			while(rSet.next()){
 				int photo_id = rSet.getInt("photo_id");
-				Timestamp upload_time = rSet.getTimestamp("photo_upload_time");
-				photo = new PhotoModel(albumId);
-				photo.setPhotoId(photo_id);
-				photo.setPhotoUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
-				allPhoto.add(photo);
+				//Timestamp upload_time = rSet.getTimestamp("photo_upload_time");
+				//photo = new PhotoModel(albumId);
+				//photo.setPhotoId(photo_id);
+				//photo.setPhotoUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
+				allPhoto.add(photo_id);
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "获得所有相片实体实现类发生异常！", e);
 		} finally {
 			daoClose();
