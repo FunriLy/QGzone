@@ -7,10 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qg.dao.MessageDao;
 import com.qg.dao.RelationDao;
-import com.qg.dao.UserDao;
 import com.qg.model.RelationModel;
-import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -23,10 +22,13 @@ public class RelationDaoImpl implements RelationDao{
 	private PreparedStatement sql;//声明预处理语句
 	private ResultSet rs;//声明结果集
 	private boolean flag=false;//判断标志
-	private UserDao userDao= new UserDaoImpl();
+	private MessageDao messageDao= new MessageDaoImpl();
 	public static void main(String[] args) {
 		RelationDaoImpl dao = new RelationDaoImpl();
-		System.out.println(dao.getRelationsById(2));
+//		RelationModel relation = new RelationModel
+//				("aaa", "ssdad", 10000, 10001, 1, 20);
+//		System.out.println(dao.addRelation(relation));
+		System.out.println(dao.getRelationsById(1263677));
 	}
 	/**
 	 * 类中公用关闭流的方法
@@ -106,7 +108,8 @@ public class RelationDaoImpl implements RelationDao{
 		conn = SimpleConnectionPool.getConnection();
 		try {
 
-			sql=conn.prepareStatement();
+			sql=conn.prepareStatement("select * from relation where receiver_id=?");
+			sql.setInt(1, userId);
 			rs=sql.executeQuery();
 			while(rs.next()) {
 				RelationModel relation = new RelationModel();
@@ -116,7 +119,7 @@ public class RelationDaoImpl implements RelationDao{
 				relation.setRelatedId(rs.getInt("related_id"));
 				relation.setRelationTime(rs.getTimestamp("relation_time"));
 				relation.setReceiverId(rs.getInt("receiver_id"));
-				relation.setSender(userDao.getUserById(rs.getInt("sender_id")));
+				relation.setSender(messageDao.getMessageById(rs.getInt("sender_id")));
 				if(relation.getReceiverId() == userId) {
 					relations.add(relation);
 					flag = true;

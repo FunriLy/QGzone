@@ -13,10 +13,25 @@ import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
-
+/**
+ * 用户信息dao层实现类
+ * @author hunger linhange
+ *
+ */
 public class MessageDaoImpl implements MessageDao{
 
 	private static final Logger LOGGER = Logger.getLogger(MessageDaoImpl.class);
+	
+	public static void main(String[] args) {
+		MessageDaoImpl messageDao = new MessageDaoImpl();
+//		MessageModel message = new MessageModel(123456, "haha");
+//		message.setUserAddress("广东工业");
+//		System.out.println(messageDao.changeMessage(message));
+//		System.out.println(messageDao.getMessageById(123456));
+	//	System.out.println(messageDao.getMessagesByName("v"));
+	//	System.out.println(messageDao.getMessageById(1234567));
+		System.out.println(messageDao.changeImage(1263677, "2333.jpg"));
+	}
 	
 	private Connection conn;//声明Connection对象
 	private PreparedStatement sql;//声明预处理语句
@@ -46,7 +61,7 @@ public class MessageDaoImpl implements MessageDao{
 		LOGGER.log(Level.DEBUG, "用户的具体信息 账号:",message.getUserId());
 		conn = SimpleConnectionPool.getConnection();
 		try {
-			sql=conn.prepareStatement("insert into message(user_id,user_sex,user_email,user_phone,user_birthday)"
+			sql=conn.prepareStatement("insert into message(user_id,user_sex,user_email,user_phone,user_birthday,user_address)"
 					+" "+"values(?,?,?,?,?,?)");
 			sql.setInt(1, message.getUserId());
 			sql.setString(2, message.getUserSex());
@@ -152,8 +167,7 @@ public class MessageDaoImpl implements MessageDao{
 			sql=conn.prepareStatement("select a.user_name,b.*" 
 					+" from user as a ,message as b "  
 					+" where a.user_id=b.user_id "
-					+ " and a.user_name=?;");
-			sql.setString(1, userName);
+					+ " and a.user_name like '%"+userName+"%';");
 			rs=sql.executeQuery();
 			while(rs.next()) {
 				MessageModel message = new MessageModel();
@@ -165,10 +179,8 @@ public class MessageDaoImpl implements MessageDao{
 				message.setUserPhone(rs.getString("user_phone"));
 				message.setUserBirthday(rs.getString("user_birthday"));
 				message.setUserAddress(rs.getString("user_address"));
-				if(message.getUserName().equals(userName)) {
-					messages.add(message);
-					flag = true;
-				}
+				messages.add(message);
+				flag = true;
 			}
 				
 		} catch (Exception e) {
@@ -182,6 +194,32 @@ public class MessageDaoImpl implements MessageDao{
 		}
 		else 
 			return null;
+	}
+	
+	public boolean changeImage(int userId,String image){
+		LOGGER.log(Level.DEBUG, "修改个人头像:账号",userId);
+		conn = SimpleConnectionPool.getConnection();
+		try {
+
+			sql=conn.prepareStatement("update message set user_image=? "
+					+ " where user_id = ?");
+			sql.setString(1, image);
+			sql.setInt(2, userId);
+			sql.executeUpdate();
+			flag=true;
+			System.out.println("changImage is running");
+				
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "修改用户头像发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return true;
+		}
+		else 
+			return false;
 	}
 
 }

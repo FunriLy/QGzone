@@ -56,8 +56,9 @@ public interface UserDao {
 	boolean changePassword(int userId,String password);
 	
 	/**
-	 * 获得所有用户的账号集合
+	 * 遍历数据库获取账号集合
 	 * @return 账号集合
 	 */
-	public List<String> selcetUserId();
+	List<String> selcetUserId();
+	 
 }

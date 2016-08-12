@@ -34,10 +34,20 @@ public interface MessageDao {
 	 */
 	MessageModel getMessageById(int userId);
 	
+	
 	/**
-	 * 通过昵称获得个人信息对象集合
-	 * @param userName 昵称
-	 * @return 对象集合
+	 * 根据用户昵称获取用户信息列表
+	 * @param name 昵称
+	 * @return 用户信息集合
 	 */
 	List<MessageModel> getMessagesByName(String userName);
+	
+	
+	/**
+	 * 根据账号修改头像
+	 * @param userId 账号
+	 * @param image 头像名
+	 * @return 成功true 失败false
+	 */
+	boolean changeImage(int userId,String image);
 }

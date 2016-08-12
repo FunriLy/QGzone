@@ -25,6 +25,18 @@ public class UserDaoImpl implements UserDao{
 	private ResultSet rs;//声明结果集
 	private  boolean flag=false;//判断标志
 	
+	public static void main(String[] args) {
+		UserDaoImpl userDao = new UserDaoImpl();
+		System.out.println(userDao.getUsersByName("linhange"));
+		System.out.println(userDao.changePassword(100012, "M7"));
+		UserModel user = new UserModel();
+		user.setPassword("aaa");
+		user.setUserId(1234567);
+		user.setUserName("linhange");
+		user.setUserSecretAnswer("fuck u");
+		user.setUserSecretId(1);
+		userDao.addUser(user);
+	}
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -85,6 +97,7 @@ public class UserDaoImpl implements UserDao{
 			while(rs.next()) {
 				user.setUserId(rs.getInt("user_id"));
 				user.setUserName(rs.getString("user_name"));
+				user.setPassword(rs.getString("user_password"));
 				user.setUserSecretId(rs.getInt("user_secret_id"));
 				user.setUserSecretAnswer(rs.getString("user_secret_answer"));
 				user.setUserImage(rs.getString("user_image"));

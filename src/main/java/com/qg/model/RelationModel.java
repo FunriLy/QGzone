@@ -2,6 +2,9 @@ package com.qg.model;
 
 import java.sql.Timestamp;
 
+import com.qg.dao.MessageDao;
+import com.qg.dao.impl.MessageDaoImpl;
+
 public class RelationModel {
 
 	private int relationId;//与我相关id
@@ -10,8 +13,20 @@ public class RelationModel {
 	private Timestamp relationTime;//发布时间
 	private int receiverId;//接收者账号
 	private int relationHasRead;//是否已读
-	private UserModel sender;//发送者对象
+	private MessageModel sender;//发送者对象
 	private int relatedId;//相关信息id
+	
+	public RelationModel(){}
+	public RelationModel(String relationType,String relationContent
+			,int receiverId,int senderId,int relationHasRead,int relatedId){
+		MessageDao dao = new MessageDaoImpl();
+		this.relationType = relationType;
+		this.relationContent = relationContent;
+		this.receiverId = receiverId;
+		this.relationHasRead = relationHasRead;
+		this.relatedId = relatedId;
+		this.sender = dao.getMessageById(senderId);
+	}
 	
 	public int getRelationId() {
 		return relationId;
@@ -49,10 +64,10 @@ public class RelationModel {
 	public void setRelationHasRead(int relationHasRead) {
 		this.relationHasRead = relationHasRead;
 	}
-	public UserModel getSender() {
+	public MessageModel getSender() {
 		return sender;
 	}
-	public void setSender(UserModel sender) {
+	public void setSender(MessageModel sender) {
 		this.sender = sender;
 	}
 	public int getRelatedId() {
