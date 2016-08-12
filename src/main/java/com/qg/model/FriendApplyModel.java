@@ -17,28 +17,19 @@ public final class FriendApplyModel {
 		this.responserId = responserId;
 	}
 	
-	public FriendApplyModel(int friendApplyId, int respnserId, int applyState){
+	public FriendApplyModel(int friendApplyId, int requesterId, int applyState){
 		this.friendApplyId = friendApplyId;
-		this.responserId = respnserId;
+		this.requesterId = requesterId;
 		this.applyState = applyState;
-	}
-	
-	public String getRequesterName() {
-		return requesterName;
-	}
-
-	public void setRequesterName(String requesterName) {
-		this.requesterName = requesterName;
-	}
-
-	public void setFriendApplyId(int friendApplyId) {
-		this.friendApplyId = friendApplyId;
 	}
 
 	public int getFriendApplyId() {
 		return friendApplyId;
 	}
 
+	public void setFriendApplyId(int friendApplyId) {
+		this.friendApplyId = friendApplyId;
+	}
 
 	public int getRequesterId() {
 		return requesterId;
@@ -71,6 +62,15 @@ public final class FriendApplyModel {
 	public void setApplyState(int applyState) {
 		this.applyState = applyState;
 	}
+
+	public String getRequesterName() {
+		return requesterName;
+	}
+
+	public void setRequesterName(String requesterName) {
+		this.requesterName = requesterName;
+	}
 	
+
 	
 }

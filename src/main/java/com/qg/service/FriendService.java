@@ -3,15 +3,15 @@ package com.qg.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.RequestingUserName;
 
 import com.qg.dao.FriendDao;
 import com.qg.dao.MessageDao;
+import com.qg.dao.UserDao;
 import com.qg.dao.impl.FriendDaoImpl;
 import com.qg.dao.impl.MessageDaoImpl;
+import com.qg.dao.impl.UserDaoImpl;
 import com.qg.model.FriendApplyModel;
 import com.qg.model.MessageModel;
-import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -104,11 +104,11 @@ public class FriendService {
 	 */
 	public int conductFriendApply(FriendApplyModel friendApply){
 		int result = fail;
+		FriendDao friendDao = new FriendDaoImpl();
 		if(success == isFriend(friendApply.getFriendApplyId(), friendApply.getResponserId())){
+			friendDao.friendApplyIsExist(friendApply.getFriendApplyId());
 			return 3;
 		}
-
-		FriendDao friendDao = new FriendDaoImpl();
 		if(success != friendDao.friendApplyIsExist(friendApply.getFriendApplyId())){
 			return 4;
 		}
@@ -138,11 +138,27 @@ public class FriendService {
 	 * 用户发送好友申请
 	 * @param requesterId 发送者
 	 * @param responserId 接收者
-	 * @return 成功返回success，否则返回fail
+	 * @return 成功返回success，否则返回fail; 用户给自己发送好友请求返回-1;用户不存在返回-2; 用户间存在好友关系返回-3;
 	 */
 	public int sendFriendApply(int requesterId, int responserId){
 		int result = fail;
 		FriendDao friendDao = new FriendDaoImpl();
+		
+		//用户给自己发送好友请求
+		if (requesterId == responserId) {
+			return -1;
+		}
+		//若用户不存在
+		SearchService searchService = new SearchService();
+		if (success != searchService.userIsExist(responserId)) {
+			return -2;
+		}
+		
+		//用户之间已经存在好友关系
+		if (success == isFriend(responserId, requesterId)) {
+			return -3;
+		}
+		
 		result = friendDao.sendFriendApply(requesterId, responserId);
 		return result;
 	}
@@ -153,9 +169,20 @@ public class FriendService {
 	 * @return 用户好友申请列表
 	 */
 	public List<FriendApplyModel> getAllFriendApply(int userId){
-		List<FriendApplyModel> allFriendApply = null;
+		List<FriendApplyModel> allFriendApply = new ArrayList<>();
 		FriendDao friendDao = new FriendDaoImpl();
+		UserDao userDao = new UserDaoImpl();
 		allFriendApply = friendDao.getMyFriendApplies(userId);
+		
+		
+		FriendApplyModel friendApply = null;
+		//将名字赋予相应的id
+		for(int i=0; i<allFriendApply.size(); i++){
+			friendApply = allFriendApply.get(i);
+			//根据好友申请中的requestId获得UserModel对象，再将该对象昵称放入好友申请中
+			friendApply.setRequesterName(userDao.getUserById(friendApply.getRequesterId()).getUserName());
+			allFriendApply.set(i, friendApply);
+		}
 		return allFriendApply;
 	}
 	

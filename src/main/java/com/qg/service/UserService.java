@@ -16,22 +16,7 @@ public class UserService {
 
 	private UserDao userDao = new UserDaoImpl();
 	private MessageService messageService = new MessageService();
-	public static void main(String[] args) {
-		UserDao userDao = new UserDaoImpl();
-		UserService service = new UserService();
-//		UserModel user = new UserModel();
-//		user.setPassword("123456");
-//		user.setUserName("livid");
-//		user.setUserSecretAnswer("simle");
-//		user.setUserSecretId(1);
-//		service.addUser(user);
-//		System.out.println(service.changePassword(4638109, "123456", "aaaaaa"));
-//		System.out.println(service.changeSecret(4638109, 1, "simle", 3, "who is dady"));
-//		System.out.println(service.forgetPassword(4638109, 3, "who is dady", "123456"));
-		System.out.println(service.isExistOfUserId("12636777"));
-	}
-	
-	
+
 	/**
 	 * 创建随机账号
 	 * @return 生成一个七位的随机账号

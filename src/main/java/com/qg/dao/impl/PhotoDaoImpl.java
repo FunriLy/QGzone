@@ -19,7 +19,6 @@ import com.qg.util.SimpleConnectionPool;
 public class PhotoDaoImpl implements PhotoDao {
 
 	private static final Logger LOGGER = Logger.getLogger(PhotoDaoImpl.class);
-	private static final int success = 1;
 	private static final int fail = 0;
 	
 	private Connection con = null;
@@ -72,7 +71,7 @@ public class PhotoDaoImpl implements PhotoDao {
 	@Override
 	public List<Integer> getAllPhotoByAlbumId(int albumId) {
 		List<Integer> allPhoto = new ArrayList<Integer>();
-		PhotoModel photo = null;
+		//PhotoModel photo = new PhotoModel();
 		try {
 			con = SimpleConnectionPool.getConnection();
 			String strSql = "select * from photos where album_id=?";

@@ -1,8 +1,8 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet("DeletePhoto")
+@WebServlet("/DeletePhoto")
 public class PhotoDelete {
 
 }

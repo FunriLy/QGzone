@@ -1,8 +1,7 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,9 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.User;
-
-import com.google.gson.Gson;
 import com.qg.model.MessageModel;
 import com.qg.model.UserModel;
 import com.qg.service.SearchService;
@@ -25,39 +21,37 @@ import com.qg.util.Logger;
  * 
  * @author zggdczfr
  * <p>
- * 通过id来查找用户
- * 状态码: 301-成功；302-没找到;
+ * 通过用户昵称来搜索用户
+ * 状态码: 301-找到; 302-找不到;
  * </p>
  */
 
-@WebServlet("SearchByUserId")
-public class SearchByUserId extends HttpServlet {
+@WebServlet("/SearchByUserName")
+public class SearchbyUserName extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(SearchByUserId.class);
-	private static final int success = 1;
+	private static final Logger LOGGER = Logger.getLogger(SearchbyUserName.class);
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int searchUserId = Integer.valueOf(request.getParameter("searchUserId"));
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId =1;
+		String searchUserName =request.getParameter("searchName");
 		int state = 302;
-		Gson gson = new Gson();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		SearchService searchService = new SearchService();
-		//将对象包装进集合发送过去
-		List<MessageModel> allMessage = new ArrayList<MessageModel>();
-		MessageModel message = searchService.searchMessageByUserId(searchUserId);
-		if (message != null) {
+		//获得搜索结果
+		List<MessageModel> allMessage = searchService.searchMessagesByUserName(searchUserName);
+		if(allMessage.isEmpty()){
+			state = 302;
+		} else {
 			state = 301;
-			allMessage.add(message);
 		}
 		
-		LOGGER.log(Level.DEBUG, "用户 {0} 搜索账号 {1}", userId, searchUserId);
-		
-		JsonUtil<List<MessageModel>, String> object = new JsonUtil(state,allMessage);
-		output.write(gson.toJson(object).getBytes("UTF-8"));
+		LOGGER.log(Level.DEBUG, "用户 {0} 搜索昵称 {1}", userId, searchUserName);
+	
+		output.write(JsonUtil.tojson(state, allMessage).getBytes("UTF-8"));
 		output.close();
 	}
 	

@@ -71,4 +71,12 @@ public interface AlbumDao {
 	 * @return 相册密码
 	 */
 	public String getPasswordByAlbumId(int albumId);
+	
+	/**
+	 * 查询用户相册是否重名
+	 * @param userId 用户id
+	 * @param albumName 相册姓名
+	 * @return 若重复返回fail，否则返回success
+	 */
+	public int isDuplicationOfName(int userId, String albumName);
 }

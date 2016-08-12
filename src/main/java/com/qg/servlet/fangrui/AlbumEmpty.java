@@ -1,8 +1,7 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,10 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.qg.model.MessageModel;
+import com.qg.model.AlbumModel;
 import com.qg.model.UserModel;
-import com.qg.service.FriendService;
+import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -22,38 +20,37 @@ import com.qg.util.Logger;
  * 
  * @author zggdczfr
  * <p>
- * 用户获取好友列表信息
- * 状态码: 301-成功; 302-失败;
+ * 用户清空相册
+ * 状态码: 601-删除成功; 602-失败; 603-没有权限; 604-相册不存在;
  * </p>
  */
 
-@WebServlet("MyFriends")
-public class FriendMyFriends extends HttpServlet {
+@WebServlet("/EmptyAlbum")
+public class AlbumEmpty extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(FriendMyFriends.class);
+	private static final Logger LOGGER = Logger.getLogger(AlbumEmpty.class);
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		//获得用户id
+		//用户id
 		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int state = 302;
-		FriendService friendService = new FriendService();
-		List<MessageModel> myFriends = friendService.myAllFriend(userId);
-		Gson gson = new Gson();
+		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
-		if(myFriends.isEmpty()){
-			//集合为空
-			state = 302;
-		} else {
-			state = 301;
+		//获得Json并解析
+		int albumId = Integer.valueOf(request.getParameter("albumId"));
+		String path = getServletContext().getRealPath("/WEB-INF/album") + "/" + userId + "/" + albumId;
+		
+		AlbumService albumService = new AlbumService();
+		AlbumModel realAlbum = albumService.getAlbumByAlbumId(albumId);
+		if (userId == realAlbum.getUserId()) {
+			state = albumService.emptyAlbum(path, albumId);
 		}
 		
-		LOGGER.log(Level.DEBUG, "用户获取好友列表 用户: {0} 状态: {1}", userId, state);
+		LOGGER.log(Level.DEBUG, "用户 {0} 清空相册 {1} 状态: {2}", userId, albumId, state);
 		
-		JsonUtil< List<MessageModel>, String> object = new JsonUtil(state, myFriends);
-		output.write(gson.toJson(object).getBytes("UTF-8"));
-		output.close();
+		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+		output.close();		
 	}
 	
 	@Override

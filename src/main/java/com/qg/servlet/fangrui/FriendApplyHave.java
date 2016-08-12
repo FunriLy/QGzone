@@ -1,8 +1,7 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,11 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.qg.dao.FriendDao;
-import com.qg.dao.impl.FriendDaoImpl;
-import com.qg.model.MessageModel;
 import com.qg.model.UserModel;
+import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -23,34 +19,32 @@ import com.qg.util.Logger;
  * 
  * @author zggdczfr
  * <p>
- * 用户删除好友申请
- * 状态码: 301-成功; 302-失败; 
+ * 检查用户是否还有未处理的好友申请
+ * 状态码：301-有; 302-无;
  * </p>
  */
 
-@WebServlet("DeleteFriendApply")
-public class FriendApplyDelete extends HttpServlet {
+@WebServlet("/HaveFriendApply")
+public class FriendApplyHave extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(FriendApplyDelete.class);
+	private static final Logger LOGGER = Logger.getLogger(FriendApplyHave.class);
 	private static final int success = 1;
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		//获得用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int friendApplyId = Integer.valueOf(request.getParameter("friendApplyId"));
+		
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
 		int state = 302;
-		Gson gson = new Gson();
+		FriendService friendService = new FriendService();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
-		FriendDao friendDao = new FriendDaoImpl();
-		if(success == friendDao.deleteFriendApply(friendApplyId)){
+		if (success == friendService.havefriendApply(userId)) {
 			state = 301;
 		}
 		
-		LOGGER.log(Level.DEBUG, "用户 {0} 删除好友申请编号 {1}", userId, friendApplyId);
+		LOGGER.log(Level.DEBUG, "用户 {0} 请求查看是否有未处理的好友申请 状态: {1}", userId, state);
 		
-		JsonUtil<List<MessageModel>, String> object = new JsonUtil(state);
-		output.write(gson.toJson(object).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
 	}
 	

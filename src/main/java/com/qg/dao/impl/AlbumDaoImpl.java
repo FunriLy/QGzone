@@ -215,7 +215,7 @@ public class AlbumDaoImpl implements AlbumDao {
 		String result = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "";
+			String strSql = "select * from albums where album_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, albumId);
 			ResultSet rSet = pStatement.executeQuery();
@@ -225,6 +225,27 @@ public class AlbumDaoImpl implements AlbumDao {
 		} catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "获取相册密码实现类发送异常！", e);
+		}
+		return result;
+	}
+
+	@Override
+	public int isDuplicationOfName(int userId, String albumName) {
+		int result = success;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String srSql = "select * from albums where user_id=? and album_name=?";
+			pStatement = con.prepareStatement(srSql);
+			pStatement.setInt(1, userId);
+			pStatement.setString(2, albumName);
+			ResultSet rSet = pStatement.executeQuery();
+			if (rSet.next()) {
+				result = fail;
+			}
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "查询相册名重复实现类发送异常！", e);
 		}
 		return result;
 	}

@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.dao.PhotoDao;
-import com.qg.dao.impl.PhotoDaoImpl;
-import com.qg.model.AlbumModel;
 import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
+import com.qg.service.PhotoService;
+import com.qg.util.JsonUtil;
+import com.qg.util.Level;
 import com.qg.util.Logger;
 
 /**
@@ -27,12 +27,11 @@ import com.qg.util.Logger;
  * </p>
  */
 
-@WebServlet("CheckPublicAlbum")
+@WebServlet("/CheckPublicAlbum")
 public class AlbumCheckPublic extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(AlbumCheckPublic.class);
-	private static final int success = 1;
-
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
@@ -45,34 +44,17 @@ public class AlbumCheckPublic extends HttpServlet {
 		List<Integer> allPhotoId = new ArrayList<Integer>();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
-		
-		
-		int result = albumService.albumIsExist(albumId);
-		if (success == result) {
-			AlbumModel albumModel = albumService.getAlbumByAlbumId(albumId);
-			//权限不符
-			if(success == albumModel.getAlbumState()){
-				state = 604;
-			} else if(0 == albumModel.getPhotoCount()){
-				//数量为0
-				state = 602;
-			} else {
-				PhotoDao photoDao = new PhotoDaoImpl();
-				allPhotoId = photoDao.getAllPhotoByAlbumId(albumId);
-				state = 601;
-			}
-		} else {
-			state = 603;
+		state = albumService.checkPublicAlbum(albumId,userId);
+		//获取相册中图片信息
+		if (state == 601) {
+			PhotoService photoService = new PhotoService();
+			allPhotoId = photoService.allPhoto(albumId);
 		}
 		
+		LOGGER.log(Level.DEBUG, "用户 {0} 查看公开相册 {1} 状态: {2}", userId, albumId, state);
 		
-		
-		
-		
-		
-		
-		
-		
+		output.write(JsonUtil.tojson(state,allPhotoId).getBytes("UTF-8"));
+		output.close();
 		
 	}
 	

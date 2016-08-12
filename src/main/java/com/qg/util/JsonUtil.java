@@ -38,12 +38,12 @@ public class JsonUtil<T> {
 }
 
 class ObjectModel<T, K> {
-	List<T> list;
+	List<T> jsonList;
 	int state;
 	K jsonObject;
 
 	public ObjectModel(int state, List<T> jsonList) {
-		this.list = jsonList;
+		this.jsonList = jsonList;
 		this.state = state;
 	}
 

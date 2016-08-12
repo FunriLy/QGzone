@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
@@ -25,18 +24,19 @@ import com.qg.util.Logger;
  * </p>
  */
 
-@WebServlet("DeleteFriend")
+@WebServlet("/DeleteFriend")
 public class FriendDelete extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(FriendDelete.class);
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id 与 操作对象id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId =1;
+		
 		int friendId = Integer.valueOf(request.getParameter("friendId"));
 		//初始化状态码
 		int state = 302; 
-		Gson gson = new Gson();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		FriendService friendService = new FriendService();
 		int result = friendService.deleteFriend(userId, friendId);
@@ -52,8 +52,7 @@ public class FriendDelete extends HttpServlet{
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 执行解除与用户 {1} 的好友关系  状态: {2}", userId, friendId, state);
 		
-		JsonUtil<String, String> object = new JsonUtil(state);
-		output.write(gson.toJson(object).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
 	}
 	
