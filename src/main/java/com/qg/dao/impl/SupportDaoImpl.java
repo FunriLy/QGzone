@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qg.dao.SupportDao;
-import com.qg.dao.TwitterDao;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -88,13 +87,13 @@ public class SupportDaoImpl implements SupportDao{
     	List<String> supporters = new ArrayList<String>();
     	try {
 			conn = SimpleConnectionPool.getConnection();
-			String sql = "SELECT * FROM support WHERE twitter_id=? ORDER BY supporter_id DESC";
+			String sql = "SELECT supporter_id FROM support WHERE twitter_id=? ORDER BY supporter_id DESC";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			rs = pStatement.executeQuery();
-			if(rs.next()){
-				UserDao userDao = new UserDao();
-				supporters.add(userDao.getNameById(rs.getInt("supporter_id")));
+			while(rs.next()){
+				UserDaoImpl userDaoImpl = new UserDaoImpl();
+				supporters.add(userDaoImpl.getUserById(rs.getInt("supporter_id")).getUserName());
 				}
     	} catch (SQLException e) {
     		LOGGER.log(Level.ERROR, "获取点赞用户异常！", e);

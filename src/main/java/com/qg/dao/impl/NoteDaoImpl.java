@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.qg.dao.NoteDao;
 import com.qg.model.NoteModel;
-import com.qg.model.TwitterModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -46,7 +45,7 @@ public class NoteDaoImpl implements NoteDao {
 	}
 
 	@Override
-	public List<NoteModel> getNote(int pageNumber, int userId) {
+	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
 		List<NoteModel> notes = new ArrayList<NoteModel>();
 		 try {
 			 int number=(pageNumber-1)*16;
@@ -56,16 +55,17 @@ public class NoteDaoImpl implements NoteDao {
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, number);
 			 rs=pStatement.executeQuery();
-			 UserDao userDao = new UserDao();
+			 UserDaoImpl userDaoImpl = new UserDaoImpl();
 			 while(rs.next()){
 				 NoteModel note = new NoteModel
 				  (rs.getInt("note_id"),rs.getString("note"),rs.getInt("target_id"),
-				  userDao.getNameById(rs.getInt("target_id")),rs.getInt("note_man_id"),userDao.getNameById(rs.getInt("note_man_id")),Format.format(rs.getTimestamp("time")),
-				  new NoteCommentDaoImpl().getNoteCommentByNoteId(rs.getInt("note_id")));
+				userDaoImpl.getUserById(rs.getInt("target_id")).getUserName(),rs.getInt("note_man_id"),userDaoImpl.getUserById(rs.getInt("note_man_id")).getUserName(),
+				Format.format(rs.getTimestamp("time")),new NoteCommentDaoImpl().getNoteCommentByNoteId(rs.getInt("note_id")));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "获得留言集合异常！", e);
+			throw new Exception("添加说说异常!");
 		}finally{
 			close(rs, pStatement, conn);
 		}
@@ -74,18 +74,19 @@ public class NoteDaoImpl implements NoteDao {
 
 	@Override
 	public NoteModel geNoteById(int noteId) {
-		NoteModel noteModel;
+		NoteModel noteModel = null;
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql =  "SELECT * FROM note WHERE note_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
+			rs=pStatement.executeQuery();
 			if(rs.next()){
-				UserDao userDao = new UserDao();
+				UserDaoImpl userDaoImpl = new UserDaoImpl();
 				noteModel=new NoteModel
 			(rs.getInt("note_id"),rs.getString("note"),rs.getInt("target_id"),
-			 userDao.getNameById(rs.getInt("target_id")),rs.getInt("note_man_id"),userDao.getNameById(rs.getInt("note_man_id")),Format.format(rs.getTimestamp("time")),
-				  new NoteCommentDaoImpl().getNoteCommentByNoteId(rs.getInt("note_id")));
+					userDaoImpl.getUserById(rs.getInt("target_id")).getUserName(),rs.getInt("note_man_id"),userDaoImpl.getUserById(rs.getInt("note_man_id")).getUserName(),
+					Format.format(rs.getTimestamp("time")),new NoteCommentDaoImpl().getNoteCommentByNoteId(rs.getInt("note_id")));
 				}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "根据留言id获取留言异常！", e);
@@ -103,9 +104,10 @@ public class NoteDaoImpl implements NoteDao {
 			String sql = "DELETE FROM note WHERE note_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
-			new NoteCommentDaoImpl().deleteComments(noteId);
 			pStatement.executeUpdate();
-		} catch (SQLException e) {
+			//删除其下全部回复
+			new NoteCommentDaoImpl().deleteComments(noteId);
+			} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "删除留言异常！", e);
 			result=false;
 		}finally{

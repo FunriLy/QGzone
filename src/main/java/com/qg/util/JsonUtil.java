@@ -1,6 +1,8 @@
 package com.qg.util;
 
 import java.util.List;
+
+import com.google.gson.Gson;
 /***
  * 
  * @author dragon
@@ -12,29 +14,45 @@ import java.util.List;
  * </pre>
  */
 
-public class JsonUtil<T,K> {
+public class JsonUtil<T> {
 
-	private List<T> jsonList;
-	private int state;
-	private K jsonObject;
-	
-	public JsonUtil(List<T> jsonList, int state, K jsonObject) {
-		this.jsonList = jsonList;
+	private static Gson gson = null;
+	static {
+		if (gson == null) {
+			gson = new Gson();
+		}
+	}
+
+	public static <T, K> String tojson(int state, List<T> jsonList) {
+		return gson.toJson(new ObjectModel<T, K>(state, jsonList));
+	}
+
+	public static <T, K> String tojson(int state, K jsonList) {
+		return gson.toJson(new ObjectModel<T, K>(state, jsonList));
+	}
+
+	public static <T, K> String tojson(int state) {
+		return gson.toJson(new ObjectModel<T, K>(state));
+	}
+
+}
+
+class ObjectModel<T, K> {
+	List<T> list;
+	int state;
+	K jsonObject;
+
+	public ObjectModel(int state, List<T> jsonList) {
+		this.list = jsonList;
+		this.state = state;
+	}
+
+	public ObjectModel(int state) {
+		this.state = state;
+	}
+
+	public ObjectModel(int state, K jsonObject) {
 		this.state = state;
 		this.jsonObject = jsonObject;
 	}
-	public JsonUtil( int state,List<T> jsonList) {
-		this.jsonList = jsonList;
-		this.state = state;
-	}
-	public JsonUtil(int state, K jsonObject) {
-		this.state = state;
-		this.jsonObject = jsonObject;
-	}
-	public JsonUtil(int state) {
-		super();
-		this.state = state;
-	}
-	
-	
 }

@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.qg.dao.TwitterCommentDao;
-import com.qg.dao.UserDao;
 import com.qg.model.TwitterCommentModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -42,11 +41,11 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			rs = pStatement.executeQuery();
-			UserDao userDao = new UserDao();
+			UserDaoImpl userDaoImpl = new UserDaoImpl();
 			while(rs.next()){
 				twitterComments.add(new TwitterCommentModel(rs.getInt("comment_id"),rs.getString("comment"),
-						twitterId,rs.getInt("commenter_id"),userDao.getNameById(rs.getInt("commenter_id")),
-						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time"))));
+						twitterId,rs.getInt("commenter_id"),userDaoImpl.getUserById(rs.getInt("commenter_id")).getUserName(),
+						rs.getInt("target_id"),userDaoImpl.getUserById(rs.getInt("target_id")).getUserName(),Format.format(rs.getTimestamp("time"))));
 				}
     	} catch (SQLException e) {
     		LOGGER.log(Level.ERROR, "获取说说评论异常！", e);
@@ -77,17 +76,18 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     	return result;
 	}
     public TwitterCommentModel geTwitterCommentById(int commentId) {
-    	TwitterCommentModel twitterComment;
+    	TwitterCommentModel twitterComment = null;
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql =  "SELECT * FROM twitter_comment WHERE comment_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
+			rs=pStatement.executeQuery();
 			if(rs.next()){
-				UserDao userDao = new UserDao();
+				UserDaoImpl userDaoImpl = new UserDaoImpl();
 				twitterComment=new TwitterCommentModel(commentId,rs.getString("comment"),
-						rs.getInt("twitter_id"),rs.getInt("commenter_id"),userDao.getNameById(rs.getInt("commenter_id")),
-						rs.getInt("target_id"),userDao.getNameById(rs.getInt("target_id")),Format.format(rs.getTimestamp("time")));
+						rs.getInt("twitter_id"),rs.getInt("commenter_id"),userDaoImpl.getUserById(rs.getInt("commenter_id")).getUserName(),
+						rs.getInt("target_id"),userDaoImpl.getUserById(rs.getInt("target_id")).getUserName(),Format.format(rs.getTimestamp("time")));
 				}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "获取某条说说评论异常！", e);

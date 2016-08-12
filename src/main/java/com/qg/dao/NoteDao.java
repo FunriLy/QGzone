@@ -26,8 +26,9 @@ public interface NoteDao {
 	 * @param pageNumber 当前页码
 	 * @param userId 当前用户id
 	 * @return 该用户留言板的留言集合
+	 * @throws Exception 
 	 */
-	List< NoteModel >getNote (int pageNumber,int userId);
+	List< NoteModel >getNote (int pageNumber,int userId) throws Exception;
 	/**
 	 * 这是一个通过具体留言id获取留言对象的方法
 	 * @param noteId 留言id

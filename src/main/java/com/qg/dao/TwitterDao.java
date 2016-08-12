@@ -20,9 +20,9 @@ public interface TwitterDao {
      * @param twitter 说说的对象
      * @return true false
      */
-    public int addTwitter(TwitterModel twitter);
+    public int addTwitter(TwitterModel twitter) throws Exception;
     /***
-     * 这是一个取出说说集合的方法
+     * 这是一个取出说说 集合的方法
      * @param pageNumber 当前页码
      * @return 说说对象的集合
      */

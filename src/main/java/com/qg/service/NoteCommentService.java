@@ -20,8 +20,13 @@ public class NoteCommentService {
 		return noteCommentDaoImpl.getNoteCommentById(commentId);
 	}
 	
-	public boolean deleteComment(int commentId) {
-		return noteCommentDaoImpl.deleteComment(commentId);
+	public boolean deleteComment(int commentId,int userId) {
+		//判断权限后删除(评论者和留言板本人才可以删除)
+		if (this.getNoteCommentById(commentId).getCommenterId()==userId||
+				userId==new NoteService().getNoteById(this.getNoteCommentById(commentId).getNoteId()).getTargetId())
+			return noteCommentDaoImpl.deleteComment(commentId);
+		else
+			return false;
 	}
 	
 	public boolean deleteComments(int noteId) {

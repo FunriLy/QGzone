@@ -1,14 +1,14 @@
 package com.qg.model;
 
 public class NoteCommentModel {
-	private int commentId;
-	private String comment;
-	private int noteId;
-	private int commenterId;
-	private String commenterName;
-	private int targetId;
-	private String targetName;
-	private String time;
+	private int commentId;	//留言评论id
+	private String comment; //留言评论内容
+	private int noteId;//留言id
+	private int commenterId;//留言评论者id
+	private String commenterName;//留言评论者昵称
+	private int targetId;//被评论者id
+	private String targetName;//被评论者昵称
+	private String time;//留言评论时间
 	
 	
 	public NoteCommentModel() {
@@ -25,6 +25,16 @@ public class NoteCommentModel {
 		this.targetId = targetId;
 		this.targetName = targetName;
 		this.time = time;
+	}
+	
+	
+	
+	public NoteCommentModel(String comment, int noteId, int commenterId, int targetId) {
+		super();
+		this.comment = comment;
+		this.noteId = noteId;
+		this.commenterId = commenterId;
+		this.targetId = targetId;
 	}
 
 	public int getCommentId() {

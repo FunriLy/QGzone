@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.qg.dao.SupportDao;
-import com.qg.dao.TwitterCommentDao;
 import com.qg.dao.TwitterDao;
 import com.qg.model.TwitterModel;
 import com.qg.util.Level;
@@ -36,7 +34,7 @@ public class TwitterDaoImpl implements TwitterDao{
        }
 }
 
-    public int addTwitter(TwitterModel twitter) {
+    public int addTwitter(TwitterModel twitter) throws Exception {
 		int tiwtterId = 0;
 		Date newTime = new Date();
     	try {
@@ -54,14 +52,16 @@ public class TwitterDaoImpl implements TwitterDao{
 			
 			conn = SimpleConnectionPool.getConnection();
 			String SQL = "SELECT twitter_id FROM twitter WHERE time=?";
-			pStatement = conn.prepareStatement(SQL);
+			 pStatement = conn.prepareStatement(SQL);
 			pStatement.setTimestamp(1,new Timestamp(newTime.getTime()));
 			rs=pStatement.executeQuery();
+			if(rs.next())
 			tiwtterId=rs.getInt("twitter_id");
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加说说异常！", e);
+			throw new Exception("添加说说异常!");
 		} finally {
-				close(null, pStatement, conn);
+				close(rs, pStatement, conn);
 			}
     	return tiwtterId;
     }
@@ -69,7 +69,7 @@ public class TwitterDaoImpl implements TwitterDao{
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		 try {
 			 int number=(pageNumber-1)*16;
-			 String sql = 	"SELECT DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time FROM twitter"
+			 String sql = 	"SELECT DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time FROM twitter "
 					 		+"INNER JOIN friends ON" 
 					 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
 					 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
@@ -81,12 +81,12 @@ public class TwitterDaoImpl implements TwitterDao{
 			 pStatement.setInt(3, userId);
 			 pStatement.setInt(4, number);
 			 rs=pStatement.executeQuery();
-			 UserDao userDao = new UserDao();
+			 UserDaoImpl userDaoImpl = new UserDaoImpl();
 				SupportDaoImpl supportDao = new SupportDaoImpl();
 			 while(rs.next()){
 				TwitterModel twitterModel = new TwitterModel
 				  (rs.getInt("twitter_id"),rs.getString("twitter_word"),rs.getInt("twitter_picture"),rs.getInt("talker_id"),
-				  userDao.getNameById(rs.getInt("talker_id")),Format.format(rs.getTimestamp("time")),
+						  userDaoImpl.getUserById(rs.getInt("talker_id")).getUserName(),Format.format(rs.getTimestamp("time")),
 				  supportDao.getSupporterByTwitterId(rs.getInt("twitter_id")),new TwitterCommentDaoImpl().getTwitterCommentByTwitterId(rs.getInt("twitter_id")));
 				twitters.add(twitterModel);
 			}
@@ -98,17 +98,18 @@ public class TwitterDaoImpl implements TwitterDao{
 		return twitters;
 	}
     public TwitterModel geTwitterById(int twitterId) {
-    	TwitterModel twitter;
+    	TwitterModel twitter = null;
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql =  "SELECT * FROM twitter WHERE twitter_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
+			 rs=pStatement.executeQuery();
 			if(rs.next()){
-				UserDao userDao = new UserDao();
+				UserDaoImpl userDaoImpl = new UserDaoImpl();
 				SupportDaoImpl supportDao = new SupportDaoImpl();
 				twitter=new TwitterModel (twitterId,rs.getString("twitter_word"),rs.getInt("twitter_picture"),rs.getInt("talker_id"),
-						  userDao.getNameById(rs.getInt("talker_id")),Format.format(rs.getTimestamp("time")),
+						userDaoImpl.getUserById(rs.getInt("talker_id")).getUserName(),Format.format(rs.getTimestamp("time")),
 						  supportDao.getSupporterByTwitterId(rs.getInt("twitter_id")),new TwitterCommentDaoImpl().getTwitterCommentByTwitterId(rs.getInt("twitter_id")));
 				}
 		} catch (SQLException e) {
@@ -139,7 +140,7 @@ public class TwitterDaoImpl implements TwitterDao{
     	boolean result = true;
     	try {
     		conn = SimpleConnectionPool.getConnection();
-			String sql = "UPDATE twitter SET  WHERE support=support+1 WHERE twitter_id=?";
+			String sql = "UPDATE twitter SET support=support+1 WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			pStatement.executeUpdate();
@@ -155,7 +156,7 @@ public class TwitterDaoImpl implements TwitterDao{
     	boolean result=true;
     	try {
     		conn = SimpleConnectionPool.getConnection();
-			String sql = "UPDATE twitter SET  WHERE support=support-1 WHERE twitter_id=?";
+			String sql = "UPDATE twitter SET support=support-1 WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			pStatement.executeUpdate();
@@ -173,10 +174,11 @@ public class TwitterDaoImpl implements TwitterDao{
 		int twitterPicture=0;
 				try {
 					conn = SimpleConnectionPool.getConnection();
-					String sql = "SELECT twitter_picture FROM twitter WHERE twitterId=?";
+					String sql = "SELECT twitter_picture FROM twitter WHERE twitter_id=?";
 					pStatement = conn.prepareStatement(sql);
 					pStatement.setInt(1, twitterId);
 					rs=pStatement.executeQuery();
+					if(rs.next())
 					twitterPicture=rs.getInt("twitter_picture");
 				} catch (SQLException e) {
 					LOGGER.log(Level.ERROR, "获取图片张数异常！", e);
