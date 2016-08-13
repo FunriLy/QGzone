@@ -3,8 +3,11 @@ package com.qg.service;
 import java.util.List;
 import java.util.Random;
 
+import com.qg.dao.MessageDao;
 import com.qg.dao.UserDao;
+import com.qg.dao.impl.MessageDaoImpl;
 import com.qg.dao.impl.UserDaoImpl;
+import com.qg.model.MessageModel;
 import com.qg.model.UserModel;
 import com.qg.util.EncryptionUtil;
 /**
@@ -15,8 +18,8 @@ import com.qg.util.EncryptionUtil;
 public class UserService {
 
 	private UserDao userDao = new UserDaoImpl();
-	private MessageService messageService = new MessageService();
-
+	private MessageDao messageDao = new MessageDaoImpl();
+	
 	/**
 	 * 创建随机账号
 	 * @return 生成一个七位的随机账号
@@ -64,7 +67,9 @@ public class UserService {
 	public boolean addUser(UserModel user) {
 		user.setUserId(createUserId());
 		user.setPassword(encryptPassword(user.getPassword()));
-		return (userDao.addUser(user)&&messageService.addMessage(user.getUserId()));
+		MessageModel message = new MessageModel();
+		message.setUserId(user.getUserId());
+		return (userDao.addUser(user)&&messageDao.addMessage(message));
 	}
 	
 	

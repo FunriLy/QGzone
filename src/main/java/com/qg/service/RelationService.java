@@ -2,11 +2,9 @@ package com.qg.service;
 
 import java.util.List;
 
-import com.qg.dao.RelationDao;
-import com.qg.dao.UserDao;
-import com.qg.dao.impl.RelationDaoImpl;
-import com.qg.dao.impl.UserDaoImpl;
-import com.qg.model.RelationModel;
+import com.qg.dao.*;
+import com.qg.dao.impl.*;
+import com.qg.model.*;
 
 /**
  * 与我相关业务逻辑包装类
@@ -40,6 +38,8 @@ public class RelationService {
 	public boolean deleteRelation(int relationId){
 		return relationDao.deleteRelation(relationId);
 	}
+	
+	
 	/**
 	 * 根据账号获取与我相关对象列表
 	 * @param userId 账号
@@ -48,4 +48,36 @@ public class RelationService {
 	public List<RelationModel>  getRelationsById(int userId){
 		return relationDao.getRelationsById(userId);
 	}
+	
+	//留言、评论、回复、点赞、添加好友回应
+	/**
+	 * 留言类型：noteComment( 或 nc )
+	 * 评论回复类型：twitteComment( 或 tc )
+	 * 点赞类型：supportTwitter( 或st )
+	 * 好友添加：friendApply( 或 fa )
+	 */
+	public Object getRelationDetails(String relationType,int relatedId){
+		
+		TwitterDao tDao = new TwitterDaoImpl();
+		TwitterCommentDao tcDao = new TwitterCommentDaoImpl();
+		NoteCommentDao ncDao = new NoteCommentDaoImpl();
+		SupportDao stDao = new SupportDaoImpl();
+		FriendDao faDao = new FriendDaoImpl();
+		Object object = null;
+		switch (relationType) {
+		case "nc":
+			object = ncDao.getNoteCommentById(relatedId);
+			break;
+		case "tc":
+			object = tDao.geTwitterById(relatedId);
+			break;
+		case "st":
+			object = tDao.geTwitterById(relatedId);
+			break;
+		default:
+			break;
+		}
+		return object;
+	}
+	
 }

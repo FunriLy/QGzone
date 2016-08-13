@@ -22,16 +22,6 @@ public class MessageDaoImpl implements MessageDao{
 
 	private static final Logger LOGGER = Logger.getLogger(MessageDaoImpl.class);
 	
-	public static void main(String[] args) {
-		MessageDaoImpl messageDao = new MessageDaoImpl();
-//		MessageModel message = new MessageModel(123456, "haha");
-//		message.setUserAddress("广东工业");
-//		System.out.println(messageDao.changeMessage(message));
-//		System.out.println(messageDao.getMessageById(123456));
-	//	System.out.println(messageDao.getMessagesByName("v"));
-	//	System.out.println(messageDao.getMessageById(1234567));
-		System.out.println(messageDao.changeImage(1263677, "2333.jpg"));
-	}
 	
 	private Connection conn;//声明Connection对象
 	private PreparedStatement sql;//声明预处理语句
