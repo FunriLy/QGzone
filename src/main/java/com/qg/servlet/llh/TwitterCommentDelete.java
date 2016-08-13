@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.llh;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,32 +10,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.UserModel;
-import com.qg.service.NoteService;
+import com.qg.service.TwitterCommentService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Logger;
 
-@WebServlet("/NoteDelete")
+@WebServlet("/TwitterCommentDelete")
 /***
  * 
  * @author dragon
  * <pre>
- * 删除某条留言
+ * 删除说说评论
+ * 201-删除成功 202删除失败
  * </pre>
  */
-public class NoteDelete extends HttpServlet {
+public class TwitterCommentDelete extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(NoteDelete.class);
+	private static final Logger LOGGER = Logger.getLogger(TwitterCommentDelete.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-		int state = 501;
-		// 获取留言id
-		int noteId = Integer.getInteger(request.getParameter("noteId"));
+		int state = 201;
+		// 获取说说评论id
+		int commentId = Integer.getInteger(request.getParameter("commentId"));
 		//获取当前用户Id
 		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-
 		// 删除服务器上的说说评论信息
-		if (!new NoteService().deleteNote(noteId,userId)) {
-			state = 502;
+		if (!new TwitterCommentService().deleteComment(commentId,userId)) {
+			state = 202;
 		}
 
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());

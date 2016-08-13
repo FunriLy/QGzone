@@ -65,7 +65,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			}
     	return tiwtterId;
     }
-	public List<TwitterModel>getTwitter(int pageNumber,int userId){
+	public List<TwitterModel>getTwitter(int pageNumber,int userId) throws Exception{
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		 try {
 			 int number=(pageNumber-1)*16;
@@ -92,6 +92,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "获取说说异常！", e);
+			throw new Exception("获取说说异常!");
 		}finally{
 			close(rs, pStatement, conn);
 		}
@@ -127,6 +128,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			new TwitterCommentDaoImpl().deleteComments(twitterId);
+			new SupportDaoImpl().deleteSupports(twitterId);
 			pStatement.executeUpdate();
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "删除某条说说异常！", e);
@@ -187,4 +189,33 @@ public class TwitterDaoImpl implements TwitterDao{
 					}
 		    	return twitterPicture;
 		    }
+
+	@Override
+	public List<TwitterModel> getMyTwitter(int pageNumber, int userId) throws Exception {
+		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
+		 try {
+			 int number=(pageNumber-1)*16;
+			 String sql = 	"SELECT * FROM twitter WHERE talker_id=? ORDER BY twitter_id DESC LIMIT ?,16";
+			 conn = SimpleConnectionPool.getConnection();				
+			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
+			 pStatement.setInt(1, userId);
+			 pStatement.setInt(2, number);
+			 rs=pStatement.executeQuery();
+			 UserDaoImpl userDaoImpl = new UserDaoImpl();
+				SupportDaoImpl supportDao = new SupportDaoImpl();
+			 while(rs.next()){
+				TwitterModel twitterModel = new TwitterModel
+				  (rs.getInt("twitter_id"),rs.getString("twitter_word"),rs.getInt("twitter_picture"),rs.getInt("talker_id"),
+						  userDaoImpl.getUserById(rs.getInt("talker_id")).getUserName(),Format.format(rs.getTimestamp("time")),
+				  supportDao.getSupporterByTwitterId(rs.getInt("twitter_id")),new TwitterCommentDaoImpl().getTwitterCommentByTwitterId(rs.getInt("twitter_id")));
+				twitters.add(twitterModel);
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "获取我的说说异常！", e);
+			throw new Exception();
+		}finally{
+			close(rs, pStatement, conn);
+		}
+		return twitters;
+	}
 }

@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.llh;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,6 +22,7 @@ import com.qg.util.Logger;
  * 
  * <pre>
  *  添加留言评论
+ *  501留言成功 502留言失败 503留言过长
  *  </pre>
  */
 public class NoteCommentAdd extends HttpServlet {
@@ -36,11 +37,15 @@ public class NoteCommentAdd extends HttpServlet {
 		String comment = request.getParameter("comment");
 		// 获取当前登陆用户
 		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		// 获取留言评论的实体类
-		NoteCommentModel noterCommentModel = new NoteCommentModel(comment, noteId, commenterId, targetId);
-		// 存进数据库
-		if (!new NoteCommentService().addNoteComment(noterCommentModel))
-			state = 502;
+		if (!(comment.length() > 50)) {
+
+			// 获取留言评论的实体类
+			NoteCommentModel noterCommentModel = new NoteCommentModel(comment, noteId, commenterId, targetId);
+			// 存进数据库
+			if (!new NoteCommentService().addNoteComment(noterCommentModel))
+				state = 502;
+		} else
+			state = 503;
 		// 打包发送
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));

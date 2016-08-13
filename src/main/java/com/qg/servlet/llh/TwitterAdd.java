@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.llh;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,12 +34,14 @@ import com.qg.util.Level;
  * @author dragon
  *  <pre>
  *  添加说说的类
+ *  201-成功 202-添加失败 203-上传图片格式不正确  204-至多上传九张图  205-说说长度过长
  *  </pre>
  */
 @WebServlet("/TwitterAdd")
 public class TwitterAdd extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(TwitterAdd.class);
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		// 状态标志量
@@ -50,6 +52,8 @@ public class TwitterAdd extends HttpServlet {
 		int twitterPictureId = 0;
 		// 添加说说时候返回的说说id
 		int twitterId = 0;
+		// 说说内容
+		String value = null;
 
 		// 获取当前登陆用户id
 		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
@@ -59,7 +63,7 @@ public class TwitterAdd extends HttpServlet {
 			// 设置文件阀值大小
 			factory.setSizeThreshold(10 * 1024);
 			// 设置缓存文件区
-			String tempPath = getServletContext().getRealPath("/WEB-INF/twitter/tmp/");
+			String tempPath = getServletContext().getRealPath("/twitterPhotos/tmp/");
 			factory.setRepository(new File(tempPath));
 			// 获得解析器
 			ServletFileUpload upload = new ServletFileUpload(factory);
@@ -71,46 +75,55 @@ public class TwitterAdd extends HttpServlet {
 			for (FileItem fileItem : list) {
 				if (!fileItem.isFormField()) {
 					twitterPicture++;
+				} else {
+					// 获取说说内容
+					value = fileItem.getString("utf-8");
 				}
 			}
-			// 遍历集合
-			for (FileItem fileItem : list) {
-				if (fileItem.isFormField()) {
-					String name = fileItem.getFieldName();
-					String value = fileItem.getString("utf-8");
-					LOGGER.log(Level.INFO, "说说文字", name, value);
-					// 获取说说实体
-					TwitterModel twitter = new TwitterModel(value, twitterPicture, talkId);
-					// 存进数据库并且获得说说id
-					twitterId = new TwitterService().addTwitter(twitter);
-				} else {
-					// 定义限制上传的文件类型的字符串数组
-					String[] suffixs = new String[] { ".jpg", ".png", "bmp", "jpeg", "jpeg2000", "tiff", "psd", "swf" };
-					// 创建文件后缀过滤器
-					SuffixFileFilter filter = new SuffixFileFilter(suffixs);
-					// 文件是否符合格式
-					if (filter.accept((File) fileItem)) {
-						twitterPictureId++;
-						InputStream in = new BufferedInputStream(fileItem.getInputStream());
-						// 获取路径
-						String path = getServletContext().getRealPath("/WEB-INF/twitter/");
-						System.out.println(path);
-						OutputStream out = new BufferedOutputStream(
-								new FileOutputStream(path + twitterId + "_" + twitterPictureId + ".jpg"));
-						// 将文件写在服务器
-						int len = -1;
-						byte[] b = new byte[1024];
-						while ((len = in.read(b)) != -1) {
-							out.write(b, 0, len);
+			if (value != null && value.length() >= 150)
+				state = 205;
+			else {
+				LOGGER.log(Level.INFO, "说说文字", value);
+				// 获取说说实体
+				TwitterModel twitter = new TwitterModel(value, twitterPicture, talkId);
+				// 存进数据库并且获得说说id
+				twitterId = new TwitterService().addTwitter(twitter);
+
+				if (twitterPicture <= 9) {
+					// 遍历集合
+					for (FileItem fileItem : list) {
+						if (!fileItem.isFormField()) {
+							// 定义限制上传的文件类型的字符串数组
+							String[] suffixs = new String[] { ".jpg", ".png", "bmp", "jpeg", "jpeg2000", "tiff", "psd",
+									"swf" };
+							// 创建文件后缀过滤器
+							SuffixFileFilter filter = new SuffixFileFilter(suffixs);
+							// 文件是否符合格式
+							if (filter.accept((File) fileItem)) {
+								twitterPictureId++;
+								InputStream in = new BufferedInputStream(fileItem.getInputStream());
+								// 获取路径
+								String path = getServletContext().getRealPath("/twitterPhotos/");
+								System.out.println(path);
+								OutputStream out = new BufferedOutputStream(
+										new FileOutputStream(path + twitterId + "_" + twitterPictureId + ".jpg"));
+								// 将文件写在服务器
+								int len = -1;
+								byte[] b = new byte[1024];
+								while ((len = in.read(b)) != -1) {
+									out.write(b, 0, len);
+								}
+								out.close();
+								in.close();
+								state = 201;
+							} else {
+								state = 203;
+								// 上传文件不符合格式
+							}
 						}
-						out.close();
-						in.close();
-						state = 201;
-					} else {
-						state = 203;
-						// 上传文件不符合格式
 					}
-				}
+				} else
+					state = 204; // 只能上传九张图
 			}
 		} catch (Exception e) {
 			state = 202;

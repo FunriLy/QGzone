@@ -40,6 +40,11 @@ public interface SupportDao {
      * @param twitterId 说说id
      * @return 点赞者的名字集合
      */	
-	List<String>getSupporterByTwitterId(int twitterId);
-	     
+	List<Integer>getSupporterByTwitterId(int twitterId);
+	/***
+	 * 取消所有赞的方法
+	 * @param twitterId 说说id
+	 * @return true false
+	 */
+	public boolean deleteSupports(int twitterId);
 }

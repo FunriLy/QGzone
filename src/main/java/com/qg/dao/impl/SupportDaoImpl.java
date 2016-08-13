@@ -83,8 +83,8 @@ public class SupportDaoImpl implements SupportDao{
 		}
     	return result;
     }
-    public List<String>getSupporterByTwitterId(int twitterId){
-    	List<String> supporters = new ArrayList<String>();
+    public List<Integer>getSupporterByTwitterId(int twitterId){
+    	List<Integer> supporters = new ArrayList<Integer>();
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "SELECT supporter_id FROM support WHERE twitter_id=? ORDER BY supporter_id DESC";
@@ -92,8 +92,7 @@ public class SupportDaoImpl implements SupportDao{
 			pStatement.setInt(1, twitterId);
 			rs = pStatement.executeQuery();
 			while(rs.next()){
-				UserDaoImpl userDaoImpl = new UserDaoImpl();
-				supporters.add(userDaoImpl.getUserById(rs.getInt("supporter_id")).getUserName());
+				supporters.add(rs.getInt("supporter_id"));
 				}
     	} catch (SQLException e) {
     		LOGGER.log(Level.ERROR, "获取点赞用户异常！", e);
@@ -102,4 +101,20 @@ public class SupportDaoImpl implements SupportDao{
 		}
     	return supporters;
     }
+    public boolean deleteSupports(int twitterId){
+    	boolean result = true;
+    	try {
+			conn = SimpleConnectionPool.getConnection();
+			String sql = "DELETE FROM support WHERE twitter_id=?";
+			pStatement = conn.prepareStatement(sql);
+			pStatement.setInt(1, twitterId);
+			pStatement.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "取消所有赞异常！", e);
+			result = false;
+		} finally {
+			close(null, pStatement, conn);
+		}
+    	return result;
+	}
 }

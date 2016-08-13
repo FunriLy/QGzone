@@ -25,8 +25,9 @@ public interface TwitterDao {
      * 这是一个取出说说 集合的方法
      * @param pageNumber 当前页码
      * @return 说说对象的集合
+     * @throws Exception 
      */
-	public List<TwitterModel>getTwitter(int pageNumber,int userId);
+	public List<TwitterModel>getTwitter(int pageNumber,int userId) throws Exception;
 	/***
 	 * 这是一个根据说说id获取说说对象的方法
 	 * @param twitterId 说说id
@@ -57,4 +58,12 @@ public interface TwitterDao {
      * @return 返回图片数量
      */
     public int twitterPicture(int twitterId);
+    /**
+     * 获取用户自己的说说列表
+     * @param pageNumber 当前页码
+     * @param userId 用户id
+     * @return 说说集合
+     * @throws Exception 
+     */
+    public List<TwitterModel>getMyTwitter(int pageNumber,int userId) throws Exception; 
 }

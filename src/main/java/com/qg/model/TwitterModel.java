@@ -8,18 +8,19 @@ public class TwitterModel {
 	private int twitterPicture;//说说图片的张数
 	private int talkId;//说说的发表者id
 	private String talkerName;//说说的发表者昵称
-	private String time;//说说发表时间
-	private List<String> supporterName;//该条说说的点赞者的昵称集合
+	private String twitterTime;//说说发表时间
+	private List<Integer> supporterId;//该条说说的点赞者的昵称集合
 	private List<TwitterCommentModel> comment;//该条说说的评论集合
+	
 	public TwitterModel(int twitterId, String twitterWord, int twitterPicture, int talkId, String talkerName,
-			String time, List<String> supporterName, List<TwitterCommentModel> comment) {
+			String time, List<Integer> supporterId, List<TwitterCommentModel> comment) {
 		this.twitterId = twitterId;
 		this.twitterWord = twitterWord;
 		this.twitterPicture = twitterPicture;
 		this.talkId = talkId;
 		this.talkerName = talkerName;
-		this.time = time;
-		this.supporterName = supporterName;
+		this.twitterTime = time;
+		this.supporterId = supporterId;
 		this.comment = comment;
 	}
 	public TwitterModel() {
@@ -62,16 +63,16 @@ public class TwitterModel {
 		this.talkerName = talkerName;
 	}
 	public String getTime() {
-		return time;
+		return twitterTime;
 	}
 	public void setTime(String time) {
-		this.time = time;
+		this.twitterTime = time;
 	}
-	public List<String> getSupporterName() {
-		return supporterName;
+	public List<Integer> getSupporterId() {
+		return supporterId;
 	}
-	public void setSupporterName(List<String> supporterName) {
-		this.supporterName = supporterName;
+	public void setSupporterId(List<Integer> supporterName) {
+		this.supporterId = supporterName;
 	}
 	public List<TwitterCommentModel> getComment() {
 		return comment;

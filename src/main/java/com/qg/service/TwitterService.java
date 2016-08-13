@@ -3,45 +3,97 @@ package com.qg.service;
 import java.io.File;
 import java.util.List;
 
+import com.qg.dao.SupportDao;
+import com.qg.dao.TwitterDao;
 import com.qg.dao.impl.SupportDaoImpl;
 import com.qg.dao.impl.TwitterDaoImpl;
 import com.qg.model.TwitterModel;
 
 public class TwitterService {
-	TwitterDaoImpl twitterDaoImpl = new TwitterDaoImpl();
-	SupportDaoImpl supportDaoImpl = new SupportDaoImpl();
-
+	TwitterDao twitterDao = new TwitterDaoImpl();
+	SupportDao supportDao = new SupportDaoImpl();
+	FriendService friendService = new FriendService();
+	/***
+	 * 添加说说
+	 * @param twitter 说说实体
+	 * @return true false
+	 * @throws Exception
+	 */
 	public int addTwitter(TwitterModel twitter) throws Exception {
-		return twitterDaoImpl.addTwitter(twitter);
+		return twitterDao.addTwitter(twitter);
 	}
-
-	public List<TwitterModel> getTwitter(int pageNumber, int userId) {
-		return twitterDaoImpl.getTwitter(pageNumber, userId);
+	/**
+	 * 获取说说列表
+	 * @param pageNumber 当前页码
+	 * @param userId 当前用户
+	 * @return 说说集合
+	 * @throws Exception 
+	 */
+	public List<TwitterModel> getTwitter(int pageNumber, int userId) throws Exception {
+		return twitterDao.getTwitter(pageNumber, userId);
 	}
-
+	/**
+	 * 获取说说
+	 * @param twitterId 说说id 
+	 * @return 说说实体
+	 */
 	public TwitterModel geTwitterById(int twitterId) {
-		return twitterDaoImpl.geTwitterById(twitterId);
+		return twitterDao.geTwitterById(twitterId);
 	}
-
+	/**
+	 * 获取某个id的说说
+	 * @param talkId 用户id 
+	 * @param pageNumber 当前页码
+	 * @return 说说集合
+	 * @throws Exception 
+	 */
+	public List<TwitterModel> getTwitterByTalkId(int pageNumber, int talkId) throws Exception {
+		return twitterDao.getMyTwitter(pageNumber, talkId);
+	}
+	/***
+	 * 删除某条说说
+	 * @param twitterId 说说id
+	 * @param userId 当前用户id（判断权限）
+	 * @return true false
+	 */
 	public boolean deleteTwitter(int twitterId,int userId) {
 		//判断权限后删除
-		return (userId==this.geTwitterById(twitterId).getTalkId())?twitterDaoImpl.deleteTwitter(twitterId):false;
+		return (userId==this.geTwitterById(twitterId).getTalkId())?twitterDao.deleteTwitter(twitterId):false;
 	}
-
+	/**
+	 * 点赞
+	 * @param twitterId 说说id
+	 * @param supporterId  点赞者
+	 * @return true false
+	 */
 	public boolean addSupport(int twitterId, int supporterId) {
-		return supportDaoImpl.addSupport(twitterId, supporterId);
+		return supportDao.addSupport(twitterId, supporterId);
 	}
-
+	/***
+	 * 取消点赞
+	 * @param twitterId 说说id 
+	 * @param supporterId 点赞者id
+	 * @return true false
+	 */
 	public boolean deleteSupport(int twitterId, int supporterId) {
-		return supportDaoImpl.deleteSupport(twitterId, supporterId);
+		return supportDao.deleteSupport(twitterId, supporterId);
 	}
-
+	/***
+	 * 获取说说有几张图
+	 * @param twitterId 说说id
+	 * @return 图片数
+	 */
 	public int twitterPicture(int twitterId) {
-		return twitterDaoImpl.twitterPicture(twitterId);
+		return twitterDao.twitterPicture(twitterId);
 	}
-
+	/***
+	 * 查询是否已经点赞
+	 * @param twitterId 说说id
+	 * @param supporterId 查询者
+	 * @return true false
+	 */
 	public boolean findSupport(int twitterId, int supporterId) {
-		return supportDaoImpl.findSupport(twitterId, supporterId);
+		return supportDao.findSupport(twitterId, supporterId);
 	}
 
 	/**
@@ -70,16 +122,20 @@ public class TwitterService {
 	 * @return true false
 	 */
 	public boolean twitterSupport(int twitterId, int userId) {
-		// 检测是否点赞
-		if (!this.findSupport(twitterId, userId)) {
-			// 实现点赞
-			if (!this.addSupport(twitterId, userId))
-				return false;
-		} else {
-			// 取消点赞
-			if (!this.deleteSupport(twitterId, userId))
-				return false;
+		if(new FriendService().isFriend(userId, this.geTwitterById(twitterId).getTalkId())==1){
+			// 检测是否点赞
+			if (!this.findSupport(twitterId, userId)) {
+				// 实现点赞
+				if (!this.addSupport(twitterId, userId))
+					return false;
+			} else {
+				// 取消点赞
+				if (!this.deleteSupport(twitterId, userId))
+					return false;
+			}
+			return true;
+		}else {
+			return false;
 		}
-		return true;
 	}
 }

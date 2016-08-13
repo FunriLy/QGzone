@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.llh;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import com.qg.util.Logger;
  * @author dragon
  * <pre>
  * 删除留言评论
+ * 501删除成功 502删除失败 
  * </pre>
  */
 public class NoteCommentDelete extends HttpServlet {
@@ -28,7 +29,7 @@ public class NoteCommentDelete extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-		int state = 201;
+		int state = 501;
 		// 获取说说评论id
 		int commentId = Integer.getInteger(request.getParameter("commentId"));
 		//获取当前用户Id
@@ -36,7 +37,7 @@ public class NoteCommentDelete extends HttpServlet {
 
 		// 删除服务器上的说说评论信息
 		if (!new NoteCommentService().deleteComment(commentId,userId)) {
-			state = 202;
+			state = 502;
 		}
 
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());

@@ -8,7 +8,7 @@ public class NoteCommentModel {
 	private String commenterName;//留言评论者昵称
 	private int targetId;//被评论者id
 	private String targetName;//被评论者昵称
-	private String time;//留言评论时间
+	private String noteCommenttime;//留言评论时间
 	
 	
 	public NoteCommentModel() {
@@ -24,7 +24,7 @@ public class NoteCommentModel {
 		this.commenterName = commenterName;
 		this.targetId = targetId;
 		this.targetName = targetName;
-		this.time = time;
+		this.noteCommenttime = time;
 	}
 	
 	
@@ -80,10 +80,10 @@ public class NoteCommentModel {
 		this.targetName = targetName;
 	}
 	public String getTime() {
-		return time;
+		return noteCommenttime;
 	}
 	public void setTime(String time) {
-		this.time = time;
+		this.noteCommenttime = time;
 	}
 	
 }

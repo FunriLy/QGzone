@@ -1,4 +1,4 @@
-package com.qg.servlet;
+package com.qg.servlet.llh;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,6 +16,14 @@ import com.qg.util.Level;
 import com.qg.util.Logger;
 
 @WebServlet("/TwitterDelete")
+/***
+ * 
+ * @author dragon
+ * <pre>
+ * 删除说说
+ * 201-成功 202-失败
+ * </pre>
+ */
 public class TwitterDelete extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(TwitterDelete.class);
