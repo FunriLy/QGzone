@@ -22,7 +22,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户处理好友申请
- * 状态码: 301-成功; 302-失败; 303-已经处理; 304-申请不存在;
+ * 状态码: 301-成功; 302-失败; 303-已经是好友关系; 304-申请不存在;
  * </p>
  */
 
@@ -35,15 +35,12 @@ public class FriendApplyConduct extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId = 1;
-		String reciveObject = request.getParameter("jsonObject");
+		String reciveObject = request.getParameter("friendApplyId");
 		FriendService friendService = new FriendService();
-		Gson gson =new Gson();
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
-		//解析Json
-		FriendApplyModel friendApply = gson.fromJson(reciveObject, FriendApplyModel.class);
-		int result = friendService.conductFriendApply(friendApply);
+		int result = friendService.conductFriendApply(Integer.valueOf(reciveObject));
 		if(result == 1){
 			state = 301;
 		} else if(result == 3){
@@ -54,7 +51,7 @@ public class FriendApplyConduct extends HttpServlet{
 			state = 302;
 		}
 		
-		LOGGER.log(Level.DEBUG, "用户 {0} 请求处理好友申请， 好友申请编号: {1} 状态: {2}", userId, friendApply.getRequesterId(), state);
+		LOGGER.log(Level.DEBUG, "用户 {0} 请求处理好友申请， 好友申请编号: {1} 状态: {2}", userId, reciveObject, state);
 		
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

@@ -20,6 +20,7 @@ public class PhotoDaoImpl implements PhotoDao {
 
 	private static final Logger LOGGER = Logger.getLogger(PhotoDaoImpl.class);
 	private static final int fail = 0;
+	private static final int success = 1;
 	
 	private Connection con = null;
 	private PreparedStatement pStatement = null;
@@ -96,21 +97,23 @@ public class PhotoDaoImpl implements PhotoDao {
 	}
 
 	@Override
-	public void deletePhotoByPhotoId(int photoId) {
+	public int deletePhotoByPhotoId(int photoId) {
 		// TODO Auto-generated method stub
+		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
 			String strSql = "delete from photos where photo_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, photoId);
 			pStatement.executeUpdate();
+			result = success;
 		} catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "删除相片实现类发生异常！", e);
 		} finally {
 			daoClose();
 		}
-
+		return success;
 	}
 
 	@Override

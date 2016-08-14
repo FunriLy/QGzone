@@ -23,6 +23,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户获得好友申请列表
+ * 状态码: 301-成功; 302-为空;
  * </p>
  */
 

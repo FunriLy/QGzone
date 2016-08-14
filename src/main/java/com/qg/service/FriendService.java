@@ -37,6 +37,7 @@ public class FriendService {
 		//获得好友信息
 		for(Integer friendId : friendsId){
 			message = messageDao.getMessageById(friendId);
+			System.out.println(message.toString());
 			myAllFriend.add(message);
 		}
 		return myAllFriend;
@@ -102,18 +103,20 @@ public class FriendService {
 	 * @param friendApply 好友申请实体对象(处理状态、好友申请编号)
 	 * @return 操作成功返回success，失败返回fail, 已经存在好友关系返回3，该条好友申请不存在返回4
 	 */
-	public int conductFriendApply(FriendApplyModel friendApply){
+	public int conductFriendApply(int friendApplyId){
 		int result = fail;
 		FriendDao friendDao = new FriendDaoImpl();
-		if(success == isFriend(friendApply.getFriendApplyId(), friendApply.getResponserId())){
-			friendDao.friendApplyIsExist(friendApply.getFriendApplyId());
+		FriendApplyModel friendApply = friendDao.getFriendApplyById(friendApplyId);
+		if(success == isFriend(friendApply.getRequesterId(), friendApply.getResponserId())){
+			friendDao.conductFriendApply(friendApply.getFriendApplyId());
 			return 3;
-		}
-		if(success != friendDao.friendApplyIsExist(friendApply.getFriendApplyId())){
+		} else if(success != friendDao.friendApplyIsExist(friendApply.getFriendApplyId())){
 			return 4;
+		} else {
+			result = friendDao.conductFriendApply(friendApply.getFriendApplyId());
+			friendDao.addFriend(friendApply.getRequesterId(), friendApply.getResponserId());
 		}
 		
-		result = friendDao.conductFriendApply(friendApply.getFriendApplyId());
 		/*
 		 * 与我相关
 		 */

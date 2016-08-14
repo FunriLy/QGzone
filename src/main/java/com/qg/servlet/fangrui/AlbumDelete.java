@@ -33,19 +33,23 @@ public class AlbumDelete extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
 		//获得Json并解析
 		int albumId = Integer.valueOf(request.getParameter("albumId"));
-		String path = getServletContext().getRealPath("/WEB-INF/album") + "/" + userId + "/" + albumId;
-		
+		String path = getServletContext().getRealPath("/album") + "/" + userId + "/" + albumId;
+		System.out.println(path);
 		AlbumService albumService = new AlbumService();
 		AlbumModel realAlbum = albumService.getAlbumByAlbumId(albumId);
 		if (userId == realAlbum.getUserId()) {
 			state = albumService.deleteAlbum( path, albumId);
-		} else {
+		} else if (realAlbum.getAlbumId() == 0) {
+			state = 602;
+		} 
+		else {
 			state = 603;
 		}
 		

@@ -1,6 +1,7 @@
 package com.qg.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qg.dao.PhotoDao;
@@ -37,9 +38,33 @@ public class PhotoService {
 	 * @return 返回相册内图片id
 	 */
 	public List<Integer> allPhoto(int albumId){
-		List<Integer> allPhoto = null;
+		List<Integer> allPhoto = new ArrayList<Integer>();
 		PhotoDao photoDao = new PhotoDaoImpl();
 		allPhoto = photoDao.getAllPhotoByAlbumId(albumId);
 		return allPhoto;
+	}
+	
+	/**
+	 * 储存相片信息
+	 * @param albumId 相册id
+	 * @return 操作成功返回相片编号，否则返回fail
+	 */
+	public int savePhotoByAlbumId(int albumId){
+		int result = fail;
+		PhotoDao photoDao = new PhotoDaoImpl();
+		result = photoDao.savePhotoByAlbumId(albumId);
+		return result;
+	}
+	
+	/**
+	 * 根据相片id删除数据库中的记录
+	 * @param photoId
+	 * @return
+	 */
+	public int deletePhotoByPhotoId(int photoId){
+		int result = fail;
+		PhotoDao photoDao = new PhotoDaoImpl();
+		result = photoDao.deletePhotoByPhotoId(photoId);
+		return result;
 	}
 }

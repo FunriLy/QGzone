@@ -33,19 +33,21 @@ public class AlbumEmpty extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		
+		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
 		//获得Json并解析
 		int albumId = Integer.valueOf(request.getParameter("albumId"));
-		String path = getServletContext().getRealPath("/WEB-INF/album") + "/" + userId + "/" + albumId;
+		String path = getServletContext().getRealPath("/album") + "/" + userId + "/" + albumId;
 		
 		AlbumService albumService = new AlbumService();
 		AlbumModel realAlbum = albumService.getAlbumByAlbumId(albumId);
 		if (userId == realAlbum.getUserId()) {
 			state = albumService.emptyAlbum(path, albumId);
-		}
+		} 
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 清空相册 {1} 状态: {2}", userId, albumId, state);
 		

@@ -17,6 +17,23 @@ public class AlbumService {
 	private static final int fail = 0;
 	
 	/**
+	 * 判断用户个人的相册名是否重复
+	 * @param userId 用户id
+	 * @param albumName 相册名
+	 * @return 若成功返回601，否则返回602
+	 */
+	public int isDuplicationOfName(int userId, String albumName){
+		int result = 602;
+		
+		AlbumDao albumDao = new AlbumDaoImpl();
+		if (success == albumDao.isDuplicationOfName(userId, albumName)) {
+			result = 603;
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * 创建相册文件夹
 	 * @param album 传入的AlbumModel实体
 	 * @return 创建成功返回相册id，失败返回fail(0)，若格式错误返回-1，若重名返回-2
@@ -26,7 +43,7 @@ public class AlbumService {
 		int result = fail;
 		AlbumDao albumDao = new AlbumDaoImpl();
 		//格式错误
-		if (success == doCreateAlbum(album.getAlbumPassword(), album.getAlbumName())) {
+		if (success != doCreateAlbum(album.getAlbumPassword(), album.getAlbumName(), album.getAlbumState())) {
 			return -1;
 		}
 		//重名
@@ -43,7 +60,7 @@ public class AlbumService {
 			String albumPath = userPath + "/" + String.valueOf(result);
 			File file = new File(albumPath);
 			//若文件不存在，创建该文件夹
-			if(file.exists()){
+			if(!file.exists()){
 				file.mkdirs();
 				state = success;
 			}
@@ -63,13 +80,17 @@ public class AlbumService {
 	 * @param albumName 名字
 	 * @return 若正确返回success， 否则返回fail
 	 */
-	public int doCreateAlbum(String password, String albumName){
+	public int doCreateAlbum(String password, String albumName, int albumState){
 		String regex1 ="[a-z0-9A-Z_]{5,15}";
 		String regex2 ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
 		int result = success;
 		//密码格式错误或者命名格式错误
-		if ((!password.matches(regex1)) || (!albumName.matches(regex2))) {
-			result = fail;
+		if (albumState==success && !password.matches(regex1)) {
+			return fail;
+		}
+		
+		if ((!albumName.matches(regex2))) {
+			return fail;
 		}
 		
 		return result;
@@ -189,10 +210,10 @@ public class AlbumService {
 	 * 通过相册编号获取相册对象
 	 * 该相册信息包括相片数量
 	 * @param albumId 相册编号
-	 * @return 操作成功返回AlbumModel实体对象，否则返回null
+	 * @return 操作成功返回AlbumModel实体对象，否则返回空对象
 	 */
 	public AlbumModel getAlbumByAlbumId(int albumId){
-		AlbumModel album = null;
+		AlbumModel album = new AlbumModel();
 		AlbumDao albumDao = new AlbumDaoImpl();
 		PhotoDao photoDao = new PhotoDaoImpl();
 		//如果相册存在,获得相册信息和相片数量
@@ -200,6 +221,8 @@ public class AlbumService {
 			album = albumDao.getAlbumByAlbumId(albumId);
 			album.setPhotoCount(photoDao.getPhotoCountByAlbumId(albumId));
 		}
+		//防止空指针
+		
 		return album;
 	}
 	
@@ -275,6 +298,8 @@ public class AlbumService {
 		} else {
 			//删除相册并删除记录
 			delFolder(folderPath);
+			PhotoDao photoDao = new PhotoDaoImpl();
+			photoDao.deleteAllPhotoByAlbumId(albumId);
 			albumDao.deleteAlbumByAlbumId(albumId);
 			state = 601;
 		}
@@ -290,11 +315,13 @@ public class AlbumService {
 		int state = 602;
 		
 		File file = new File(folderPath);
-		if (file.exists()) {
+		if (!file.exists()) {
 			state = 604;
 		} else {
 			//清空相册
 			delAllFile(folderPath);
+			PhotoDao photoDao = new PhotoDaoImpl();
+			photoDao.deleteAllPhotoByAlbumId(albumId);
 			state = 601;
 		}
 		return state;

@@ -271,5 +271,32 @@ public class FriendDaoImpl implements FriendDao {
 		return result;
 	}
 
+	@Override
+	public FriendApplyModel getFriendApplyById(int friendApplyId) {
+		FriendApplyModel friendApply = new FriendApplyModel();
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "select * from f_apply where f_apply_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, friendApplyId);
+			ResultSet rSet = pStatement.executeQuery();
+			if (rSet.next()) {
+				int requesterId = rSet.getInt("requester_id");
+				int responserId = rSet.getInt("responser_id");
+				int applyState = rSet.getInt("apply_state");
+				friendApply.setApplyState(applyState);
+				friendApply.setRequesterId(requesterId);
+				friendApply.setResponserId(responserId);
+				friendApply.setFriendApplyId(friendApplyId);
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			LOGGER.log(Level.ERROR, "根据好友申请id {0} 获得好友申请出错", friendApplyId);
+		} finally {
+			daoClose();
+		}
+		return friendApply;
+	}
+
 
 }

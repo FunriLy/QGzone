@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -35,12 +34,13 @@ public class AlbumCreate extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//获得用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 
 		
-		String path = getServletContext().getRealPath("/album") + String.valueOf(userId);
+		String path = getServletContext().getRealPath("/album/") + String.valueOf(userId);
 		File file = new File(path);
 		//确保用户有个人文件夹
 		if (file.exists()) {
@@ -50,7 +50,9 @@ public class AlbumCreate extends HttpServlet {
 		//获得Json并解析
 		Gson gson = new Gson();
 		String strAlbum = request.getParameter("album");
+		System.out.println(strAlbum);
 		AlbumModel album = gson.fromJson(strAlbum, AlbumModel.class);
+		System.out.println(album.toString());
 		album.setUserId(userId);
 		AlbumService albumService = new AlbumService();
 		

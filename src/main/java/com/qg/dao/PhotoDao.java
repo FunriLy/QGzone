@@ -21,10 +21,11 @@ public interface PhotoDao {
 	List<Integer> getAllPhotoByAlbumId(int albumId);
 	
 	/**
-	 * 根据相片编号删除相片在数据库中的记录
+	 * 根据相片编号删除相片
 	 * @param photoId 相片编号
+	 * @return 成功返回success， 否则返回fail
 	 */
-	void deletePhotoByPhotoId(int photoId);
+	int deletePhotoByPhotoId(int photoId);
 	
 	/**
 	 * 根据相册编号删除相册记录

@@ -86,4 +86,11 @@ public interface FriendDao {
 	 * @return 若存在返回success，否则返回fail
 	 */
 	int havefriendApply(int responserId);
+	
+	/**
+	 * 通过好友申请编号获得好友申请内容
+	 * @param friendApplyId
+	 * @return 好友申请对象
+	 */
+	FriendApplyModel getFriendApplyById(int friendApplyId);
 }

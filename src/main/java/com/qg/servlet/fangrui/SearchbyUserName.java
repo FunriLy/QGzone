@@ -43,7 +43,7 @@ public class SearchbyUserName extends HttpServlet {
 		SearchService searchService = new SearchService();
 		//获得搜索结果
 		List<MessageModel> allMessage = searchService.searchMessagesByUserName(searchUserName);
-		if(allMessage.isEmpty()){
+		if(allMessage==null){
 			state = 302;
 		} else {
 			state = 301;

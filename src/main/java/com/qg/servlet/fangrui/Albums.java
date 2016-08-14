@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.internal.FailableCache;
 import com.qg.model.AlbumModel;
 import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
@@ -33,6 +34,7 @@ public class Albums extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(Albums.class);
 	private static final int success = 1;
+	private static final int fail = 0;
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -47,7 +49,7 @@ public class Albums extends HttpServlet {
 		//获取Json
 		int t_userId = Integer.valueOf(request.getParameter("userId"));
 		//若不是用户本人浏览相册
-		if (userId != t_userId) {
+		if (fail != t_userId) {
 			//判断是否为好友关系
 			if (success == friendService.isFriend(userId, t_userId)) {
 				allAlbum = albumService.getAllAlbumByUserId(t_userId);
