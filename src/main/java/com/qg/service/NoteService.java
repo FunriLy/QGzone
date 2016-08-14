@@ -43,6 +43,14 @@ public class NoteService {
 	 */
 	public boolean deleteNote(int noteId,int userId){
 		//判断权限后删除(留言的人和被留言的人都可删除该留言)
-		return this.getNoteById(noteId).getNoteManId()==userId||userId==this.getNoteById(noteId).getTargetId()?noteDao.deleteNote(noteId):false;
+		return this.existNote(noteId)&&(this.getNoteById(noteId).getNoteManId()==userId||userId==this.getNoteById(noteId).getTargetId())?noteDao.deleteNote(noteId):false;
+	}
+	/***
+	 * 判断留言是否存在
+	 * @param noteId留言id
+	 * @return true false
+	 */
+	boolean existNote(int noteId){
+		return noteDao.existNote(noteId);
 	}
 }

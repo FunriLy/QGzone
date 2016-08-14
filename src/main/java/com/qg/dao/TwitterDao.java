@@ -66,4 +66,10 @@ public interface TwitterDao {
      * @throws Exception 
      */
     public List<TwitterModel>getMyTwitter(int pageNumber,int userId) throws Exception; 
+    /***
+     * 判断说说是否存在
+     * @param twitterId说说id
+     * @return true false
+     */
+    public boolean existTwitter(int twitterId);
 }

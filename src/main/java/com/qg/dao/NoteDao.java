@@ -41,4 +41,10 @@ public interface NoteDao {
 	 * @return true false
 	 */
 	boolean deleteNote(int noteId);
+	/***
+	 * 这是一个检测留言id是否存在的方法
+	 * @param noteId 留言id
+	 * @return true false
+	 */
+	boolean existNote(int noteId);
 }

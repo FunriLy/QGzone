@@ -127,4 +127,26 @@ public class NoteDaoImpl implements NoteDao {
        }
 }
 
+	@Override
+	public boolean existNote(int noteId) {
+
+    	boolean result = false;
+    	
+    	try {
+			conn = SimpleConnectionPool.getConnection();
+			String sql = "SELECT COUNT(1) FROM note WHERE note_id=?";
+			pStatement = conn.prepareStatement(sql);
+			pStatement.setInt(1, noteId);
+			rs = pStatement.executeQuery();
+			if(rs.next()){
+				result=(rs.getInt(1)==1);
+				}
+    	} catch (SQLException e) {
+    		LOGGER.log(Level.ERROR, "查询留言是否存在异常！", e);
+		} finally {
+			close(rs, pStatement, conn);
+		}
+    	return result;
+	}
+
 }

@@ -87,6 +87,14 @@ public class TwitterService {
 		return twitterDao.twitterPicture(twitterId);
 	}
 	/***
+	 * 查询说说是否存在
+	 * @param twitterId 说说id
+	 * @return ture false
+	 */
+	public boolean existTwitter(int twitterId){
+		return twitterDao.existTwitter(twitterId);
+	}
+	/***
 	 * 查询是否已经点赞
 	 * @param twitterId 说说id
 	 * @param supporterId 查询者
@@ -122,7 +130,7 @@ public class TwitterService {
 	 * @return true false
 	 */
 	public boolean twitterSupport(int twitterId, int userId) {
-		if(new FriendService().isFriend(userId, this.geTwitterById(twitterId).getTalkId())==1){
+		if(this.existTwitter(twitterId)&&(new FriendService().isFriend(userId, this.geTwitterById(twitterId).getTalkId())==1||this.geTwitterById(twitterId).getTalkId()==userId)){
 			// 检测是否点赞
 			if (!this.findSupport(twitterId, userId)) {
 				// 实现点赞

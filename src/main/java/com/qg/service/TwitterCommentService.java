@@ -23,7 +23,7 @@ public class TwitterCommentService {
 	  * @return true false
 	  */
 	 public boolean addTwitterComment(TwitterCommentModel twitterComment){
-		 return  twitterCommentDao.addTwitterComment(twitterComment);
+		 return  new TwitterService().existTwitter(twitterComment.getTwitterId())?twitterCommentDao.addTwitterComment(twitterComment):false;
 	 }
 	 /***
 	  * 该方法根据id获取说说评论
@@ -41,8 +41,8 @@ public class TwitterCommentService {
 	  */
 	 public boolean deleteComment(int commentId,int userId){
 			//判断权限后删除(说说发表者和评论者都可以删除评论)
-		 return this.geTwitterCommentById(commentId).getCommenterId()==userId||
-				 userId==new TwitterService().geTwitterById(this.geTwitterCommentById(commentId).getTwitterId()).getTalkId()
+		 return this.geTwitterCommentById(commentId)!=null&&this.geTwitterCommentById(commentId).getCommenterId()==userId||
+				 this.geTwitterCommentById(commentId)!=null&&userId==new TwitterService().geTwitterById(this.geTwitterCommentById(commentId).getTwitterId()).getTalkId()
 				 ?twitterCommentDao.deleteComment(commentId):false;
 	 }
 
