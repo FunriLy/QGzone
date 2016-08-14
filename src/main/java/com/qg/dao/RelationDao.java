@@ -33,4 +33,12 @@ public interface RelationDao {
 	 */
 	 List<RelationModel>  getRelationsById(int userId);
 	 
+	 /**
+	  * 根据账号返回与我相关集合（分页显示）
+	  * @param page 页码
+	  * @param userId 账号
+	  * @return 与我相关信息集合
+	  */
+
+	List<RelationModel> getRelationsById(int page, int userId);
 }

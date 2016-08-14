@@ -1,6 +1,8 @@
-package com.qg.servlet;
+package com.qg.servlet.hunger;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -32,7 +34,7 @@ public class MessageChange extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	/**
@@ -40,25 +42,32 @@ public class MessageChange extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
 		MessageModel message = gson.fromJson(reciveObject, MessageModel.class);
 		//获取存在session中的用户对象
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
-		if(user!=null&&user.getUserId()==message.getUserId()){
+		System.out.println(user+""+message);
+		if(user!=null){
+			System.out.println(message);
 			flag = messageService.changeMessage(message);
 			if(flag){
-				state = 161;//成功
+				state = 151;//成功
 			}
 			else{
-				state = 162;//失败
+				state = 152;//失败
 			}
 		}
 		else{
 			state=0;
 		}
-	
+		//返回数据给前端（状态码+用户信息对象）	
+		Map<String,Object> jsonObject = new HashMap();
+		jsonObject.put("message", message);
+		jsonObject.put("state", state+"");
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		output.close();
 	
 	}
 

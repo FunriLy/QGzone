@@ -49,6 +49,7 @@ public class RelationService {
 		return relationDao.getRelationsById(userId);
 	}
 	
+	
 	//留言、评论、回复、点赞、添加好友回应
 	/**
 	 * 留言类型：noteComment( 或 nc )
@@ -79,5 +80,13 @@ public class RelationService {
 		}
 		return object;
 	}
-	
+	/**
+	 * 根据账号获取与我相关对象列表(分页)
+	 * @param page 页码
+	 * @param userId 账号
+	 * @return 与我相关对象集合
+	 */
+	public List<RelationModel> getRelationsById(int page, int userId){
+		return relationDao.getRelationsById(page, userId);
+	}
 }

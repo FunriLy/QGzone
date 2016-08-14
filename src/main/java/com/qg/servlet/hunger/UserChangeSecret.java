@@ -1,6 +1,8 @@
-package com.qg.servlet;
+package com.qg.servlet.hunger;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -30,7 +32,7 @@ public class UserChangeSecret extends HttpServlet {
     private int state;   
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	/**
@@ -51,16 +53,21 @@ public class UserChangeSecret extends HttpServlet {
 			String newAnswer = map.getOrDefault("newAnswer", null);//新密保答案
 			flag = userService.changeSecret(userId, oldSecretId, oldAnswer, newSecretId, newAnswer);
 			if(flag){
-				state = 131;//成功
+				state = 141;//成功
 			}
 			else{
-				state = 132;//失败
+				state = 142;//失败
 			}
 		}
 		else{
-			
+			state = 000;//session消失
 		}
-	
+		//返回数据给前端（状态码）	
+		Map<String,Object> jsonObject = new HashMap();
+		jsonObject.put("state", state);
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		output.close();
 	}
 
 }

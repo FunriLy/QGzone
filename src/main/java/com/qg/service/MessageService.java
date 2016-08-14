@@ -42,10 +42,10 @@ public class MessageService {
 	  */
 	public boolean changeMessage(MessageModel message){
 		String regex1 ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
-		String regex2 = "\\w+@\\w+(\\.\\w{2,3})*\\.\\w{2,3}";
+		//String regex2 = "\\w+@\\w+(\\.\\w{2,3})*\\.\\w{2,3}";
 		if(message == null){return false;}//具体信息对象不存在
 		if(message.getUserName()==null){return false;}//昵称为null
-		if(message.getUserEmail()!=null&&!message.getUserEmail().matches(regex2)){return false;}
+		//if(message.getUserEmail()!=""&&!message.getUserEmail().matches(regex2)){return false;}
 		return messageDao.changeMessage(message);
 	}
 	

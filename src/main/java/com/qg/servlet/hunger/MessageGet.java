@@ -1,6 +1,8 @@
-package com.qg.servlet;
+package com.qg.servlet.hunger;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -29,7 +31,7 @@ public class MessageGet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	/**
@@ -40,19 +42,26 @@ public class MessageGet extends HttpServlet {
 		
 		//获取存在session中的用户对象
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
+		MessageModel message = null;
 		if(user!=null){
-			MessageModel message = messageService.getMessageById(user.getUserId());
-			if(flag){
-				state = 171;//成功
+			message = messageService.getMessageById(user.getUserId());
+			if(message!=null){
+				state = 161;//成功
 			}
 			else{
-				state = 172;//失败
+				state = 162;//失败
 			}
 		}
 		else{
-			state=0;
+			state=0;//session消失
 		}
-	
+		//返回数据给前端（状态码+用户信息对象）	
+		Map<String,Object> jsonObject = new HashMap();
+		jsonObject.put("message", message);
+		jsonObject.put("state", state+"");
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		output.close();	
 	
 	
 	}

@@ -10,6 +10,7 @@ import java.util.List;
 import com.qg.dao.MessageDao;
 import com.qg.dao.RelationDao;
 import com.qg.model.RelationModel;
+import com.qg.model.TwitterModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -26,9 +27,9 @@ public class RelationDaoImpl implements RelationDao{
 	public static void main(String[] args) {
 		RelationDaoImpl dao = new RelationDaoImpl();
 //		RelationModel relation = new RelationModel
-//				("aaa", "ssdad", 10000, 10001, 1, 20);
+//				("d", "ssdad", 1794993, 1800057, 1, 20);
 //		System.out.println(dao.addRelation(relation));
-		System.out.println(dao.getRelationsById(1263677));
+		System.out.println(dao.getRelationsById(1, 1794993));
 	}
 	/**
 	 * 类中公用关闭流的方法
@@ -103,7 +104,7 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public List<RelationModel> getRelationsById(int userId) {
 		
-		LOGGER.log(Level.DEBUG, "与我相关信息id:",userId);
+		LOGGER.log(Level.DEBUG, "与我相关信息id{0}:",userId);
 		List<RelationModel> relations = new ArrayList<RelationModel>();
 		conn = SimpleConnectionPool.getConnection();
 		try {
@@ -138,4 +139,46 @@ public class RelationDaoImpl implements RelationDao{
 		else 
 			return null;
 	}
+	
+	@Override
+	public List<RelationModel> getRelationsById(int page,int userId) {
+		LOGGER.log(Level.DEBUG, "与我相关信息id{0}:",userId);
+		List<RelationModel> relations = new ArrayList<RelationModel>();
+		conn = SimpleConnectionPool.getConnection();
+		 try {
+			int number=(page-1)*3;
+			sql=conn.prepareStatement("select * from relation where receiver_id=?"
+					+" order by relation_time desc"
+					+ " limit ?"+","+3);
+			sql.setInt(1, userId);
+			sql.setInt(2, number);
+			rs=sql.executeQuery();
+			while(rs.next()) {
+				RelationModel relation = new RelationModel();
+				relation.setRelationId(rs.getInt("relation_id"));
+				relation.setRelationType(rs.getString("relation_type"));
+				relation.setRelationContent(rs.getString("relation_content"));
+				relation.setRelatedId(rs.getInt("related_id"));
+				relation.setRelationTime(rs.getTimestamp("relation_time"));
+				relation.setReceiverId(rs.getInt("receiver_id"));
+				relation.setSender(messageDao.getMessageById(rs.getInt("sender_id")));
+				if(relation.getReceiverId() == userId) {
+					relations.add(relation);
+					flag = true;
+				}
+			}
+			 
+		 }catch (Exception e) {
+			 LOGGER.log(Level.ERROR, "查询与我相关发生异常！", e);
+			}finally {
+				daoClose();
+			}
+			if(flag){
+				flag=false;
+				return relations;
+			}
+			else 
+				return null;
+		}
+		 
 }

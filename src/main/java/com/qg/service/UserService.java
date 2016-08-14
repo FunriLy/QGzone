@@ -62,14 +62,16 @@ public class UserService {
 	/**
 	 * 添加用户方法
 	 * @param user 用户对象
-	 * @return 
+	 * @return 账号
 	 */
-	public boolean addUser(UserModel user) {
+	public String addUser(UserModel user) {
 		user.setUserId(createUserId());
 		user.setPassword(encryptPassword(user.getPassword()));
 		MessageModel message = new MessageModel();
 		message.setUserId(user.getUserId());
-		return (userDao.addUser(user)&&messageDao.addMessage(message));
+		userDao.addUser(user);
+		messageDao.addMessage(message);
+		return user.getUserId()+"";
 	}
 	
 	
@@ -161,12 +163,12 @@ public class UserService {
 	/**
 	 * 注册，判断提交各个数据格式
 	 * @param user 用户对象
-	 * @return 成功true 错误false
+	 * @return 账号
 	 */
-	public  boolean doSignUp(UserModel user){
-		if(user == null){return false;}
+	public  String doSignUp(UserModel user){
+		if(user == null){return null;}
 		if(user.getPassword()==null||user.getUserName()==null
-				||user.getUserSecretAnswer()==null){return false;}
+				||user.getUserSecretAnswer()==null){return null;}
 		String regex1 ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
 		String regex2 ="[a-z0-9A-Z_]{5,15}";
 		if(user.getPassword().matches(regex2)
@@ -174,7 +176,7 @@ public class UserService {
 				&&user.getUserSecretAnswer().matches(regex1)){
 			return addUser(user);
 		}
-		return false;
+		return null;
 	}
 	/**
 	 * 登录，判断提交的各个数据
@@ -211,5 +213,16 @@ public class UserService {
 		return flag;
 	}
 	
-		
+	public boolean checkPassword(int userId,int oldSecretId,String oldAnswer ){	
+		UserModel user = userDao.getUserById(userId);
+		String regex1 ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
+		String regex2 ="[a-z0-9A-Z_]{5,15}";
+		if(user==null||oldSecretId==0||oldAnswer==null){return false;}
+		if(!oldAnswer.matches(regex1)){return false;}
+		if(user.getUserSecretId()==oldSecretId
+				&&user.getUserSecretAnswer().equals(oldAnswer)){
+			return true;
+		}
+		return false;
+	}	
 }

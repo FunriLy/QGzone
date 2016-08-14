@@ -1,6 +1,10 @@
-package com.qg.servlet;
+package com.qg.servlet.hunger;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.qg.model.UserModel;
 import com.qg.service.UserService;
+import com.qg.util.JsonUtil;
 
 /**
  * 
@@ -35,21 +40,37 @@ public class UserSignUp extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//设置编码
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("content-type","text/html;charset=UTF-8");
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
-		UserModel user = gson.fromJson(reciveObject, UserModel.class);
-		System.out.println();
-		flag = userService.doSignUp(user);
-		if(flag){
+		UserModel user = gson.fromJson(reciveObject, UserModel.class);//用户对象
+		System.out.println("啊啊啊啊啊");
+		//判断注册格式，成功返回账号
+		String userId= userService.doSignUp(user);
+		if(userId!=null){
+			//成功
 			state = 101;
 		}
 		else{
+			//失败
 			state = 102;
 		}
+		
+		
+		//返回数据给前端（状态码+账号）	
+		Map<String,Object> jsonObject = new HashMap();
+		jsonObject.put("userId", userId);
+		jsonObject.put("state", state+"");
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		output.close();
+		
 	}
 
 }

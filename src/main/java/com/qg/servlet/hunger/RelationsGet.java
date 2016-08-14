@@ -3,6 +3,7 @@ package com.qg.servlet.hunger;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,33 +13,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.qg.model.RelationModel;
 import com.qg.model.UserModel;
-import com.qg.service.UserService;
+import com.qg.service.RelationService;
 
 /**
- * 
- * @author hunger
- * <p>
- * 用户登录
- * 状态码: 111 登录成功，112登录失败
- * </p>
+ * 获取与我相关列表集合
+ * @author hunger 
+ *
  */
-@WebServlet("/UserSignIn")
-public class UserSignIn extends HttpServlet {
+@WebServlet("/RelationsGet")
+public class RelationsGet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserService userService = new UserService();
+	private RelationService relationService = new RelationService();
 	private Gson gson = new Gson();
 	private boolean flag = false;
-    private int state;     
+    private int state;    
+
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("get runs");
+		doPost(request, response);
+		
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//设置编码
 		response.setCharacterEncoding("utf-8");
@@ -46,31 +48,38 @@ public class UserSignIn extends HttpServlet {
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
-		String userId= map.getOrDefault("userId", null);//账号
-		String userPassword = map.getOrDefault("password", null);//密码
-		System.out.println(userId+userPassword);
-		//判断账号密码是否符合
-		flag = userService.doSingIn(userId, userPassword);
-		UserModel user = null;
-		if(flag){
-			//登录成功
-			state = 111;
-			//将用户存入session
-			user = userService.getUserById(Integer.parseInt(userId));
-			request.getSession().setAttribute("user", user);
+		String page= map.getOrDefault("page", null);//账号
+		//获取存在session中的用户对象 
+		UserModel user = (UserModel)request.getSession().getAttribute("user");
+		//获取与我相关信息集合
+		List<RelationModel> relations = null;
+		if(user!=null){
+			if(page!=null){
+			relations = relationService.getRelationsById(Integer.parseInt(page), user.getUserId());
+			if(relations==null){
+				System.out.println("没有与我相关信息");
+				state = 402;//(改)
+				}else{
+					state = 401;
+				}
+			}
+			else{
+				System.out.println("传入页码为空");
+				state = 402;
+			}
+			
 		}
 		else{
-			//登录失败
-			state = 112;
+			System.out.println("用户session消失");
+			state = 0;
 		}
-		
-		//返回数据给前端（状态码+用户对象）	
+		//返回数据给前端（状态码+与我相关对象集合）	
 		Map<String,Object> jsonObject = new HashMap();
-		jsonObject.put("user", user);
+		jsonObject.put("relations", relations);
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
-		output.close();
+		output.close();		
 	}
 
 }
