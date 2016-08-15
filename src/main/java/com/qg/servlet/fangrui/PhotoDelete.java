@@ -1,7 +1,6 @@
 package com.qg.servlet.fangrui;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
 import com.qg.model.PhotoModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -42,6 +40,12 @@ public class PhotoDelete extends HttpServlet {
 		int state = 602;
 		AlbumService albumService = new AlbumService();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
 		
 		//获得Json并解析
 		Gson gson = new Gson();
@@ -52,10 +56,10 @@ public class PhotoDelete extends HttpServlet {
 		AlbumModel album = albumService.getAlbumByAlbumId(photo.getAlbumId());
 		//确保用户操作自己的相册
 		if (userId == album.getUserId()) {
-			String photoPath = getServletContext().getRealPath("/album/") + userId + "/" + photo.getAlbumId() + "/" + photo.getPhotoId() + ".jpg";
-			System.out.println(photoPath);
+			String photoPath = getServletContext().getRealPath("/album/") + userId + "/" + photo.getAlbumId() + "/" ;
+			String photoId = photo.getPhotoId()+".jpg";
 			PhotoService photoService = new PhotoService();
-			if (success == photoService.deletePhoto(photoPath)) {
+			if (success == photoService.deletePhoto(photoPath, photoId)) {
 				state = 601;
 			}
 		} else {

@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.qg.model.FriendApplyModel;
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -35,11 +32,21 @@ public class FriendApplyConduct extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId = 1;
-		String reciveObject = request.getParameter("friendApplyId");
+		
 		FriendService friendService = new FriendService();
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
+		if (request.getParameter("friendApplyId")==null || request.getParameter("friendApplyId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		
+		
+		String reciveObject = request.getParameter("friendApplyId");
 		int result = friendService.conductFriendApply(Integer.valueOf(reciveObject));
 		if(result == 1){
 			state = 301;

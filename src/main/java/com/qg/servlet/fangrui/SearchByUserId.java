@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.MessageModel;
-import com.qg.model.UserModel;
 import com.qg.service.SearchService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -38,9 +37,22 @@ public class SearchByUserId extends HttpServlet {
 		//获得用户id
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId =1;
-		int searchUserId = Integer.valueOf(request.getParameter("searchId"));
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
+		if (request.getParameter("searchId")==null || request.getParameter("searchId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		int searchUserId = 0;
+		try {
+			searchUserId = Integer.valueOf(request.getParameter("searchId"));
+		} catch (NumberFormatException e) {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+		}
 		SearchService searchService = new SearchService();
 		//将对象包装进集合发送过去
 		List<MessageModel> allMessage = new ArrayList<MessageModel>();

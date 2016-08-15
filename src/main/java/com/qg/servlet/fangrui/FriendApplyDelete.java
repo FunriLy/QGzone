@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qg.dao.FriendDao;
 import com.qg.dao.impl.FriendDaoImpl;
-import com.qg.model.UserModel;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -36,9 +35,18 @@ public class FriendApplyDelete extends HttpServlet {
 		//获得用户id
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId = 1;
-		int friendApplyId = Integer.valueOf(request.getParameter("friendApplyId"));
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
+		if (request.getParameter("friendApplyId")==null || request.getParameter("friendApplyId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		
+		int friendApplyId = Integer.valueOf(request.getParameter("friendApplyId"));
 		FriendDao friendDao = new FriendDaoImpl();
 		if(success == friendDao.deleteFriendApply(friendApplyId)){
 			state = 301;

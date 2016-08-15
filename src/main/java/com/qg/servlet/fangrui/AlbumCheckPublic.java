@@ -36,13 +36,22 @@ public class AlbumCheckPublic extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
 		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		//获得相册id
-		int albumId = Integer.valueOf(request.getParameter("albumId"));
 		//初始化状态码等数据
 		int state = 602;
+		
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("albumId")== null || request.getParameter("albumId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
+		
+		
+		//获得相册id
+		int albumId = Integer.valueOf(request.getParameter("albumId"));
 		AlbumService albumService = new AlbumService();
 		List<Integer> allPhotoId = new ArrayList<Integer>();
-		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
 		state = albumService.checkPublicAlbum(albumId,userId);
 		//获取相册中图片信息

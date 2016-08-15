@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.FriendApplyModel;
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -31,7 +30,6 @@ import com.qg.util.Logger;
 public class FriendApplyMy extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(FriendApplyMy.class);
-	private static final int success = 1;
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

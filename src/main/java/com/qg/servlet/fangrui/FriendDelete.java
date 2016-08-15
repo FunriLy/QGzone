@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -34,10 +33,18 @@ public class FriendDelete extends HttpServlet{
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId =1;
 		
-		int friendId = Integer.valueOf(request.getParameter("friendId"));
 		//初始化状态码
 		int state = 302; 
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
+		if (request.getParameter("friendId")==null || request.getParameter("friendId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		int friendId = Integer.valueOf(request.getParameter("friendId"));
 		FriendService friendService = new FriendService();
 		int result = friendService.deleteFriend(userId, friendId);
 		if(1 == result){

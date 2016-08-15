@@ -21,12 +21,14 @@ public class PhotoService {
 	 * @param photoPath 文件完整路径
 	 * @return 成功返回success，失败返回fail
 	 */
-	public int deletePhoto(String photoPath){
+	public int deletePhoto(String photoPath, String photoId){
 		int result = fail;
-		File file = new File(photoPath);
+		File file = new File(photoPath+photoId);
 		if(file.isFile() && file.exists()){
 			file.delete();
 			LOGGER.log(Level.DEBUG, "用户删除相片  相片路径: {0}",photoPath);
+			File t_File = new File(photoPath+"t_"+photoId);
+			t_File.delete();
 			result = success;
 		}
 		return result;

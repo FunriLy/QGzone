@@ -37,7 +37,6 @@ public class FriendService {
 		//获得好友信息
 		for(Integer friendId : friendsId){
 			message = messageDao.getMessageById(friendId);
-			System.out.println(message.toString());
 			myAllFriend.add(message);
 		}
 		return myAllFriend;

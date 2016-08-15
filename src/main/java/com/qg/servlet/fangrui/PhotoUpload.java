@@ -20,9 +20,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.ImgCompress;
@@ -76,7 +74,6 @@ public class PhotoUpload extends HttpServlet{
 			
 			for(FileItem fileItem : list){
 				if(fileItem.isFormField()){
-					String name = fileItem.getFieldName();
 					String value = fileItem.getString("utf-8");
 					
 					albumId = Integer.valueOf(value);

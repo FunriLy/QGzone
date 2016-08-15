@@ -33,12 +33,19 @@ public class FriendApplySend extends HttpServlet{
 		//获得用户id
 		int userId = 1;
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int addFriendId = Integer.valueOf(request.getParameter("addFriendId"));
 		//初始化状态码
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		FriendService friendService = new FriendService();
 		
+		if (request.getParameter("addFriendId")==null || request.getParameter("addFriendId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		int addFriendId = Integer.valueOf(request.getParameter("addFriendId"));
 		int result = friendService.sendFriendApply(userId, addFriendId);
 		
 		if (1 == result) {

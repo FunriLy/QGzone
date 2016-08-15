@@ -40,6 +40,14 @@ public class AlbumRechristen extends HttpServlet{
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
+		if (request.getParameter("album")==null || request.getParameter("album")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		
 		//获得Json并解析
 		Gson gson = new Gson();
 		String strAlbum = request.getParameter("album");

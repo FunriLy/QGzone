@@ -39,16 +39,24 @@ public class AlbumCheckPrivacy extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
 		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int state = 602;
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
 		//获得Json数据并解析
 		String strAlbum = request.getParameter("jsonObject");
 		Gson gson = new Gson();
 		AlbumModel album = gson.fromJson(strAlbum, AlbumModel.class);
 		
 		AlbumService albumService  = new AlbumService();
-		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
 		List<Integer> allPhotoId = new ArrayList<Integer>();
 		
-		int state = albumService.checkPrivacyAlbum(album, userId);
+		state = albumService.checkPrivacyAlbum(album, userId);
 		//如果状态码为601
 		if (601 == state) {
 			PhotoService photoService = new PhotoService();

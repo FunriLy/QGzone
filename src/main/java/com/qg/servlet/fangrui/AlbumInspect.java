@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -39,6 +38,14 @@ public class AlbumInspect extends HttpServlet {
 		int userId = 1;
 		int state = 602;
 		
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
+		
 		//获得Json并解析
 		Gson gson = new Gson();
 		String strAlbum = request.getParameter("jsonObject");		
@@ -52,7 +59,6 @@ public class AlbumInspect extends HttpServlet {
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 判断相册 {1} 密码，状态: {2}", userId, album.getAlbumId(), state);
 		
-		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
 		

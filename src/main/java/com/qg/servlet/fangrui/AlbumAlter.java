@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -35,15 +34,25 @@ public class AlbumAlter extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId =1;
+		//初始化数据
+		int state = 602; 
+		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
+		
 		//获取 Json 并解析
 		String reciveObject = request.getParameter("jsonObject");
 		AlbumService albumService = new AlbumService();
 		Gson gson = new Gson();
-		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
 		AlbumModel album = gson.fromJson(reciveObject, AlbumModel.class);
-		//初始化数据
-		int state = 602; 
+
 		//相册不存在
 		if(success != albumService.albumIsExist(album.getAlbumId())){
 			state = 603;

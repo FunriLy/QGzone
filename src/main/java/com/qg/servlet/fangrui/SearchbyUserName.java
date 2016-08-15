@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.MessageModel;
-import com.qg.model.UserModel;
 import com.qg.service.SearchService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -37,9 +36,17 @@ public class SearchbyUserName extends HttpServlet {
 		//获得用户id
 		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int userId =1;
-		String searchUserName =request.getParameter("searchName");
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
+		if (request.getParameter("searchName")==null || request.getParameter("searchName")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
+		String searchUserName =request.getParameter("searchName");
 		SearchService searchService = new SearchService();
 		//获得搜索结果
 		List<MessageModel> allMessage = searchService.searchMessagesByUserName(searchUserName);

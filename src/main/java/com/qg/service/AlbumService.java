@@ -293,7 +293,7 @@ public class AlbumService {
 		AlbumDao albumDao = new AlbumDaoImpl();
 		
 		File file = new File(folderPath);
-		if (file.exists()) {
+		if (!file.exists()) {
 			state = 604;
 		} else {
 			//删除相册并删除记录

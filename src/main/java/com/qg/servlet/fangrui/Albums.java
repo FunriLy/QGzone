@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.inject.internal.FailableCache;
 import com.qg.model.AlbumModel;
 import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
@@ -45,6 +44,13 @@ public class Albums extends HttpServlet {
 		List<AlbumModel> allAlbum = new ArrayList<AlbumModel>();
 		AlbumService albumService = new AlbumService();
 		FriendService friendService = new FriendService();
+		
+		if (request.getParameter("userId")==null || request.getParameter("userId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
 		
 		//获取Json
 		int t_userId = Integer.valueOf(request.getParameter("userId"));

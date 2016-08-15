@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.AlbumModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -37,6 +36,14 @@ public class AlbumDelete extends HttpServlet {
 		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		if (request.getParameter("albumId")== null || request.getParameter("albumId")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针！");
+			return;
+		}
+		
+		
 		
 		//获得Json并解析
 		int albumId = Integer.valueOf(request.getParameter("albumId"));
@@ -47,7 +54,7 @@ public class AlbumDelete extends HttpServlet {
 		if (userId == realAlbum.getUserId()) {
 			state = albumService.deleteAlbum( path, albumId);
 		} else if (realAlbum.getAlbumId() == 0) {
-			state = 602;
+			state = 604;
 		} 
 		else {
 			state = 603;

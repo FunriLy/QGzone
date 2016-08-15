@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -28,7 +27,6 @@ import com.qg.util.Logger;
 public class AlbumIsDuplication extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(AlbumIsDuplication.class);
-	private static final int success = 1;
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -37,6 +35,14 @@ public class AlbumIsDuplication extends HttpServlet{
 		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		
+		if (request.getParameter("albumName")==null || request.getParameter("albumName")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
+		}
+		
 		AlbumService albumService = new AlbumService();
 		
 		//获得Json

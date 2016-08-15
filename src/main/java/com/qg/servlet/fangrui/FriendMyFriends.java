@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.MessageModel;
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -47,6 +46,8 @@ public class FriendMyFriends extends HttpServlet {
 		} else {
 			state = 301;
 		}
+		
+		System.out.println(getServletContext().getRealPath("/album/tmp/"));
 		
 		LOGGER.log(Level.DEBUG, "用户获取好友列表 用户: {0} 状态: {1}", userId, state);
 		
