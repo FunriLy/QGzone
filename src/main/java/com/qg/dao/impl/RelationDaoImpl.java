@@ -27,9 +27,10 @@ public class RelationDaoImpl implements RelationDao{
 	public static void main(String[] args) {
 		RelationDaoImpl dao = new RelationDaoImpl();
 //		RelationModel relation = new RelationModel
-//				("d", "ssdad", 1794993, 1800057, 1, 20);
+//				("d", "always online", 1794993, 1800057, 1, 20);
 //		System.out.println(dao.addRelation(relation));
-		System.out.println(dao.getRelationsById(1, 1794993));
+		System.out.println(dao.hasRelationUnread(3462578));
+
 	}
 	/**
 	 * 类中公用关闭流的方法
@@ -52,7 +53,7 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public boolean addRelation(RelationModel relation) {
 		
-		LOGGER.log(Level.DEBUG, "用户的具体信息 账号:",relation.getRelatedId());
+		
 		conn = SimpleConnectionPool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into relation"
@@ -80,7 +81,6 @@ public class RelationDaoImpl implements RelationDao{
 	}
 	@Override
 	public boolean deleteRelation(int relationId) {
-		LOGGER.log(Level.DEBUG, "与我相关信息id:",relationId);
 		conn = SimpleConnectionPool.getConnection();
 		try {
 			sql=conn.prepareStatement("delete from relation where relation_id=?");
@@ -104,7 +104,6 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public List<RelationModel> getRelationsById(int userId) {
 		
-		LOGGER.log(Level.DEBUG, "与我相关信息id{0}:",userId);
 		List<RelationModel> relations = new ArrayList<RelationModel>();
 		conn = SimpleConnectionPool.getConnection();
 		try {
@@ -142,7 +141,6 @@ public class RelationDaoImpl implements RelationDao{
 	
 	@Override
 	public List<RelationModel> getRelationsById(int page,int userId) {
-		LOGGER.log(Level.DEBUG, "与我相关信息id{0}:",userId);
 		List<RelationModel> relations = new ArrayList<RelationModel>();
 		conn = SimpleConnectionPool.getConnection();
 		 try {
@@ -180,5 +178,55 @@ public class RelationDaoImpl implements RelationDao{
 			else 
 				return null;
 		}
-		 
+	@Override
+	public boolean hasRelationUnread(int userId){
+		conn = SimpleConnectionPool.getConnection();
+		try {
+			sql=conn.prepareStatement("select relation_has_read from relation where receiver_id=?");
+			sql.setInt(1, userId);
+			rs=sql.executeQuery();
+			while(rs.next()) {
+				int relationHasRead = 1;
+				relationHasRead = rs.getInt("relation_has_read");
+				if(relationHasRead == 0) {
+					flag = true;
+					break;
+				}
+			}
+			System.out.println("hasRelationUnread is running");
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "查看是否有未读与我相关发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return true;
+		}
+		else 
+			return false;
+	}
+	@Override
+	public boolean changeRelationHasRead(int userId){
+		conn = SimpleConnectionPool.getConnection();
+		try {
+			sql=conn.prepareStatement("update  relation set relation_has_read = ?"
+					+ " where receiver_id=?");
+			sql.setInt(1, 1);
+			sql.setInt(2, userId);
+			sql.executeUpdate();
+			flag=true;
+			System.out.println("changeRelationHasRead is running");
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "修改未读与我相关发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return true;
+		}
+		else 
+			return false;
+	}
 }

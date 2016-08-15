@@ -17,20 +17,18 @@ import com.qg.model.UserModel;
 import com.qg.service.MessageService;
 
 /**
- * Servlet implementation class MessageGet
+ * Servlet implementation class MessageSearch
  */
-@WebServlet("/MessageGet")
-public class MessageGet extends HttpServlet {
+@WebServlet("/MessageSearch")
+public class MessageSearch extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MessageService messageService = new MessageService();
 	private Gson gson = new Gson();
 	private boolean flag = false;
-    private int state;     
+    private int state;   
 
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doPost(request, response);
 	}
 
@@ -38,13 +36,11 @@ public class MessageGet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		
 		//获取存在session中的用户对象
-		UserModel user = (UserModel)request.getSession().getAttribute("user");
+		String userId = request.getParameter("userId");
 		MessageModel message = null;
-		if(user!=null){
-			message = messageService.getMessageById(user.getUserId());
+		if(userId!=null){
+			message = messageService.getMessageById(Integer.parseInt(userId));
 			if(message!=null){
 				state = 161;//成功
 			}
@@ -64,8 +60,6 @@ public class MessageGet extends HttpServlet {
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
 		output.close();	
-	
-	
 	}
 
 }

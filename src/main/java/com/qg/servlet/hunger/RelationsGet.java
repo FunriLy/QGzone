@@ -58,7 +58,7 @@ public class RelationsGet extends HttpServlet {
 			relations = relationService.getRelationsById(Integer.parseInt(page), user.getUserId());
 			if(relations==null){
 				System.out.println("没有与我相关信息");
-				state = 402;//(改)
+				state = 403;//(改)
 				}else{
 					state = 401;
 				}
@@ -66,6 +66,7 @@ public class RelationsGet extends HttpServlet {
 			else{
 				System.out.println("传入页码为空");
 				state = 402;
+				relationService.changeRelationHasRead(user.getUserId());
 			}
 			
 		}
@@ -73,6 +74,7 @@ public class RelationsGet extends HttpServlet {
 			System.out.println("用户session消失");
 			state = 0;
 		}
+		
 		//返回数据给前端（状态码+与我相关对象集合）	
 		Map<String,Object> jsonObject = new HashMap();
 		jsonObject.put("relations", relations);

@@ -52,8 +52,9 @@ public class RelationService {
 	
 	//留言、评论、回复、点赞、添加好友回应
 	/**
-	 * 留言类型：noteComment( 或 nc )
-	 * 评论回复类型：twitteComment( 或 tc )
+	 * 留言板留言：noteAdd( 或na )
+	 * 留言评论类型：noteComment( 或 nc )
+	 * 说说回复类型：twitteComment( 或 tc )
 	 * 点赞类型：supportTwitter( 或st )
 	 * 好友添加：friendApply( 或 fa )
 	 */
@@ -66,6 +67,9 @@ public class RelationService {
 		FriendDao faDao = new FriendDaoImpl();
 		Object object = null;
 		switch (relationType) {
+		case "na":
+			object = ncDao.getNoteCommentById(relatedId);
+			break;
 		case "nc":
 			object = ncDao.getNoteCommentById(relatedId);
 			break;
@@ -80,6 +84,8 @@ public class RelationService {
 		}
 		return object;
 	}
+	
+	
 	/**
 	 * 根据账号获取与我相关对象列表(分页)
 	 * @param page 页码
@@ -88,5 +94,25 @@ public class RelationService {
 	 */
 	public List<RelationModel> getRelationsById(int page, int userId){
 		return relationDao.getRelationsById(page, userId);
+	}
+	
+	
+	/**
+	 * 判断该账号是否有未读信息
+	 * @param userId 账号
+	 * @return 有true 无false
+	 */
+	public boolean hasRelationUnread(int userId){
+		return relationDao.hasRelationUnread(userId);
+	}
+	
+	
+	/**
+	 * 修改该账号的未读信息为已读
+	 * @param userId 账号
+	 * @return 成功true 失败false
+	 */
+	public boolean changeRelationHasRead(int userId){
+		return relationDao.changeRelationHasRead(userId);
 	}
 }

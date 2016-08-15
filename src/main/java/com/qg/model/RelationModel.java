@@ -23,7 +23,6 @@ public class RelationModel {
 		this.relationType = relationType;
 		this.relationContent = relationContent;
 		this.receiverId = receiverId;
-		this.relationHasRead = relationHasRead;
 		this.relatedId = relatedId;
 		this.sender = dao.getMessageById(senderId);
 	}

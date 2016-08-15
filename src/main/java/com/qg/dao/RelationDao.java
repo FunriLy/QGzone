@@ -41,4 +41,18 @@ public interface RelationDao {
 	  */
 
 	List<RelationModel> getRelationsById(int page, int userId);
+	
+	/**
+	 * 根据账号判断是否有未读信息
+	 * @param userId 账号
+	 * @return 有则返回true , 无则返回false
+	 */
+	boolean hasRelationUnread(int userId);
+	
+	/**
+	 * 修改未读为已读
+	 * @param userId 账号
+	 * @return 修改成功返回true ，失败返回false
+	 */
+	boolean changeRelationHasRead(int userId);
 }
