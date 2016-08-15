@@ -8,11 +8,14 @@ import com.qg.dao.TwitterDao;
 import com.qg.dao.impl.SupportDaoImpl;
 import com.qg.dao.impl.TwitterDaoImpl;
 import com.qg.model.TwitterModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 
 public class TwitterService {
 	TwitterDao twitterDao = new TwitterDaoImpl();
 	SupportDao supportDao = new SupportDaoImpl();
 	FriendService friendService = new FriendService();
+	private static final Logger LOGGER = Logger.getLogger(TwitterService.class);
 	/***
 	 * 添加说说
 	 * @param twitter 说说实体
@@ -30,7 +33,12 @@ public class TwitterService {
 	 * @throws Exception 
 	 */
 	public List<TwitterModel> getTwitter(int pageNumber, int userId) throws Exception {
-		return twitterDao.getTwitter(pageNumber, userId);
+		int twitterNumber=twitterDao.twitterNumber(userId);
+		LOGGER.log(Level.ERROR, "页码数{0}",this.twitterPage(userId,twitterNumber) );
+		if (this.twitterPage(userId,twitterNumber) > pageNumber)
+			return twitterDao.getTwitter(pageNumber, userId);
+		else
+			return null;
 	}
 	/**
 	 * 获取说说
@@ -48,7 +56,12 @@ public class TwitterService {
 	 * @throws Exception 
 	 */
 	public List<TwitterModel> getTwitterByTalkId(int pageNumber, int talkId) throws Exception {
+		int twitterNumber=twitterDao.userTwitterNumber(talkId);
+		LOGGER.log(Level.ERROR, "页码数{0}",this.twitterPage(talkId,twitterNumber) );
+		if (this.twitterPage(talkId,twitterNumber) > pageNumber)
 		return twitterDao.getMyTwitter(pageNumber, talkId);
+		else 
+			return null;
 	}
 	/***
 	 * 删除某条说说
@@ -145,5 +158,20 @@ public class TwitterService {
 		}else {
 			return false;
 		}
+	}
+	/***
+	 * 获取页码
+	 * @param userId 当前用户id
+	 * @return
+	 */
+	public int twitterPage(int userId,int twitterNumber){
+		int totalPage;
+		int pageSize=12;
+
+				if (twitterNumber % pageSize == 0)
+					totalPage = new Integer(twitterNumber / pageSize).intValue();
+				else
+					totalPage = new Integer(twitterNumber / pageSize).intValue() + 1;
+				return totalPage;
 	}
 }

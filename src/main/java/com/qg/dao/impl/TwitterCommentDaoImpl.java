@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.qg.dao.TwitterCommentDao;
+import com.qg.model.RelationModel;
 import com.qg.model.TwitterCommentModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -56,6 +57,8 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     }
     public boolean addTwitterComment(TwitterCommentModel twitterComment){
     	boolean result = true;
+    	Date newTime = new Date();
+		int twitterId = 0;
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into twitter_comment(comment, twitter_id, commenter_id, "
@@ -65,8 +68,21 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.setInt(2, twitterComment.getTwitterId());
 			pStatement.setInt(3, twitterComment.getCommenterId());
 			pStatement.setInt(4, twitterComment.getTargetId());
-			pStatement.setTimestamp(5,new Timestamp(new Date().getTime()));
+			pStatement.setTimestamp(5,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
+			
+			conn = SimpleConnectionPool.getConnection();
+			String SQL = "SELECT twitter_id FROM twitter_comment WHERE time=?";
+			pStatement = conn.prepareStatement(SQL);
+			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
+			rs = pStatement.executeQuery();
+			if (rs.next())
+				twitterId = rs.getInt("twitter_id");
+			// 插入与我相关表
+			RelationModel relation = new RelationModel("tc", twitterComment.getComment(), twitterComment.getTargetId(),
+					twitterComment.getCommenterId(), 0, twitterId);
+			new RelationDaoImpl().addRelation(relation);
+			
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加说说评论异常！", e);
 			result = false;

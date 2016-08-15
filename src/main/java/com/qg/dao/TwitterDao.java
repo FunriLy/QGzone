@@ -72,4 +72,16 @@ public interface TwitterDao {
      * @return true false
      */
     public boolean existTwitter(int twitterId);
+    /***
+     * 获取用户可获取的总说说数
+     * @param userId 用户id
+     * @return 说说数
+     */
+    public int twitterNumber(int userId);
+    /***
+     * 获取访问用户可获取的总说说数
+     * @param userId 用户id
+     * @return 说说数
+     */
+    public int userTwitterNumber(int userId);
 }

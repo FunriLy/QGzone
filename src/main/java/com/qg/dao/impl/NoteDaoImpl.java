@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.qg.dao.NoteDao;
 import com.qg.model.NoteModel;
+import com.qg.model.RelationModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -27,6 +28,8 @@ public class NoteDaoImpl implements NoteDao {
 	@Override
 	public boolean addNote(NoteModel note) {
 		boolean result = true;
+		int noteId=0;
+		Date newTime = new Date();
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into note(note, target_id, note_man_id,time) value(?,?,?,?)";
@@ -34,8 +37,20 @@ public class NoteDaoImpl implements NoteDao {
 			pStatement.setString(1, note.getNote());
 			pStatement.setInt(2, note.getTargetId());
 			pStatement.setInt(3, note.getNoteManId());
-			pStatement.setTimestamp(4,new Timestamp(new Date().getTime()));
+			pStatement.setTimestamp(4,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
+			//获取插入数据库后留言的id
+			conn = SimpleConnectionPool.getConnection();
+			String SQL = "SELECT note_id FROM note WHERE time=?";
+			pStatement = conn.prepareStatement(SQL);
+			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
+			rs = pStatement.executeQuery();
+			if (rs.next())
+				noteId = rs.getInt("note_id");
+			//插入与我相关表
+			RelationModel relation = new RelationModel("na",note.getNote(),note.getTargetId(),note.getNoteManId(),0,noteId);
+			new RelationDaoImpl().addRelation(relation);
+			
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加留言异常！", e);
 		} finally {
@@ -147,6 +162,28 @@ public class NoteDaoImpl implements NoteDao {
 			close(rs, pStatement, conn);
 		}
     	return result;
+	}
+
+	@Override
+	public int noteNumber(int userId) {
+		int noteNumber = 0;
+		try {
+			 String sql = 	"SELECT  COUNT(1) FROM note WHERE target_id=?";
+			 conn = SimpleConnectionPool.getConnection();				
+			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
+			 pStatement.setInt(1, userId);
+			 rs = pStatement.executeQuery();
+			 while(rs.next()){
+				 noteNumber = rs.getInt(1);
+		       }
+			 LOGGER.log(Level.DEBUG, "获取了{0}条留言", noteNumber);
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "获取留言数目异常！", e);
+		}finally{
+			close(rs, pStatement, conn);
+		}
+		
+		return noteNumber;
 	}
 
 }

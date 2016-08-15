@@ -47,4 +47,10 @@ public interface NoteDao {
 	 * @return true false
 	 */
 	boolean existNote(int noteId);
+	/***
+	 * 查询留言的数目
+	 * @param userId 当前留言板者的id
+	 * @return 返回数目
+	 */
+	int noteNumber(int userId);
 }

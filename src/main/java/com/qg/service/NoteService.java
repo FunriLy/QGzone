@@ -5,10 +5,13 @@ import java.util.List;
 import com.qg.dao.NoteDao;
 import com.qg.dao.impl.NoteDaoImpl;
 import com.qg.model.NoteModel;
+import com.qg.util.Level;
+import com.qg.util.Logger;
 
 public class NoteService {
 	NoteDao noteDao = new NoteDaoImpl();
 	FriendService friendService = new FriendService();
+	private static final Logger LOGGER = Logger.getLogger(NoteService.class);
 	/***
 	 * 发表留言
 	 * @param note 留言实体类
@@ -25,7 +28,13 @@ public class NoteService {
 	 * @throws Exception
 	 */
 	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
+		int noteNumber = noteDao.noteNumber(userId);
+		
+		LOGGER.log(Level.ERROR, "页码数{0}",this.notePage(userId,noteNumber) );
+		if (this.notePage(userId,noteNumber) > pageNumber)
 		return noteDao.getNote(pageNumber, userId);
+		else 
+			return null;
 	}
 	/***
 	 * 根据id获取留言实体
@@ -52,5 +61,17 @@ public class NoteService {
 	 */
 	boolean existNote(int noteId){
 		return noteDao.existNote(noteId);
+	}
+	
+	
+	public int notePage(int userId,int noteNumber){
+		int totalPage;
+		int pageSize=12;
+
+				if (noteNumber % pageSize == 0)
+					totalPage = new Integer(noteNumber / pageSize).intValue();
+				else
+					totalPage = new Integer(noteNumber / pageSize).intValue() + 1;
+				return totalPage;
 	}
 }

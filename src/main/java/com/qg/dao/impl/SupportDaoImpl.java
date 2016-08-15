@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qg.dao.SupportDao;
+import com.qg.model.RelationModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -36,6 +37,11 @@ public class SupportDaoImpl implements SupportDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.setInt(2, supporterId);
 			pStatement.executeUpdate();
+			//添加进与我相关表
+			RelationModel relation = new RelationModel("st", "",new TwitterDaoImpl().geTwitterById(twitterId).getTalkId() ,
+					supporterId, 0, twitterId);
+			
+			new RelationDaoImpl().addRelation(relation);
 			new TwitterDaoImpl().addSupport(twitterId);
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "点赞异常！", e);
@@ -54,6 +60,15 @@ public class SupportDaoImpl implements SupportDao{
 			pStatement.setInt(1, twitterId);
 			pStatement.setInt(2, supporterId);
 			pStatement.executeUpdate();
+			//删除与我相关中的相关信息
+			conn = SimpleConnectionPool.getConnection();
+			String SQL = "DELETE FROM relation WHERE relation_type=? AND sender_id=? AND related_id=?";
+			 pStatement = conn.prepareStatement(SQL);
+			 pStatement.setString(1, "st");
+			 pStatement.setInt(2, supporterId);
+			 pStatement.setInt(3, twitterId);
+			 pStatement.executeUpdate();
+			
 			new TwitterDaoImpl().deleteSupport(twitterId);
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "取消赞异常！", e);

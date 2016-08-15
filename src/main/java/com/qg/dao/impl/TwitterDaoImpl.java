@@ -48,7 +48,6 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement.setInt(4, 0);
 			pStatement.setTimestamp(5,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
-			conn.close();
 			
 			conn = SimpleConnectionPool.getConnection();
 			String SQL = "SELECT twitter_id FROM twitter WHERE time=?";
@@ -90,6 +89,7 @@ public class TwitterDaoImpl implements TwitterDao{
 				  supportDao.getSupporterByTwitterId(rs.getInt("twitter_id")),new TwitterCommentDaoImpl().getTwitterCommentByTwitterId(rs.getInt("twitter_id")));
 				twitters.add(twitterModel);
 			}
+			 LOGGER.log(Level.DEBUG, "获取第{0}页的说说,从第{1}条开始", pageNumber,twitters.get(0).getTwitterId());
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "获取说说异常！", e);
 			throw new Exception("获取说说异常!");
@@ -238,5 +238,53 @@ public class TwitterDaoImpl implements TwitterDao{
 			close(rs, pStatement, conn);
 		}
     	return result;
+	}
+
+	@Override
+	public int twitterNumber(int userId) {
+		int twitterNumber = 0;
+		try {
+			 String sql = 	"SELECT  COUNT(DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time) FROM twitter "
+				 		+"INNER JOIN friends ON" 
+				 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
+				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)";
+			 conn = SimpleConnectionPool.getConnection();				
+			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
+			 pStatement.setInt(1, userId);
+			 pStatement.setInt(2, userId);
+			 pStatement.setInt(3, userId);
+			 rs = pStatement.executeQuery();
+			 while(rs.next()){
+				 twitterNumber = rs.getInt(1);
+		       }
+			 LOGGER.log(Level.DEBUG, "获取了{0}条说说", twitterNumber);
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "获取说说数目异常！", e);
+		}finally{
+			close(rs, pStatement, conn);
+		}
+		
+		return twitterNumber;
+	}
+	
+	public int userTwitterNumber(int userId) {
+		int twitterNumber = 0;
+		try {
+			 String sql = 	"SELECT  COUNT(1) FROM twitter WHERE talker_id=?";
+			 conn = SimpleConnectionPool.getConnection();				
+			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
+			 pStatement.setInt(1, userId);
+			 rs = pStatement.executeQuery();
+			 while(rs.next()){
+				 twitterNumber = rs.getInt(1);
+		       }
+			 LOGGER.log(Level.DEBUG, "获取了{0}条说说", twitterNumber);
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "获取说说数目异常！", e);
+		}finally{
+			close(rs, pStatement, conn);
+		}
+		
+		return twitterNumber;
 	}
 }
