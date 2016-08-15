@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteCommentModel;
-import com.qg.model.UserModel;
 import com.qg.service.NoteCommentService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Logger;
@@ -32,11 +31,12 @@ public class NoteCommentAdd extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 501;
 		/* 获取留言id，被回复方id,回复内容 */
-		int noteId = Integer.getInteger(request.getParameter("noteId"));
-		int targetId = Integer.getInteger(request.getParameter("targetId"));
+		int noteId = Integer.parseInt(request.getParameter("noteId"));
+		int targetId = Integer.parseInt(request.getParameter("targetId"));
 		String comment = request.getParameter("comment");
 		// 获取当前登陆用户
-		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int commenterId = 10000;
 		if (!(comment.length() > 50)) {
 
 			// 获取留言评论的实体类

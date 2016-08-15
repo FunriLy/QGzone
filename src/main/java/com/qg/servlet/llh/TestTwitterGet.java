@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.TwitterModel;
-import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -37,9 +36,6 @@ public class TestTwitterGet  extends HttpServlet {
 		int userId = 3;
 		//获取页码
 		String page = request.getParameter("page");
-		//设置编码
-		resp.setCharacterEncoding("utf-8");
-		resp.setHeader("content-type","text/html;charset=UTF-8");
 		try {
 			//获取说说列表
 			twitters = new TwitterService().getTwitter(Integer.parseInt(page), userId);

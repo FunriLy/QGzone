@@ -68,12 +68,12 @@ public class TwitterDaoImpl implements TwitterDao{
 	public List<TwitterModel>getTwitter(int pageNumber,int userId) throws Exception{
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		 try {
-			 int number=(pageNumber-1)*16;
+			 int number=(pageNumber-1)*12;
 			 String sql = 	"SELECT DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time FROM twitter "
 					 		+"INNER JOIN friends ON" 
 					 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
 					 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
-					 		+"ORDER BY twitter_id DESC LIMIT ?,16";
+					 		+"ORDER BY twitter_id DESC LIMIT ?,12";
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
@@ -194,8 +194,8 @@ public class TwitterDaoImpl implements TwitterDao{
 	public List<TwitterModel> getMyTwitter(int pageNumber, int userId) throws Exception {
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		 try {
-			 int number=(pageNumber-1)*16;
-			 String sql = 	"SELECT * FROM twitter WHERE talker_id=? ORDER BY twitter_id DESC LIMIT ?,16";
+			 int number=(pageNumber-1)*12;
+			 String sql = 	"SELECT * FROM twitter WHERE talker_id=? ORDER BY twitter_id DESC LIMIT ?,12";
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);

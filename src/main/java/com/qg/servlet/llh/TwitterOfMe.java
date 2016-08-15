@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.TwitterModel;
-import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -27,13 +26,15 @@ import com.qg.util.Logger;
  */
 @WebServlet("/TwitterOfMe")
 public class TwitterOfMe  extends HttpServlet{
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(TwitterOfMe.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 201;
 		List<TwitterModel> twitters = null;
 		//获取当前登陆id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int userId=3;
 		//获取页码
 		String page = request.getParameter("page");
 		try {

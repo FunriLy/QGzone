@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteModel;
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.service.NoteService;
 import com.qg.util.JsonUtil;
@@ -35,7 +34,8 @@ public class NoteOfOthers extends HttpServlet {
 		int state = 501;
 		List<NoteModel> notes = null;
 		// 获取当前用户id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int userId =3;
 		//获取被访问者的id
 		int targetId = Integer.parseInt(request.getParameter("targetId"));
 		// 获取页码
@@ -44,7 +44,7 @@ public class NoteOfOthers extends HttpServlet {
 		try {
 			if (new FriendService().isFriend(userId, targetId) == 1) {
 				// 获取全部留言
-				notes = new NoteService().getNote(Integer.parseInt(page), userId);
+				notes = new NoteService().getNote(Integer.parseInt(page), targetId);
 			} else
 				state = 502;
 		} catch (Exception e) {

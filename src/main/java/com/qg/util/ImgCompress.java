@@ -45,6 +45,26 @@ public class ImgCompress
 		}
     }
     
+	@SuppressWarnings("finally")
+	public static int ImageCompress(String photoPath, String photoName){
+    	int result = fail;
+    	try {
+    		ImgCompress imgCompress = new ImgCompress(photoPath+photoName);
+    		//获取文件名
+    		//String imgName = pictiurePath.substring(pictiurePath.lastIndexOf("/"));
+    		// 规定相片的长度
+    		imgCompress.resize(200, 200, photoPath, photoName);
+    		result = success;
+		} catch (IOException e) {
+			result =fail;
+			//如果捕抓到异常，则压缩失败
+			e.printStackTrace();
+		} finally {
+			return result;
+		}
+    }
+    
+    
     
     /**
      * 构造器
@@ -102,6 +122,20 @@ public class ImgCompress
     	BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_BGR);
     	image.getGraphics().drawImage(img, 0, 0, w, h, null);
     	String savePath = path + "t_" + photoId+".jpg";
+    	File destFile = new File(savePath);
+    	// 写出文件
+    	FileOutputStream out = new FileOutputStream(savePath);   
+    	//压缩后输出到文件流
+    	JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out); 
+    	encoder.encode(image); //  JPEG编码
+    	out.flush();
+        out.close(); 
+    }
+    
+	public void resize(int w, int h, String path, String photoName) throws IOException{
+    	BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_BGR);
+    	image.getGraphics().drawImage(img, 0, 0, w, h, null);
+    	String savePath = path +"_" +photoName;
     	File destFile = new File(savePath);
     	// 写出文件
     	FileOutputStream out = new FileOutputStream(savePath);   

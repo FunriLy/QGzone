@@ -20,12 +20,11 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 
 import com.qg.model.TwitterModel;
-import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.Logger;
+import com.qg.util.ImgCompress;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 
@@ -44,6 +43,8 @@ public class TwitterAdd extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println(1);
+		
 		// 状态标志量
 		int state = 201;
 		// 图片张数
@@ -54,83 +55,119 @@ public class TwitterAdd extends HttpServlet {
 		int twitterId = 0;
 		// 说说内容
 		String value = null;
-
+		// 文件名
+		String filename;
+		
+		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
+		
 		// 获取当前登陆用户id
-		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int talkId = 10000;
+		
+		
 		try {
 			// 构造工厂
 			DiskFileItemFactory factory = new DiskFileItemFactory();
+
 			// 设置文件阀值大小
 			factory.setSizeThreshold(10 * 1024);
+
 			// 设置缓存文件区
 			String tempPath = getServletContext().getRealPath("/twitterPhotos/tmp/");
 			factory.setRepository(new File(tempPath));
+
 			// 获得解析器
 			ServletFileUpload upload = new ServletFileUpload(factory);
+
 			// 解决上传文件名 乱码问题
 			upload.setHeaderEncoding("utf-8");
+
 			// 对请求内容进行解析
 			List<FileItem> list = upload.parseRequest(new ServletRequestContext(request));
+
 			// 获得图片的张数
 			for (FileItem fileItem : list) {
-				if (!fileItem.isFormField()) {
-					twitterPicture++;
+
+				if (fileItem.isFormField()) {
+
+					// 获取说说内容的name值
+					String name = fileItem.getFieldName();
+
+					// 根据name获取内容
+					if (name.equals("twitterWord")) {
+						value = fileItem.getString("utf-8");
+					}
+
 				} else {
-					// 获取说说内容
-					value = fileItem.getString("utf-8");
+					// 若不是文本，判断名字是否为空后（是否上传文件），图片数自增+1
+					String fileEnd = fileItem.getName().toLowerCase();
+					if (!(value!=null||fileEnd.endsWith(".jpg") || fileEnd.endsWith(".png") || fileEnd.endsWith(".bmp")
+							|| fileEnd.endsWith(".swf") || fileEnd.endsWith(".jpeg") || fileEnd.endsWith(".jpeg2000")
+							|| fileEnd.endsWith(".tiff"))) {
+						state = 203;
+						output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+						output.close();
+						return;
+					} else if(!fileItem.getName().equals(""))
+						twitterPicture++;
 				}
 			}
+			// 判断字数是否超限
 			if (value != null && value.length() >= 150)
 				state = 205;
 			else {
-				LOGGER.log(Level.INFO, "说说文字", value);
-				// 获取说说实体
-				TwitterModel twitter = new TwitterModel(value, twitterPicture, talkId);
-				// 存进数据库并且获得说说id
-				twitterId = new TwitterService().addTwitter(twitter);
-
+				// 需要文本或者图片才能进行说说发表
+				if ((value != null && value.length() > 0) || twitterPicture != 0) {
+					// 获取说说实体
+					TwitterModel twitter = new TwitterModel(value, twitterPicture, talkId);
+					// 存进数据库并且获得说说id
+					twitterId = new TwitterService().addTwitter(twitter);
+				}
+				LOGGER.log(Level.DEBUG, "说说内容{0},图片张数{1}",value ,twitterPicture);
 				if (twitterPicture <= 9) {
 					// 遍历集合
 					for (FileItem fileItem : list) {
 						if (!fileItem.isFormField()) {
-							// 定义限制上传的文件类型的字符串数组
-							String[] suffixs = new String[] { ".jpg", ".png", "bmp", "jpeg", "jpeg2000", "tiff", "psd",
-									"swf" };
-							// 创建文件后缀过滤器
-							SuffixFileFilter filter = new SuffixFileFilter(suffixs);
-							// 文件是否符合格式
-							if (filter.accept((File) fileItem)) {
+							filename = fileItem.getName();
+							if (!filename.equals("")) {
+								
 								twitterPictureId++;
-								InputStream in = new BufferedInputStream(fileItem.getInputStream());
+								
 								// 获取路径
 								String path = getServletContext().getRealPath("/twitterPhotos/");
-								System.out.println(path);
+								LOGGER.log(Level.DEBUG, "说说图片id:{0},名字:{1}", twitterId,
+										twitterId + "_" + twitterPictureId + ".jpg");
+								
+								//获取流
 								OutputStream out = new BufferedOutputStream(
 										new FileOutputStream(path + twitterId + "_" + twitterPictureId + ".jpg"));
+								InputStream in = new BufferedInputStream(fileItem.getInputStream());
+								
 								// 将文件写在服务器
 								int len = -1;
 								byte[] b = new byte[1024];
 								while ((len = in.read(b)) != -1) {
 									out.write(b, 0, len);
 								}
+								//关闭流
 								out.close();
 								in.close();
+								ImgCompress.ImageCompress(path, twitterId + "_" + twitterPictureId + ".jpg");
+								
 								state = 201;
-							} else {
-								state = 203;
-								// 上传文件不符合格式
-							}
+							} else
+								state = 202;
 						}
 					}
 				} else
 					state = 204; // 只能上传九张图
 			}
+
 		} catch (Exception e) {
 			state = 202;
 			LOGGER.log(Level.ERROR, "发表说说异常", e);
 		} finally {
-			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.write(JsonUtil.tojson(state, twitterId).getBytes("UTF-8"));
 			output.close();
 		}
 

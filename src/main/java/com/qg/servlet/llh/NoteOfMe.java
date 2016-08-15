@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteModel;
-import com.qg.model.UserModel;
 import com.qg.service.NoteService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -34,7 +33,8 @@ public class NoteOfMe extends HttpServlet {
 		int state = 501;
 		List<NoteModel> notes = null;
 		// 获取当前用户id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int userId=3;
 		// 获取页码
 		String page = request.getParameter("page");
 

@@ -28,6 +28,7 @@ import com.qg.util.Logger;
  */
 @WebServlet("/TwitterOfOthers")
 public class TwitterOfOthers  extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(TwitterOfOthers.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {

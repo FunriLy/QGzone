@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -31,27 +30,32 @@ public class TwitterDelete extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 201;
 		// 获取说说id
-		int twitterId = Integer.getInteger(request.getParameter("twitterId"));
+		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
 		//获取当前用户Id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int userId = 3;
+//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		
 		TwitterService twitterService = new TwitterService();
 		// 获取路径
-		String path = getServletContext().getRealPath("/WEB-INF/twitter/");
+		String path = getServletContext().getRealPath("/twitterPhotos/");
 		// 获取图片张数
 		int picture = twitterService.twitterPicture(twitterId);
+		LOGGER.log(Level.DEBUG, " {0}想删除说说，说说id为{1}，其图片张数为：{2}", userId,twitterId,picture);
 		try {
 			// 循环删除服务器上的图片
 			while (picture > 0) {
-				if (!twitterService.deleteFile(path + twitterId + "_" + picture + ".jpg")) {
+				if (!(twitterService.geTwitterById(twitterId).getTalkId() == userId
+						&& twitterService.deleteFile(path + twitterId + "_" + picture + ".jpg"))) {
 					state = 202;
 					break;
 				}
 				picture--;
 			}
 			// 删除服务器上的说说信息
-			if (!twitterService.deleteTwitter(twitterId,userId)) {
-				state = 202;
+			if (state != 202) {
+				if (!twitterService.deleteTwitter(twitterId, userId)) {
+					state = 202;
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.log(Level.ERROR, "删除说说失败", e);
@@ -61,5 +65,8 @@ public class TwitterDelete extends HttpServlet{
 			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 			output.close();
 		}
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(request, resp);
 	}
 }

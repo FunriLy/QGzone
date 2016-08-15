@@ -9,7 +9,7 @@ public class NoteModel {
 	private String targetName;//被留言者昵称
 	private int noteManId;//留言者id
 	private String noteManName;//留言者昵称
-	private String time;//留言时间
+	private String noteTime;//留言时间
 	private List<NoteCommentModel> comment;//每条留言对应的一系列评论
 	
 	public NoteModel(int noteId, String note, int targetId, String targetName, int noteManId, String noteManName,
@@ -20,7 +20,7 @@ public class NoteModel {
 		this.targetName = targetName;
 		this.noteManId = noteManId;
 		this.noteManName = noteManName;
-		this.time = time;
+		this.noteTime = time;
 		this.comment = comment;
 	}
 	
@@ -73,10 +73,10 @@ public class NoteModel {
 		this.noteManName = noteManName;
 	}
 	public String getTime() {
-		return time;
+		return noteTime;
 	}
 	public void setTime(String time) {
-		this.time = time;
+		this.noteTime = time;
 	}
 	public List<NoteCommentModel> getComment() {
 		return comment;

@@ -48,8 +48,8 @@ public class NoteDaoImpl implements NoteDao {
 	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
 		List<NoteModel> notes = new ArrayList<NoteModel>();
 		 try {
-			 int number=(pageNumber-1)*16;
-			 String sql = "SELECT * FROM note WHERE target_id=? ORDER BY note_id DESC LIMIT ?,16";
+			 int number=(pageNumber-1)*12;
+			 String sql = "SELECT * FROM note WHERE target_id=? ORDER BY note_id DESC LIMIT ?,12";
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);

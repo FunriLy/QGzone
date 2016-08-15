@@ -8,7 +8,7 @@ public class TwitterCommentModel {
 	private String commenterName;//说说评论者昵称
 	private int targetId;//说说被评论者id
 	private String targetName;//说说被评论者昵称
-	private String time;//说说评论的时间
+	private String twitterCommentTime;//说说评论的时间
 	public TwitterCommentModel(int commentId, String comment, int twitterId, int commenterId, String commenterName,
 			int targetId, String targetName, String time) {
 		super();
@@ -19,7 +19,7 @@ public class TwitterCommentModel {
 		this.commenterName = commenterName;
 		this.targetId = targetId;
 		this.targetName = targetName;
-		this.time = time;
+		this.twitterCommentTime = time;
 	}
 	
 	public TwitterCommentModel(String comment, int twitterId, int commenterId, int targetId) {
@@ -75,10 +75,10 @@ public class TwitterCommentModel {
 		this.targetName = targetName;
 	}
 	public String getTime() {
-		return time;
+		return twitterCommentTime;
 	}
 	public void setTime(String time) {
-		this.time = time;
+		this.twitterCommentTime = time;
 	}
 
 }
