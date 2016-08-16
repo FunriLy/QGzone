@@ -44,14 +44,13 @@ public class AlbumDaoImpl implements AlbumDao {
 	
 	@Override
 	public int createAlbum(AlbumModel album) {
-		LOGGER.log(Level.DEBUG, "创建相册的信息 相册名: {0}",album.getAlbumName());
+		LOGGER.log(Level.DEBUG, "创建相册的信息 相册名: {0} ",album.getAlbumName());
 		int result = fail;
 		try {
 			Date date = new Date();
 			con = SimpleConnectionPool.getConnection();
 			//将数据存进数据库
-			String strSql = "insert into albums(user_id, album_name, album_state, "
-					+ "album_password, album_upload_time) value(?,?,?,?,?)";
+			String strSql = "insert into albums(user_id, album_name, album_state, album_password, album_upload_time) value(?,?,?,?,?)";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, album.getUserId());
 			pStatement.setString(2, album.getAlbumName());
@@ -135,11 +134,12 @@ public class AlbumDaoImpl implements AlbumDao {
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "update albums set album_state=?, album_password=? where album_id=?";
+			String strSql = "update albums set album_state=?, album_password=? album_name=? where album_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, album.getAlbumState());
 			pStatement.setString(2, album.getAlbumPassword());
-			pStatement.setInt(3, album.getAlbumId());
+			pStatement.setString(3, album.getAlbumName());
+			pStatement.setInt(4, album.getAlbumId());
 			pStatement.executeUpdate();
 			//修改成功
 			result = success;

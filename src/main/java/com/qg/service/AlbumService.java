@@ -27,11 +27,34 @@ public class AlbumService {
 		
 		AlbumDao albumDao = new AlbumDaoImpl();
 		if (success == albumDao.isDuplicationOfName(userId, albumName)) {
-			result = 603;
+			result = 601;
 		}
 		
 		return result;
 	}
+	
+	/**
+	 * 已经验证存在性与权限问题
+	 * 修改相册信息
+	 * @param album
+	 * @return 603-格式错误; 604-相册重名; 602-失败; 601-成功;
+	 */
+	public int uplateAlbum(AlbumModel album){
+		int result = 602;
+		//格式错误
+		if (success != doCreateAlbum(album.getAlbumPassword(), album.getAlbumName(), album.getAlbumState())) {
+			return 603;
+		}
+		if (success != isDuplicationOfName(album.getUserId(), album.getAlbumName())) {
+			return 604;
+		}
+		AlbumDao albumDao = new AlbumDaoImpl();
+		if (success == albumDao.updateAlbum(album)) {
+			result = 601;
+		}
+		return result;
+	}
+	
 	
 	/**
 	 * 创建相册文件夹
@@ -42,6 +65,7 @@ public class AlbumService {
 		int state = fail;
 		int result = fail;
 		AlbumDao albumDao = new AlbumDaoImpl();
+		
 		//格式错误
 		if (success != doCreateAlbum(album.getAlbumPassword(), album.getAlbumName(), album.getAlbumState())) {
 			return -1;
@@ -51,6 +75,9 @@ public class AlbumService {
 			return -2;
 		}
 		//更新到数据库
+		if (album.getAlbumState() != success) {
+			album.setAlbumPassword("0");
+		}
 		result = albumDao.createAlbum(album);
 		/*
 		 * 创建文件夹
@@ -99,7 +126,7 @@ public class AlbumService {
 	/**
 	 * 用户查看公开相册
 	 * @param albumId 相册id
-	 * @return 状态码: 601-成功; 602-没有相片; 603-相册不存在; 604-相册权限不符; 605-非好友关系;
+	 * @return 状态码: 601-成功; 602-没有相片; 608-相册不存在; 605-相册权限不符; 606-非好友关系;
 	 */
 	public int checkPublicAlbum(int albumId, int userId){
 		int state = 602;
@@ -107,11 +134,11 @@ public class AlbumService {
 		FriendService friendService = new FriendService();
 		if (success != friendService.isFriend(userId, realAlbum.getUserId())) {
 			//非好友关系
-			state = 605;
+			state = 606;
 		} else if (success == albumIsExist(albumId)) {
 			//权限不符
 			if(success == realAlbum.getAlbumState()){
-				state = 604;
+				state = 605;
 			} else if(0 == realAlbum.getPhotoCount()){
 				//数量为0
 				state = 602;
@@ -120,7 +147,7 @@ public class AlbumService {
 				state = 601;
 			}
 		} else {
-			state = 603;
+			state = 608;
 		}
 		return state;
 	}
@@ -131,21 +158,19 @@ public class AlbumService {
 	 * 用户查看私密相册,返回状态码
 	 * @param album 用户输入的相册对象
 	 * @param userId 用户id
-	 * @return 状态码: 601-成功; 602-密码错误; 603-相册不存在; 604-相片为0; 605-非好友关系
+	 * @return 状态码: 601-成功; 602-密码错误; 608-相册不存在; 605-相片为0; 606-非好友关系
 	 */
 	public int checkPrivacyAlbum(AlbumModel album, int userId){
 		int state = 602;
 		FriendService friendService = new FriendService();
 		AlbumModel realAlbum = getAlbumByAlbumId(album.getAlbumId());
-		if (success != friendService.isFriend(userId, realAlbum.getUserId())) {
-			state = 605;
-		} else if (success == albumIsExist(album.getAlbumId())) {
+		if (success == albumIsExist(album.getAlbumId())) {
 			//用户为相册创建者
 			if (userId == realAlbum.getUserId()) {
 				
 				//相片数目为0
 				if (0 == realAlbum.getPhotoCount()) {
-					state = 604;
+					state = 605;
 				} else {
 					//创建者获得相册内容
 					state = 601;
@@ -154,14 +179,14 @@ public class AlbumService {
 			} else if(success != friendService.isFriend(userId, realAlbum.getUserId())){
 				
 				//非好友关系
-				state = 605;
+				state = 606;
 				
 			} else if(realAlbum.getAlbumPassword().equals(album.getAlbumPassword())){
 				//验证密码正确
 				
 				//相片数目为0
 				if (0 == realAlbum.getPhotoCount()) {
-					state = 604;
+					state = 605;
 				} else {
 					//获得相册内容
 					state = 601;
@@ -172,7 +197,7 @@ public class AlbumService {
 				state = 602;
 			}
 		} else {
-			state = 603;
+			state = 608;
 		}
 		return state;
 	}
@@ -226,35 +251,27 @@ public class AlbumService {
 		return album;
 	}
 	
-	/**
-	 * 更改相册信息(相册权限、相册密码)
-	 * @param album 存入的相册实体
-	 * @return 若成功返回success，否则返回fail
-	 */
-	public int uplateAlbum(AlbumModel album){
-		int result = fail;
-		AlbumDao albumDao = new AlbumDaoImpl();
-		result = albumDao.updateAlbum(album);
-		return result;
-	}
-	
+
 	/**
 	 * 用户更改相册名
 	 * @param albumId 相册编号
 	 * @param albumName 新相册名
-	 * @return 状态码: 601-修改成功; 602-修改失败;  604-格式错误;
+	 * @return 状态码: 601-修改成功; 602-修改失败;  603-格式错误;
 	 */
 	public int uplateAlbumName(int albumId, String albumName){
 		int result = 602;
-		if (albumName.length() <= 10 && (!albumName.isEmpty())) {
+		String regex ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
+				
+		//命名正确
+		if (albumName.matches(regex)) {
 			AlbumDao albumDao = new AlbumDaoImpl();
-			//新名不空且长度不超过10
 			if (success == albumDao.uplateAlbumName(albumId, albumName) ) {
 				result = 601;
 			}
 		} else {
-			result = 604;
+			result = 603;
 		}
+		
 		return result;
 	}
 	
@@ -286,7 +303,7 @@ public class AlbumService {
 	/**
 	 * 用户删除相册，
 	 * @param folderPath 文件夹绝对路径
-	 * @return 状态码: 601-删除成功; 602-失败;  604-相册不存在;
+	 * @return 状态码: 601-删除成功; 602-失败;  608-相册不存在;
 	 */
 	public int deleteAlbum(String folderPath, int albumId){
 		int state = 602;
@@ -294,7 +311,7 @@ public class AlbumService {
 		
 		File file = new File(folderPath);
 		if (!file.exists()) {
-			state = 604;
+			state = 608;
 		} else {
 			//删除相册并删除记录
 			delFolder(folderPath);
@@ -309,14 +326,14 @@ public class AlbumService {
 	/**
 	 * 用户清空相册，
 	 * @param folderPath 文件夹绝对路径
-	 * @return 状态码: 601-删除成功; 602-失败;  604-相册不存在;
+	 * @return 状态码: 601-删除成功; 602-失败;  608-相册不存在;
 	 */
 	public int emptyAlbum(String folderPath, int albumId){
 		int state = 602;
 		
 		File file = new File(folderPath);
 		if (!file.exists()) {
-			state = 604;
+			state = 608;
 		} else {
 			//清空相册
 			delAllFile(folderPath);

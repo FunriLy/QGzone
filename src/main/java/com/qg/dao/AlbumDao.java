@@ -38,7 +38,7 @@ public interface AlbumDao {
 	AlbumModel getAlbumByAlbumId(int albumId);
 	
 	/**
-	 * 修改相册的信息，包括相册权限、相册密码
+	 * 修改相册的信息，包括相册权限、相册密码、名
 	 * @param album 传入的相册实体
 	 * @return 若修改成功返回success，否则返回fail。
 	 */

@@ -20,7 +20,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户删除相册
- * 状态码: 601-删除成功; 602-失败; 603-没有权限; 604-相册不存在;
+ * 状态码: 601-删除成功; 602-失败; 607-没有权限; 608-相册不存在;
  * </p>
  */
 
@@ -54,10 +54,10 @@ public class AlbumDelete extends HttpServlet {
 		if (userId == realAlbum.getUserId()) {
 			state = albumService.deleteAlbum( path, albumId);
 		} else if (realAlbum.getAlbumId() == 0) {
-			state = 604;
+			state = 608;
 		} 
 		else {
-			state = 603;
+			state = 607;
 		}
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 删除相册 {1} 状态: {2}", userId, albumId, state);

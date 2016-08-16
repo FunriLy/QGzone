@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -25,7 +24,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户查看私密相册
- * 状态码: 601-成功; 602-密码错误; 603-相册不存在; 604-相片为0; 605-非好友关系;
+ * 状态码: 601-成功; 602-密码错误; 608-相册不存在; 605-相片为0; 606-非好友关系;
  * </p>
  */
 
@@ -38,7 +37,8 @@ public class AlbumCheckPrivacy extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {

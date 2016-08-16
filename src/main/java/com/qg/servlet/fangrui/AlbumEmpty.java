@@ -20,7 +20,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户清空相册
- * 状态码: 601-删除成功; 602-失败; 603-没有权限; 604-相册不存在;
+ * 状态码: 601-删除成功; 602-失败; 607-没有权限; 608-相册不存在;
  * </p>
  */
 
@@ -51,7 +51,11 @@ public class AlbumEmpty extends HttpServlet {
 		AlbumModel realAlbum = albumService.getAlbumByAlbumId(albumId);
 		if (userId == realAlbum.getUserId()) {
 			state = albumService.emptyAlbum(path, albumId);
-		} 
+		} else if (realAlbum.getAlbumId() == 0) {
+			state = 608;
+		} else {
+			state = 607;
+		}
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 清空相册 {1} 状态: {2}", userId, albumId, state);
 		
