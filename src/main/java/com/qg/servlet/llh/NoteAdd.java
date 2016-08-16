@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteModel;
-import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.service.NoteService;
 import com.qg.util.JsonUtil;
@@ -33,29 +32,29 @@ public class NoteAdd extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		int noteId = 0;
 		int state = 501;
 		/* 获取被留言者id,留言内容 */
 		int targetId = Integer.parseInt((request.getParameter("targetId")));
 		String note = request.getParameter("note");
 		// 当前用户=留言者
-//		int noteManId=3;
-		int noteManId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		LOGGER.log(Level.DEBUG, "留言:{0}  被留言者id:{1}  当前用户Id:{2}", note,targetId,noteManId);
-		if(new FriendService().isFriend(noteManId, targetId)==1){
-			if (!(note.length() > 15)) {
+		int noteManId=3;
+//		int noteManId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		if(new FriendService().isFriend(noteManId, targetId)==1||targetId==noteManId){
+			if (!(note.length() > 120)) {
 				// 获取留言的实体类
 				NoteModel noteModel = new NoteModel(note, targetId, noteManId);
 				// 存进数据库
-				if (!new NoteService().addNote(noteModel))
-					state = 502;
+				noteId = new NoteService().addNote(noteModel);
 				// 打包发送
 			} else
 				state = 503;
 		}else {
 			state =504;
 		}
+		LOGGER.log(Level.DEBUG, "留言:{0}  被留言者id:{1}  当前用户Id:{2}  留言id为:{3}", note,targetId,noteManId,noteId);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state,noteId).getBytes("UTF-8"));
 		output.close();
 	}
 

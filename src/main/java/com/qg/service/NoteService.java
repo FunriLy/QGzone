@@ -1,5 +1,6 @@
 package com.qg.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qg.dao.NoteDao;
@@ -17,7 +18,7 @@ public class NoteService {
 	 * @param note 留言实体类
 	 * @return true false
 	 */
-	public boolean addNote(NoteModel note) {
+	public int addNote(NoteModel note) {
 		return 	noteDao.addNote(note);
 	}
 	/***
@@ -30,11 +31,12 @@ public class NoteService {
 	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
 		int noteNumber = noteDao.noteNumber(userId);
 		
+		List<NoteModel>notes = new ArrayList<>();
 		LOGGER.log(Level.ERROR, "页码数{0}",this.notePage(userId,noteNumber) );
-		if (this.notePage(userId,noteNumber) > pageNumber)
+		if (!(this.notePage(userId,noteNumber) < pageNumber))
 		return noteDao.getNote(pageNumber, userId);
 		else 
-			return null;
+			return notes;
 	}
 	/***
 	 * 根据id获取留言实体
@@ -59,7 +61,7 @@ public class NoteService {
 	 * @param noteId留言id
 	 * @return true false
 	 */
-	boolean existNote(int noteId){
+	public boolean existNote(int noteId){
 		return noteDao.existNote(noteId);
 	}
 	
@@ -73,5 +75,8 @@ public class NoteService {
 				else
 					totalPage = new Integer(noteNumber / pageSize).intValue() + 1;
 				return totalPage;
+	}
+	public int noteNumber(int userId){
+		return  noteDao.noteNumber(userId);
 	}
 }

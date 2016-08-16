@@ -22,8 +22,8 @@ public class NoteCommentService {
 	 * @param noteComment 留言评论
 	 * @return true false
 	 */
-	public boolean addNoteComment(NoteCommentModel noteComment){
-		return (new NoteService().existNote(noteComment.getNoteId()))?noteCommentDao.addNoteComment(noteComment):false;
+	public int addNoteComment(NoteCommentModel noteComment){
+		return noteCommentDao.addNoteComment(noteComment);
 	}
 	/***
 	 * 根据id获取留言评论

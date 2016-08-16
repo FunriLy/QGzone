@@ -1,6 +1,7 @@
 package com.qg.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qg.dao.SupportDao;
@@ -34,11 +35,15 @@ public class TwitterService {
 	 */
 	public List<TwitterModel> getTwitter(int pageNumber, int userId) throws Exception {
 		int twitterNumber=twitterDao.twitterNumber(userId);
+		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		LOGGER.log(Level.ERROR, "页码数{0}",this.twitterPage(userId,twitterNumber) );
-		if (this.twitterPage(userId,twitterNumber) > pageNumber)
-			return twitterDao.getTwitter(pageNumber, userId);
-		else
-			return null;
+		
+		if (!(this.twitterPage(userId,twitterNumber) < pageNumber))
+		{
+			twitters = twitterDao.getTwitter(pageNumber, userId);
+			return twitters;
+		} else
+			return twitters;
 	}
 	/**
 	 * 获取说说
@@ -56,12 +61,13 @@ public class TwitterService {
 	 * @throws Exception 
 	 */
 	public List<TwitterModel> getTwitterByTalkId(int pageNumber, int talkId) throws Exception {
-		int twitterNumber=twitterDao.userTwitterNumber(talkId);
-		LOGGER.log(Level.ERROR, "页码数{0}",this.twitterPage(talkId,twitterNumber) );
-		if (this.twitterPage(talkId,twitterNumber) > pageNumber)
-		return twitterDao.getMyTwitter(pageNumber, talkId);
-		else 
-			return null;
+		int twitterNumber = twitterDao.userTwitterNumber(talkId);
+		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
+		LOGGER.log(Level.ERROR, "页码数{0}", this.twitterPage(talkId, twitterNumber));
+		if (!(this.twitterPage(talkId, twitterNumber) < pageNumber))
+			return twitterDao.getMyTwitter(pageNumber, talkId);
+		else
+			return twitters;
 	}
 	/***
 	 * 删除某条说说
@@ -71,7 +77,10 @@ public class TwitterService {
 	 */
 	public boolean deleteTwitter(int twitterId,int userId) {
 		//判断权限后删除
+		if(twitterDao.existTwitter(twitterId))
 		return (userId==this.geTwitterById(twitterId).getTalkId())?twitterDao.deleteTwitter(twitterId):false;
+		else 
+			return false;
 	}
 	/**
 	 * 点赞
@@ -173,5 +182,21 @@ public class TwitterService {
 				else
 					totalPage = new Integer(twitterNumber / pageSize).intValue() + 1;
 				return totalPage;
+	}
+	/***
+	 * 获取好友圈说说总数
+	 * @param userId 当前登陆用户
+	 * @return 总数
+	 */
+	public int twitterNumber(int userId){
+		return twitterDao.twitterNumber(userId);
+	}
+	/***
+	 * 获取用户的说说总数
+	 * @param userId 用户对象
+	 * @return 总数
+	 */
+	public int userTwitterNumber(int userId){
+		return twitterDao.userTwitterNumber(userId);
 	}
 }

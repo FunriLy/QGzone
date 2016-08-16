@@ -57,9 +57,9 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	}
 
 	@Override
-	public boolean addNoteComment(NoteCommentModel noteComment) {
-		boolean result = true;
+	public int addNoteComment(NoteCommentModel noteComment) {
 		Date newTime = new Date();
+		int noteCommentId=0;
 		int noteId = 0;
 		try {
 			conn = SimpleConnectionPool.getConnection();
@@ -71,27 +71,27 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 			pStatement.setInt(3, noteComment.getCommenterId());
 			pStatement.setInt(4, noteComment.getTargetId());
 			pStatement.setTimestamp(5, new Timestamp(newTime.getTime()));
-
+			pStatement.executeUpdate();
+			
 			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT note_id FROM note_comment WHERE time=?";
+			String SQL = "SELECT note_id,comment_id FROM note_comment WHERE time=?";
 			pStatement = conn.prepareStatement(SQL);
 			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
 			rs = pStatement.executeQuery();
-			if (rs.next())
+			if (rs.next()){
 				noteId = rs.getInt("note_id");
+				noteCommentId=rs.getInt("comment_id");}
 			// 插入与我相关表
 			RelationModel relation = new RelationModel("nc", noteComment.getComment(), noteComment.getTargetId(),
 					noteComment.getCommenterId(), 0, noteId);
 			new RelationDaoImpl().addRelation(relation);
 
-			pStatement.executeUpdate();
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加留言评论异常！", e);
-			result = false;
 		} finally {
 			close(null, pStatement, conn);
 		}
-		return result;
+		return noteCommentId;
 	}
 
 	@Override

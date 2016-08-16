@@ -26,7 +26,7 @@ public interface TwitterCommentDao {
      * @param twitterComment 说说对象
      * @return true false
      */
-    public boolean addTwitterComment(TwitterCommentModel twitterComment);
+    public int addTwitterComment(TwitterCommentModel twitterComment);
     /**
      * 这是一个根据评论ID获取评论对象的方法
      * @param commenterId
