@@ -53,7 +53,7 @@ public class AlbumInspect extends HttpServlet {
 		
 		AlbumService albumService = new AlbumService();
 		
-		if (success == albumService.isPassword(album.getAlbumState(), album.getAlbumPassword())) {
+		if (success == albumService.isPassword(album.getAlbumId(), album.getAlbumPassword())) {
 			state = 601;
 		}
 		
@@ -62,8 +62,6 @@ public class AlbumInspect extends HttpServlet {
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
 		
-//		String path = getServletContext().getRealPath("/album");
-//		System.out.println(path);
 	}
 	
 	@Override

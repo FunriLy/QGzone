@@ -17,6 +17,22 @@ public class AlbumService {
 	private static final int fail = 0;
 	
 	/**
+	 * 修改相册图片数量
+	 * @param mold 类型
+	 * @param albumId 相册id
+	 */
+	public void changePhotoCount(int mold, int albumId){
+		AlbumDao albumDao = new AlbumDaoImpl();
+		if (mold == success) {
+			albumDao.addPhotoCount(albumId);
+		} else {
+			albumDao.subtractPhotoCount(albumId);
+		}
+		
+	}
+	
+	
+	/**
 	 * 判断用户个人的相册名是否重复
 	 * @param userId 用户id
 	 * @param albumName 相册名
@@ -132,16 +148,17 @@ public class AlbumService {
 		int state = 602;
 		AlbumModel realAlbum = getAlbumByAlbumId(albumId);
 		FriendService friendService = new FriendService();
-		if (success != friendService.isFriend(userId, realAlbum.getUserId())) {
+		if (success != friendService.isFriend(userId, realAlbum.getUserId()) && userId!= realAlbum.getUserId()) {
 			//非好友关系
 			state = 606;
 		} else if (success == albumIsExist(albumId)) {
+			//好友关系或者主人访问
 			//权限不符
 			if(success == realAlbum.getAlbumState()){
-				state = 605;
+				state = 607;
 			} else if(0 == realAlbum.getPhotoCount()){
 				//数量为0
-				state = 602;
+				state = 605;
 			} else {
 				//相片数量不为0
 				state = 601;
@@ -240,11 +257,10 @@ public class AlbumService {
 	public AlbumModel getAlbumByAlbumId(int albumId){
 		AlbumModel album = new AlbumModel();
 		AlbumDao albumDao = new AlbumDaoImpl();
-		PhotoDao photoDao = new PhotoDaoImpl();
 		//如果相册存在,获得相册信息和相片数量
+		System.out.println(albumIsExist(albumId));
 		if(success == albumIsExist(albumId)){
 			album = albumDao.getAlbumByAlbumId(albumId);
-			album.setPhotoCount(photoDao.getPhotoCountByAlbumId(albumId));
 		}
 		//防止空指针
 		
@@ -282,21 +298,10 @@ public class AlbumService {
 	 */
 	public List<AlbumModel> getAllAlbumByUserId(int userId){
 		List<AlbumModel> allAlbum = new ArrayList<AlbumModel>();
-		List<Integer> allAlbumId = null;
-		AlbumModel album = null;
 		
 		AlbumDao albumDao = new AlbumDaoImpl();
-		allAlbumId = albumDao.getAllAlbumIdByUserId(userId);
-		//若用户相册不为空
-		if(allAlbumId != null){
-			for(Integer albumId : allAlbumId){
-				album = getAlbumByAlbumId(albumId);
-				//将相册对象的密码设置为空,并将对象加入到集合中
-				//避免其他用户获得相册密码
-				album.setAlbumPassword("");
-				allAlbum.add(album);
-			}
-		}
+		allAlbum = albumDao.getAllAlbumIdByUserId(userId);
+		
 		return allAlbum;
 	}
 

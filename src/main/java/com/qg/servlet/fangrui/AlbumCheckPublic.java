@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -23,7 +22,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户查看公开相册中的图片
- * 状态码: 601-成功; 602-没有相片; 608-相册不存在; 605-相册权限不符; 606-非好友关系;
+ * 状态码: 601-成功; 605-没有相片; 608-相册不存在; 605-相册权限不符; 606-非好友关系;
  * </p>
  */
 

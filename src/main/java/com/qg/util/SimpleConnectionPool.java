@@ -26,7 +26,7 @@ import java.sql.Connection;
      private static String m_url = "jdbc:mysql://127.0.0.1:3306/qgzone";
      private static String m_user = "root";
      private static String m_password = "123456";
-     private static int m_maxConnect = 3;
+     private static int m_maxConnect = 100;
      
      //测试bug
      static final boolean DEBUG = false;
