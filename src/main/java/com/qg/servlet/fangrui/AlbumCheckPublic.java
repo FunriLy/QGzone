@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -23,7 +22,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户查看公开相册中的图片
- * 状态码: 601-成功; 602-没有相片; 603-相册不存在; 604-相册权限不符;
+ * 状态码: 601-成功; 605-没有相片; 608-相册不存在; 605-相册权限不符; 606-非好友关系;
  * </p>
  */
 
@@ -35,7 +34,8 @@ public class AlbumCheckPublic extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		//初始化状态码等数据
 		int state = 602;
 		

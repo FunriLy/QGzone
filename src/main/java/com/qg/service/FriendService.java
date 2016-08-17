@@ -6,12 +6,15 @@ import java.util.List;
 
 import com.qg.dao.FriendDao;
 import com.qg.dao.MessageDao;
+import com.qg.dao.RelationDao;
 import com.qg.dao.UserDao;
 import com.qg.dao.impl.FriendDaoImpl;
 import com.qg.dao.impl.MessageDaoImpl;
+import com.qg.dao.impl.RelationDaoImpl;
 import com.qg.dao.impl.UserDaoImpl;
 import com.qg.model.FriendApplyModel;
 import com.qg.model.MessageModel;
+import com.qg.model.RelationModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -70,11 +73,9 @@ public class FriendService {
 		FriendDao friendDao = new FriendDaoImpl();
 		//执行操作
 		result = friendDao.deleteFriend(userId, t_userId);
-		
-		/*
-		 * 与我相关操作
-		 */
-		//若执行操作成功，返回与我相关操作
+		RelationModel relationModel = new RelationModel("fa", "用户解除双方的好友关系!!", t_userId, userId, 0, 0);
+		RelationDao relationDao = new RelationDaoImpl();
+		relationDao.addRelation(relationModel);
 		if(success == result){
 			LOGGER.log(Level.DEBUG, "service层删除好友操作");
 		}
@@ -114,11 +115,11 @@ public class FriendService {
 		} else {
 			result = friendDao.conductFriendApply(friendApply.getFriendApplyId());
 			friendDao.addFriend(friendApply.getRequesterId(), friendApply.getResponserId());
+			RelationModel relationModel = new RelationModel("fa", "用户已经同意你的好友申请!", friendApply.getRequesterId(), friendApply.getResponserId(), 0, 0);
+			RelationDao relationDao = new RelationDaoImpl();
+			relationDao.addRelation(relationModel);
 		}
 		
-		/*
-		 * 与我相关
-		 */
 		return result;
 	}
 

@@ -40,7 +40,7 @@ public class PhotoDelete extends HttpServlet {
 		int state = 602;
 		AlbumService albumService = new AlbumService();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
-		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
+		if (request.getParameter("photo")== null || request.getParameter("photo")=="") {
 			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 			output.close();
 			LOGGER.log(Level.DEBUG, "空指针！");
@@ -49,21 +49,24 @@ public class PhotoDelete extends HttpServlet {
 		
 		//获得Json并解析
 		Gson gson = new Gson();
-		String strPhoto = request.getParameter("jsonObject");
+		String strPhoto = request.getParameter("photo");
 		PhotoModel photo = gson.fromJson(strPhoto, PhotoModel.class);
 		
 		
 		AlbumModel album = albumService.getAlbumByAlbumId(photo.getAlbumId());
+		System.out.println(album.getUserId());
 		//确保用户操作自己的相册
 		if (userId == album.getUserId()) {
 			String photoPath = getServletContext().getRealPath("/album/") + userId + "/" + photo.getAlbumId() + "/" ;
 			String photoId = photo.getPhotoId()+".jpg";
 			PhotoService photoService = new PhotoService();
-			if (success == photoService.deletePhoto(photoPath, photoId)) {
+			if (success == photoService.deletePhoto(photoPath, photoId, photo.getPhotoId())) {
 				state = 601;
+				
+				albumService.changePhotoCount(0, photo.getAlbumId());
 			}
 		} else {
-			state = 603;
+			state = 602;
 		}
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 删除相册 {1} 中的图片 {2} 状态: {3}", userId, photo.getAlbumId(), photo.getPhotoId(), state);

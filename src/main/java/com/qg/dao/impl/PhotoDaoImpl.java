@@ -138,7 +138,7 @@ public class PhotoDaoImpl implements PhotoDao {
 		PhotoModel photo = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "";
+			String strSql = "select * from photos where photo_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, photoId);
 			ResultSet rSet = pStatement.executeQuery();

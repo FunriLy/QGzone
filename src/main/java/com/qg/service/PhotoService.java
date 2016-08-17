@@ -21,7 +21,7 @@ public class PhotoService {
 	 * @param photoPath 文件完整路径
 	 * @return 成功返回success，失败返回fail
 	 */
-	public int deletePhoto(String photoPath, String photoId){
+	public int deletePhoto(String photoPath, String photoId,int photo_id){
 		int result = fail;
 		File file = new File(photoPath+photoId);
 		if(file.isFile() && file.exists()){
@@ -29,6 +29,8 @@ public class PhotoService {
 			LOGGER.log(Level.DEBUG, "用户删除相片  相片路径: {0}",photoPath);
 			File t_File = new File(photoPath+"t_"+photoId);
 			t_File.delete();
+			PhotoDao photoDao = new PhotoDaoImpl();
+			photoDao.deletePhotoByPhotoId(photo_id);
 			result = success;
 		}
 		return result;

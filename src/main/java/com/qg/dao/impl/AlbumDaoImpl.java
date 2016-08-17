@@ -44,20 +44,20 @@ public class AlbumDaoImpl implements AlbumDao {
 	
 	@Override
 	public int createAlbum(AlbumModel album) {
-		LOGGER.log(Level.DEBUG, "创建相册的信息 相册名: {0}",album.getAlbumName());
+		LOGGER.log(Level.DEBUG, "创建相册的信息 相册名: {0} ",album.getAlbumName());
 		int result = fail;
 		try {
 			Date date = new Date();
 			con = SimpleConnectionPool.getConnection();
 			//将数据存进数据库
-			String strSql = "insert into albums(user_id, album_name, album_state, "
-					+ "album_password, album_upload_time) value(?,?,?,?,?)";
+			String strSql = "insert into albums(user_id, album_name, album_state, album_password, album_upload_time, photo_count) value(?,?,?,?,?,?)";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, album.getUserId());
 			pStatement.setString(2, album.getAlbumName());
 			pStatement.setInt(3, album.getAlbumState());
 			pStatement.setString(4, album.getAlbumPassword());
 			pStatement.setTimestamp(5, new Timestamp(date.getTime()));
+			pStatement.setInt(6, 0);
 			pStatement.executeUpdate();
 			
 			//获取存进数据库的实体的编号
@@ -111,14 +111,17 @@ public class AlbumDaoImpl implements AlbumDao {
 			
 			if(rSet.next()){
 				int user_id = rSet.getInt("user_id");
+				System.out.println("userId="+user_id);
 				String album_name = rSet.getString("album_name");
 				int album_state = rSet.getInt("album_state");
 				String album_password = rSet.getString("album_password");
 				Timestamp upload_time = rSet.getTimestamp("album_upload_time");
+				int photo_count = rSet.getInt("photo_count");
 				
 				album = new AlbumModel(user_id, album_name, album_state, album_password);
 				//将时间存进对象(格式：年-月-日 时-分-秒)
 				album.setAlbumId(albumId);
+				album.setPhotoCount(photo_count);
 				album.setAlbumUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
 			}
 		} catch (SQLException e) {
@@ -135,11 +138,12 @@ public class AlbumDaoImpl implements AlbumDao {
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "update albums set album_state=?, album_password=? where album_id=?";
+			String strSql = "update albums set album_state=?, album_password=? album_name=? where album_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, album.getAlbumState());
 			pStatement.setString(2, album.getAlbumPassword());
-			pStatement.setInt(3, album.getAlbumId());
+			pStatement.setString(3, album.getAlbumName());
+			pStatement.setInt(4, album.getAlbumId());
 			pStatement.executeUpdate();
 			//修改成功
 			result = success;
@@ -189,8 +193,9 @@ public class AlbumDaoImpl implements AlbumDao {
 	}
 
 	@Override
-	public List<Integer> getAllAlbumIdByUserId(int userId) {
-		List<Integer> allAlbumId = new ArrayList<Integer>();
+	public List<AlbumModel> getAllAlbumIdByUserId(int userId) {
+		List<AlbumModel> allAlbumId = new ArrayList<AlbumModel>();
+		AlbumModel  album = new AlbumModel();
 		try {
 			con = SimpleConnectionPool.getConnection();
 			String strSql = "select * from albums where user_id=?";
@@ -198,8 +203,19 @@ public class AlbumDaoImpl implements AlbumDao {
 			pStatement.setInt(1, userId);
 			ResultSet rSet = pStatement.executeQuery();
 			while(rSet.next()){
-				int album_id = rSet.getInt("album_id");
-				allAlbumId.add(new Integer(album_id));
+				int albumId = rSet.getInt("album_id");
+				String album_name = rSet.getString("album_name");
+				int album_state = rSet.getInt("album_state");
+				Timestamp upload_time = rSet.getTimestamp("album_upload_time");
+				int photo_count = rSet.getInt("photo_count");
+				
+				album = new AlbumModel(userId, album_name, album_state, "");
+				//将时间存进对象(格式：年-月-日 时-分-秒)
+				album.setAlbumId(albumId);
+				album.setPhotoCount(photo_count);
+				album.setAlbumUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
+				
+				allAlbumId.add(album);
 			}
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -246,6 +262,38 @@ public class AlbumDaoImpl implements AlbumDao {
 		} catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "查询相册名重复实现类发送异常！", e);
+		}
+		return result;
+	}
+
+	@Override
+	public int addPhotoCount(int albumId) {
+		int result = fail;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql ="update albums set photo_count=photo_count+1 where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, albumId);
+			pStatement.executeUpdate();
+			result = success;
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "增加相片数量实现类异常");
+		}
+		return result;
+	}
+
+	@Override
+	public int subtractPhotoCount(int albumId) {
+		int result = fail;
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql ="update albums set photo_count=photo_count-1 where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, albumId);
+			pStatement.executeUpdate();
+			result = success;
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "增加相片数量实现类异常");
 		}
 		return result;
 	}

@@ -42,6 +42,7 @@ public class PhotoUpload extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(PhotoUpload.class);
 	private static final int fail = 0;
+	private static final int success = 1;
 	
 	@Override 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -107,7 +108,7 @@ public class PhotoUpload extends HttpServlet{
 								}
 								
 								ImgCompress.ImageCompress(path + userId + "/" + albumId + "/", id);
-								
+								albumService.changePhotoCount(success, albumId);
 								out.close();
 								in.close();
 								state = 601;

@@ -61,9 +61,9 @@ public interface AlbumDao {
 	/**
 	 * 根据用户编号获取用户相册编号
 	 * @param userId 用户编号
-	 * @return 用户相册编号集合
+	 * @return 用户相册集合
 	 */
-	public List<Integer> getAllAlbumIdByUserId(int userId);
+	public List<AlbumModel> getAllAlbumIdByUserId(int userId);
 	
 	/**
 	 * 根据相册id获得相册密码
@@ -79,4 +79,18 @@ public interface AlbumDao {
 	 * @return 若重复返回fail，否则返回success
 	 */
 	public int isDuplicationOfName(int userId, String albumName);
+	
+	/**
+	 * 将相册中相片数目+1
+	 * @param albumId 相册id
+	 * @return 成功返回success, 否则返回fail
+	 */
+	public int addPhotoCount(int albumId);
+	
+	/**
+	 * 将相册中相片数目-1
+	 * @param albumId 相册id
+	 * @return 成功返回success, 否则返回fail
+	 */
+	public int subtractPhotoCount(int albumId);
 }
