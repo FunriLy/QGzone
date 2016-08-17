@@ -26,7 +26,8 @@ public class NoteDaoImpl implements NoteDao {
 	SimpleDateFormat Format = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
 	
 	@Override
-	public int addNote(NoteModel note) {
+	public boolean addNote(NoteModel note) {
+		boolean result = true;
 		int noteId=0;
 		Date newTime = new Date();
     	try {
@@ -55,7 +56,7 @@ public class NoteDaoImpl implements NoteDao {
 		} finally {
 				close(null, pStatement, conn);
 			}
-    	return noteId;
+    	return result;
 	}
 
 	@Override

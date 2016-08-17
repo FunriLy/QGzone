@@ -20,7 +20,7 @@ public interface NoteDao {
 	 * @param note 留言对象
 	 * @return true false
 	 */
-	int addNote(NoteModel note);
+	boolean addNote(NoteModel note);
 	/**
 	 * 这是一个获得留言集合的方法
 	 * @param pageNumber 当前页码

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qg.service.NoteCommentService;
 import com.qg.util.JsonUtil;
-import com.qg.util.Level;
 import com.qg.util.Logger;
 
 @WebServlet("/NoteCommentDelete")
@@ -39,12 +38,9 @@ public class NoteCommentDelete extends HttpServlet {
 		if (!new NoteCommentService().deleteComment(commentId,userId)) {
 			state = 502;
 		}
-		LOGGER.log(Level.DEBUG, " {0}想删除留言评论，其id为{1}", userId,commentId);
+
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
-	}
-	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(request, resp);
 	}
 }

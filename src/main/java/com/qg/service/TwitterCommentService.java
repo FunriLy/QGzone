@@ -22,8 +22,8 @@ public class TwitterCommentService {
 	  * @param twitterComment 说说评论
 	  * @return true false
 	  */
-	 public int addTwitterComment(TwitterCommentModel twitterComment){
-		 return twitterCommentDao.addTwitterComment(twitterComment);
+	 public boolean addTwitterComment(TwitterCommentModel twitterComment){
+		 return  new TwitterService().existTwitter(twitterComment.getTwitterId())?twitterCommentDao.addTwitterComment(twitterComment):false;
 	 }
 	 /***
 	  * 该方法根据id获取说说评论

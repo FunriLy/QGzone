@@ -55,10 +55,10 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 		}
     	return twitterComments;
     }
-    public int addTwitterComment(TwitterCommentModel twitterComment){
+    public boolean addTwitterComment(TwitterCommentModel twitterComment){
+    	boolean result = true;
     	Date newTime = new Date();
 		int twitterId = 0;
-		int twitterCommentId=0;
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into twitter_comment(comment, twitter_id, commenter_id, "
@@ -72,15 +72,12 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.executeUpdate();
 			
 			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT twitter_id,comment_id FROM twitter_comment WHERE time=?";
+			String SQL = "SELECT twitter_id FROM twitter_comment WHERE time=?";
 			pStatement = conn.prepareStatement(SQL);
 			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
 			rs = pStatement.executeQuery();
-			
-			
-			if (rs.next()){
+			if (rs.next())
 				twitterId = rs.getInt("twitter_id");
-				twitterCommentId = rs.getInt("comment_id");}
 			// 插入与我相关表
 			RelationModel relation = new RelationModel("tc", twitterComment.getComment(), twitterComment.getTargetId(),
 					twitterComment.getCommenterId(), 0, twitterId);
@@ -88,10 +85,11 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加说说评论异常！", e);
+			result = false;
 		} finally {
 			close(null, pStatement, conn);
 		}
-    	return twitterCommentId;
+    	return result;
 	}
     public TwitterCommentModel geTwitterCommentById(int commentId) {
     	TwitterCommentModel twitterComment = null;
