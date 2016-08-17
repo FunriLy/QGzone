@@ -52,6 +52,8 @@ public class UserSignIn extends HttpServlet {
 		//判断账号密码是否符合
 		flag = userService.doSingIn(userId, userPassword);
 		UserModel user = null;
+		//删除之前的session
+		request.getSession().invalidate();
 		if(flag){
 			//登录成功
 			state = 111;

@@ -20,8 +20,8 @@ import com.qg.util.Logger;
  * 
  * @author zggdczfr
  * <p>
- * 用户更改相册权限/更改相册密码
- * 状态码: 601-修改成功; 602-修改失败; 603-相册不存在; 604-没有权限;
+ * 用户更改相册信息
+ * 状态码: 601-修改成功; 602-修改失败; 603-格式错误; 604-重名; 608-相册不存在; 607-没有权限;
  * </p>
  */
 
@@ -52,21 +52,16 @@ public class AlbumAlter extends HttpServlet{
 		Gson gson = new Gson();
 		
 		AlbumModel album = gson.fromJson(reciveObject, AlbumModel.class);
-
+		album.setUserId(userId);
+		
 		//相册不存在
 		if(success != albumService.albumIsExist(album.getAlbumId())){
-			state = 603;
-			if (success == albumService.uplateAlbum(album)) {
-				state = 601;
-			}
+			state = 607;
 		} else if (userId != albumService.getAlbumByAlbumId(album.getAlbumId()).getUserId()) {
 			//没有权限修改
-			state = 604;
+			state = 608;
 		} else {
-			state = 602;
-			if (success == albumService.uplateAlbum(album)) {
-				state = 601;
-			}
+			state = albumService.uplateAlbum(album);
 		}
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 修改相册 {1} 重要信息，相册权限 {2} 相册密码 {3} 状态 {4}", 

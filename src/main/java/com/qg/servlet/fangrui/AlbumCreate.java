@@ -43,16 +43,21 @@ public class AlbumCreate extends HttpServlet {
 		String path = getServletContext().getRealPath("/album/") + String.valueOf(userId);
 		File file = new File(path);
 		//确保用户有个人文件夹
-		if (file.exists()) {
+		if (!file.exists()) {
 			file.mkdirs();
+		}
+		
+		if (request.getParameter("album")==null || request.getParameter("album")=="") {
+			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
+			output.close();
+			LOGGER.log(Level.DEBUG, "空指针");
+			return;
 		}
 		
 		//获得Json并解析
 		Gson gson = new Gson();
 		String strAlbum = request.getParameter("album");
-		System.out.println(strAlbum);
 		AlbumModel album = gson.fromJson(strAlbum, AlbumModel.class);
-		System.out.println(album.toString());
 		album.setUserId(userId);
 		AlbumService albumService = new AlbumService();
 		

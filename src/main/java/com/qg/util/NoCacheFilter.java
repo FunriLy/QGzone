@@ -31,7 +31,6 @@ public class NoCacheFilter implements Filter {
 		httpServletResponse.setHeader("Cache-Control", "no-cache");
 		httpServletResponse.setDateHeader("Expires", -1);
 		httpServletResponse.setHeader("Pragma", "no-cache");
-
 		chain.doFilter(request, httpServletResponse);
 	}
 

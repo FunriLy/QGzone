@@ -21,7 +21,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 用户重命名相册
- * 状态码: 601-修改成功; 602-没有相应权限,修改失败; 603-相册不存在; 604-格式错误; 605-重名；
+ * 状态码: 601-修改成功; 602-修改失败; 608-相册不存在; 603-格式错误; 604-重名；
  * </p>
  */
 
@@ -34,7 +34,8 @@ public class AlbumRechristen extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户在账号
-		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = 1;
+		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		AlbumService albumService = new AlbumService();
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
@@ -53,11 +54,13 @@ public class AlbumRechristen extends HttpServlet{
 		AlbumModel album = gson.fromJson(strAlbum, AlbumModel.class);
 
 		if (success != albumService.albumIsExist(album.getAlbumId())) {
-			state = 603;
+			state = 608;
 		} else {
 			//判断用户是否拥有相应的权限
 			if (userId == albumService.getAlbumByAlbumId(album.getAlbumId()).getUserId()) {
 				state = albumService.uplateAlbumName(album.getAlbumId(), album.getAlbumName());
+			} else if (602 == albumService.isDuplicationOfName(userId, album.getAlbumName())) {
+				state = 604;
 			} else {
 				state = 602;
 			}

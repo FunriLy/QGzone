@@ -58,7 +58,6 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public boolean addUser(UserModel user) {
-		LOGGER.log(Level.DEBUG, "创建用户的信息 账号:",user.getUserId());
 		conn = SimpleConnectionPool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into user"+" "+"values(?,?,?,?,?)");
@@ -85,7 +84,6 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public UserModel getUserById(int userId) {
-		LOGGER.log(Level.DEBUG, "用户的信息 账号:",userId);
 		conn = SimpleConnectionPool.getConnection();
 		UserModel user = new UserModel();
 		try {
@@ -121,7 +119,6 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public List<UserModel> getUsersByName(String userName) {
-		LOGGER.log(Level.DEBUG, "用户的信息 昵称:",userName);
 		List<UserModel> users = new ArrayList<UserModel>();
 		conn = SimpleConnectionPool.getConnection();
 		try {
@@ -156,7 +153,6 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public boolean changeSecret(int userId, int secretId, String newAnswer) {
-		LOGGER.log(Level.DEBUG, "修改密保问题:",secretId+newAnswer);
 		conn = SimpleConnectionPool.getConnection();
 		try {
 
@@ -187,7 +183,6 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public boolean changePassword(int userId, String password) {
 				
-		LOGGER.log(Level.DEBUG, "修改密码:",password);
 		conn = SimpleConnectionPool.getConnection();
 		try {
 
@@ -213,7 +208,6 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	public List<String> selcetUserId(){
-		LOGGER.log(Level.DEBUG, "用户的账户列表:");
 		List<String> list = new ArrayList<String>();
 		conn = SimpleConnectionPool.getConnection();
 		try {

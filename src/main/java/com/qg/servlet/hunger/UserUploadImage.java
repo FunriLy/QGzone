@@ -32,6 +32,7 @@ import com.qg.service.MessageService;
 import com.qg.service.TwitterService;
 import com.qg.service.UserService;
 import com.qg.servlet.llh.TwitterAdd;
+import com.qg.util.ImgCompress;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -105,15 +106,18 @@ public class UserUploadImage extends HttpServlet {
 					String path = getServletContext().getRealPath("/jpg/");
 					System.out.println(path);
 					OutputStream out = new BufferedOutputStream(
-							new FileOutputStream(path + user.getUserId() + ".jpg"));
+							new FileOutputStream(path+ user.getUserId() + ".jpg"));
 					// 将文件写在服务器
 					int len = -1;
 					byte[] b = new byte[1024];
 					while ((len = in.read(b)) != -1) {
 						out.write(b, 0, len);
 					}
+					ImgCompress.ImageCompress(path,user.getUserId());
 					out.close();
 					in.close();
+					// 删除临时文件(必须将文件流关掉)
+					fileItem.delete();
 					//将照片名存入数据库
 					messageService.changeImage(user.getUserId()+"");
 					//取出更新后的数据

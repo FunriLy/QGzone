@@ -48,17 +48,12 @@ public class MessageDaoImpl implements MessageDao{
 	@Override
 	public boolean addMessage(MessageModel message) {
 		
-		LOGGER.log(Level.DEBUG, "用户的具体信息 账号:",message.getUserId());
+		
 		conn = SimpleConnectionPool.getConnection();
 		try {
-			sql=conn.prepareStatement("insert into message(user_id,user_sex,user_email,user_phone,user_birthday,user_address)"
-					+" "+"values(?,?,?,?,?,?)");
+			sql=conn.prepareStatement("insert into message(user_id)"
+					+" "+"values(?)");
 			sql.setInt(1, message.getUserId());
-			sql.setString(2, message.getUserSex());
-			sql.setString(3, message.getUserEmail());
-			sql.setString(4, message.getUserPhone());
-			sql.setString(5,message.getUserBirthday());
-			sql.setString(6, message.getUserAddress());
 			sql.executeUpdate();
 			flag = true;
 			System.out.println("saveMessage is running");
@@ -77,7 +72,7 @@ public class MessageDaoImpl implements MessageDao{
 
 	@Override
 	public boolean changeMessage(MessageModel message) {
-		LOGGER.log(Level.DEBUG, "修改个人信息:账号",message.getUserId());
+		
 		conn = SimpleConnectionPool.getConnection();
 		try {
 
@@ -111,7 +106,7 @@ public class MessageDaoImpl implements MessageDao{
 	@Override
 	public MessageModel getMessageById(int userId) {
 
-		LOGGER.log(Level.DEBUG, "用户的信息 账号:",userId);
+	
 		conn = SimpleConnectionPool.getConnection();
 		MessageModel message = new MessageModel();
 		try {
@@ -149,7 +144,7 @@ public class MessageDaoImpl implements MessageDao{
 	}
 	
 	public List<MessageModel> getMessagesByName(String userName){
-		LOGGER.log(Level.DEBUG, "用户的信息 昵称:",userName);
+	
 		List<MessageModel> messages = new ArrayList<MessageModel>();
 		conn = SimpleConnectionPool.getConnection();
 		try {
@@ -187,7 +182,7 @@ public class MessageDaoImpl implements MessageDao{
 	}
 	
 	public boolean changeImage(int userId,String image){
-		LOGGER.log(Level.DEBUG, "修改个人头像:账号",userId);
+		
 		conn = SimpleConnectionPool.getConnection();
 		try {
 
