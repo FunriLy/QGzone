@@ -32,6 +32,7 @@ public class TwitterOfMe  extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 201;
 		List<TwitterModel> twitters = null;
+		int totalPage=0;
 		//获取当前登陆id
 //		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		int userId=3;
@@ -40,14 +41,19 @@ public class TwitterOfMe  extends HttpServlet{
 		try {
 			//获取说说列表
 			twitters = new TwitterService().getTwitterByTalkId(Integer.parseInt(page), userId);
+			//获取总页数
+			totalPage = new TwitterService().twitterPage(userId, new TwitterService().userTwitterNumber(userId));
 			
 		} catch (Exception e) {
 			state = 202;
 			LOGGER.log(Level.ERROR, "获取说说异常", e);
 		} finally {
 			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-			output.write(JsonUtil.tojson(state,twitters).getBytes("UTF-8"));
+			output.write(JsonUtil.tojson(state,twitters,totalPage).getBytes("UTF-8"));
 			output.close();
 		}
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(request, resp);
 	}
 }

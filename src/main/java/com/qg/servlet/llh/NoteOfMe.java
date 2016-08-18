@@ -32,6 +32,7 @@ public class NoteOfMe extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 501;
 		List<NoteModel> notes = null;
+		int totalPage=0;
 		// 获取当前用户id
 //		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		int userId=3;
@@ -41,13 +42,18 @@ public class NoteOfMe extends HttpServlet {
 		try {
 			// 获取全部留言
 			notes = new NoteService().getNote(Integer.parseInt(page), userId);
+			//获取总页数
+			totalPage = new NoteService().notePage(userId, new NoteService().noteNumber(userId));
 		} catch (Exception e) {
 			state = 502;
-			LOGGER.log(Level.ERROR, "获取说说异常", e);
+			LOGGER.log(Level.ERROR, "获取留言异常", e);
 		} finally {
 			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-			output.write(JsonUtil.tojson(state, notes).getBytes("UTF-8"));
+			output.write(JsonUtil.tojson(state, notes,totalPage).getBytes("UTF-8"));
 			output.close();
 		}
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(request, resp);
 	}
 }

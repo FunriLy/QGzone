@@ -30,22 +30,25 @@ public class TestTwitterGet  extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 201;
+		int totalPage = 0;
 		List<TwitterModel> twitters = null;
 		//获取当前登陆id
 //		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		int userId = 3;
 		//获取页码
-		String page = request.getParameter("page");
-		try {
-			//获取说说列表
-			twitters = new TwitterService().getTwitter(Integer.parseInt(page), userId);
-		} catch (Exception e) {
-			state = 202;
-			LOGGER.log(Level.ERROR, "获取说说异常", e);
-		} finally {
-			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-			output.write(JsonUtil.tojson(state,twitters).getBytes("UTF-8"));
-			output.close();
-		}
+				String page = request.getParameter("page");
+				try {
+					//获取说说列表
+					twitters = new TwitterService().getTwitter(Integer.parseInt(page), userId);
+					//获取总页数
+					totalPage = new TwitterService().twitterPage(userId, new TwitterService().twitterNumber(userId));
+				} catch (Exception e) {
+					state = 202;
+					LOGGER.log(Level.ERROR, "获取说说异常", e);
+				} finally {
+					DataOutputStream output = new DataOutputStream(resp.getOutputStream());
+					output.write(JsonUtil.tojson(state,twitters,totalPage).getBytes("UTF-8"));
+					output.close();
+				}
 	}
 }

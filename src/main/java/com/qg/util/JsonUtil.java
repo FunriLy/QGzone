@@ -23,8 +23,8 @@ public class JsonUtil<T> {
 		}
 	}
 
-	public static <T, K> String tojson(int state, List<T> jsonList) {
-		return gson.toJson(new ObjectModel<T, K>(state, jsonList));
+	public static <T, K> String tojson(int state, List<T> jsonList,int totalPage) {
+		return gson.toJson(new ObjectModel<T, K>(state, jsonList,totalPage));
 	}
 
 	public static <T, K> String tojson(int state, K jsonList) {
@@ -39,17 +39,21 @@ public class JsonUtil<T> {
 		return gson.toJson(new ObjectModel<T, K>(state,twitterId));
 	}
 
+	
+	
 }
 
 class ObjectModel<T, K> {
 	List<T> jsonList;
 	int state;
-	int twitterId;
+	int id;
+	int totalPage;
 	K jsonObject;
 
-	public ObjectModel(int state, List<T> jsonList) {
+	public ObjectModel(int state, List<T> jsonList,int totalPage) {
 		this.jsonList = jsonList;
 		this.state = state;
+		this.totalPage = totalPage;
 	}
 
 	public ObjectModel(int state) {
@@ -62,7 +66,7 @@ class ObjectModel<T, K> {
 	}
 	public ObjectModel(int state,int twitterId){
 		this.state=state;
-		this.twitterId=twitterId;
+		this.id=twitterId;
 	}
 }
 
