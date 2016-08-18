@@ -1,4 +1,4 @@
-package com.qg.dao;
+﻿package com.qg.dao;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import com.qg.model.UserModel;
  * @author hunger linhange
  *
  */
+//asdas
 public interface UserDao {
 
 	/**

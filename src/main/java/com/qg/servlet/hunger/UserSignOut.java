@@ -37,12 +37,6 @@ public class UserSignOut extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		//返回数据给前端（状态码+用户对象）	
-		Map<String,Object> jsonObject = new HashMap();
-		jsonObject.put("state", 171+"");
-		DataOutputStream output = new DataOutputStream(response.getOutputStream());
-		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
-		output.close();
 	}
 
 }

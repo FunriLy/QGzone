@@ -115,4 +115,14 @@ public class RelationService {
 	public boolean changeRelationHasRead(int userId){
 		return relationDao.changeRelationHasRead(userId);
 	}
+	
+	
+	/**
+	 * 根据账号获取未读信息集合
+	 * @param userId 账号
+	 * @return 未读信息集合
+	 */
+	public List<RelationModel> getUnReadRelationsById(int userId){
+		return relationDao.getUnReadRelationsById(userId);
+	}
 }

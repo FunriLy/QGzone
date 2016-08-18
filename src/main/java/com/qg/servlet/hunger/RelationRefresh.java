@@ -18,17 +18,16 @@ import com.qg.model.UserModel;
 import com.qg.service.RelationService;
 
 /**
- * 删除与我相关
- * @author hunger
- *
+ * 与我相关下来刷新
+ * Servlet implementation class RelationRefresh
  */
-@WebServlet("/RelationDelete")
-public class RelationDelete extends HttpServlet {
+@WebServlet("/RelationRefresh")
+public class RelationRefresh extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RelationService relationService = new RelationService();
 	private Gson gson = new Gson();
 	private boolean flag = false;
-    private int state;       
+    private int state;     
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,36 +38,28 @@ public class RelationDelete extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		//设置编码
-		response.setCharacterEncoding("utf-8");
-		response.setHeader("content-type","text/html;charset=UTF-8");
-		//获取Json并解析
-		String reciveObject = request.getParameter("jsonObject");
-		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
-		String relationId= map.getOrDefault("relationId", null);//与我相关信息id
-		System.out.println(map);
 		//获取存在session中的用户对象 
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
-		//获取与我相关集合
+		//获取与我相关信息集合
 		List<RelationModel> relations = null;
 		if(user!=null){
-			System.out.println(relationId);
-			if(relationId==null){
-				System.out.println("删除信息失败");
-				state = 412;//失败
-				}else{
-					relationService.deleteRelation(Integer.parseInt(relationId));
-					System.out.println("删除信息成功");
-					state = 411;//成功
-				}
+			relations =relationService.getUnReadRelationsById(user.getUserId());
+			if(relations!=null){
+				System.out.println("存在未读与我相关消息");
+				relationService.changeRelationHasRead(user.getUserId());
+				state = 441;
+			}
+			else{
+				System.out.println("没有与我相关信息");
+				state = 442;
 			}
 			
-			
+		}
 		else{
-			System.out.println("用户session消失");
+			System.out.println("用户未读session消失");
 			state = 0;
 		}
+		
 		//返回数据给前端（状态码+与我相关对象集合）	
 		Map<String,Object> jsonObject = new HashMap();
 		jsonObject.put("relations", relations);
@@ -76,7 +67,6 @@ public class RelationDelete extends HttpServlet {
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
 		output.close();		
-	
 	}
 
 }

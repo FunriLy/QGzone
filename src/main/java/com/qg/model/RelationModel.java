@@ -79,7 +79,7 @@ public class RelationModel {
 	public String toString() {
 		return "Relation [relationId=" + relationId + ", relationType=" + relationType + ", relationContent="
 				+ relationContent + ", relationTime=" + relationTime + ", receiverId=" + receiverId
-				+ ", relationHasRead=" + relationHasRead + ", sender=" + sender + ", relatedId=" + relatedId + "]";
+				+ ", relationHasRead=" + relationHasRead + ", sender=" + sender + ", relatedId=" + relatedId + "]\r\n";
 	}
 	
 }

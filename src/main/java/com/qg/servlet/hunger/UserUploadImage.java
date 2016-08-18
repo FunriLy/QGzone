@@ -42,7 +42,7 @@ import com.qg.util.Logger;
  * @author hunger
  * <p>
  * 用户登录
- * 状态码: 171 上传成功，172上传失败
+ * 状态码: 171 上传成功，172上传失败 173 文件格式不正确
  * </p>
  */
 @WebServlet("/UserUploadImage")
@@ -98,11 +98,22 @@ public class UserUploadImage extends HttpServlet {
 					}
 					System.out.println("文件上传项："+filename);
 					InputStream in = new BufferedInputStream(fileItem.getInputStream());
-					if(filename.equals("")){
-
+					// 若不是文本，判断名字是否为空后（是否上传文件），图片数自增+1
+					String fileEnd = fileItem.getName().toLowerCase();
+					if (!(fileEnd.endsWith(".jpg") || fileEnd.endsWith(".png") || fileEnd.endsWith(".bmp")
+							|| fileEnd.endsWith(".swf") || fileEnd.endsWith(".jpeg") || fileEnd.endsWith(".jpeg2000")
+							|| fileEnd.endsWith(".tiff"))) {
+						state = 173;
+						//返回数据给前端（状态码+用户信息对象）	
+						Map<String,Object> jsonObject = new HashMap();
+						jsonObject.put("message", message);
+						jsonObject.put("state", state+"");
+						DataOutputStream output = new DataOutputStream(response.getOutputStream());
+						output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+						output.close();	
+						return;
 					}
-					
-					//获取路径
+					//获取路径 
 					String path = getServletContext().getRealPath("/jpg/");
 					System.out.println(path);
 					OutputStream out = new BufferedOutputStream(

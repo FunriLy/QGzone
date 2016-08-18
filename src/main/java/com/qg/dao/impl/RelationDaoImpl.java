@@ -29,7 +29,8 @@ public class RelationDaoImpl implements RelationDao{
 //		RelationModel relation = new RelationModel
 //				("d", "always online", 1794993, 1800057, 1, 20);
 //		System.out.println(dao.addRelation(relation));
-		System.out.println(dao.hasRelationUnread(3462578));
+//		System.out.println(dao.hasRelationUnread(3462578));
+		System.out.println(dao.getUnReadRelationsById(3763322));
 
 	}
 	/**
@@ -228,5 +229,43 @@ public class RelationDaoImpl implements RelationDao{
 		}
 		else 
 			return false;
+	}
+	@Override
+	public List<RelationModel> getUnReadRelationsById(int userId){
+		List<RelationModel> relations = new ArrayList<RelationModel>();
+		conn = SimpleConnectionPool.getConnection();
+		 try {
+			sql=conn.prepareStatement("select * from relation where receiver_id=?"
+					+ " and relation_has_read=0"
+					+" order by relation_time desc"
+					);
+			sql.setInt(1, userId);
+			rs=sql.executeQuery();
+			while(rs.next()) {
+				RelationModel relation = new RelationModel();
+				relation.setRelationId(rs.getInt("relation_id"));
+				relation.setRelationType(rs.getString("relation_type"));
+				relation.setRelationContent(rs.getString("relation_content"));
+				relation.setRelatedId(rs.getInt("related_id"));
+				relation.setRelationTime(rs.getTimestamp("relation_time"));
+				relation.setReceiverId(rs.getInt("receiver_id"));
+				relation.setSender(messageDao.getMessageById(rs.getInt("sender_id")));
+				if(relation.getReceiverId() == userId) {
+					relations.add(relation);
+					flag = true;
+				}
+			}
+			 
+		 }catch (Exception e) {
+			 LOGGER.log(Level.ERROR, "获取未读与我相关发生异常！", e);
+			}finally {
+				daoClose();
+			}
+			if(flag){
+				flag=false;
+				return relations;
+			}
+			else 
+				return null;
 	}
 }

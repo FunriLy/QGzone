@@ -59,8 +59,6 @@ public class MessageGet extends HttpServlet {
 		Map<String,Object> jsonObject = new HashMap();
 		jsonObject.put("message", message);
 		jsonObject.put("state", state+"");
-		
-		System.out.println(gson.toJson(jsonObject));
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
 		output.close();	

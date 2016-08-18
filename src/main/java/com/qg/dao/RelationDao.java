@@ -55,4 +55,12 @@ public interface RelationDao {
 	 * @return 修改成功返回true ，失败返回false
 	 */
 	boolean changeRelationHasRead(int userId);
+	
+	/**
+	 * 刷新获取用户为读信息
+	 * @param userId 用户账号
+	 * @return 与我相关集合
+	 */
+	List<RelationModel> getUnReadRelationsById(int userId);
+	
 }

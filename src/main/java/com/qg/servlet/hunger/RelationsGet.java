@@ -48,7 +48,7 @@ public class RelationsGet extends HttpServlet {
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
-		String page= map.getOrDefault("page", null);//账号
+		String page= map.getOrDefault("page", "1");//账号
 		//获取存在session中的用户对象 
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
 		//获取与我相关信息集合
@@ -61,12 +61,12 @@ public class RelationsGet extends HttpServlet {
 				state = 403;//(改)
 				}else{
 					state = 401;
+					relationService.changeRelationHasRead(user.getUserId());
 				}
 			}
 			else{
 				System.out.println("传入页码为空");
 				state = 402;
-				relationService.changeRelationHasRead(user.getUserId());
 			}
 			
 		}
