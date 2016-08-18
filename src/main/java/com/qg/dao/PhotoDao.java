@@ -41,9 +41,9 @@ public interface PhotoDao {
 	PhotoModel getPhotoByPhotoId(int photoId);
 	
 	/**
-	 * 根据相册编号获取相片数量
-	 * @param albumId
-	 * @return
+	 * 获得用户个人主页展示图片
+	 * @return PhotoModel集合
 	 */
-	int getPhotoCountByAlbumId(int albumId);
+	List<PhotoModel> getPhotoByUserId(int userId);
+	
 }

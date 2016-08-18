@@ -38,11 +38,11 @@ public class AlbumService {
 	 * @param albumName 相册名
 	 * @return 若成功返回601，否则返回602
 	 */
-	public int isDuplicationOfName(int userId, String albumName){
+	public int isDuplicationOfName(int userId, String albumName, int albumId){
 		int result = 602;
 		
 		AlbumDao albumDao = new AlbumDaoImpl();
-		if (success == albumDao.isDuplicationOfName(userId, albumName)) {
+		if (success == albumDao.isDuplicationOfName(userId, albumName, albumId)) {
 			result = 601;
 		}
 		
@@ -61,7 +61,8 @@ public class AlbumService {
 		if (success != doCreateAlbum(album.getAlbumPassword(), album.getAlbumName(), album.getAlbumState())) {
 			return 603;
 		}
-		if (success != isDuplicationOfName(album.getUserId(), album.getAlbumName())) {
+		if (601 != isDuplicationOfName(album.getUserId(), album.getAlbumName(), album.getAlbumId())) {
+			
 			return 604;
 		}
 		AlbumDao albumDao = new AlbumDaoImpl();
@@ -87,7 +88,7 @@ public class AlbumService {
 			return -1;
 		}
 		//重名
-		if (success != albumDao.isDuplicationOfName(album.getUserId(), album.getAlbumName())) {
+		if (success != albumDao.isDuplicationOfName(album.getUserId(), album.getAlbumName(), 0)) {
 			return -2;
 		}
 		//更新到数据库
@@ -344,6 +345,8 @@ public class AlbumService {
 			delAllFile(folderPath);
 			PhotoDao photoDao = new PhotoDaoImpl();
 			photoDao.deleteAllPhotoByAlbumId(albumId);
+			AlbumDao albumDao = new AlbumDaoImpl();
+			albumDao.deletePhotoCountByAlbumId(albumId);
 			state = 601;
 		}
 		return state;

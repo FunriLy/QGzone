@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.qg.dao.PhotoDao;
 import com.qg.dao.impl.PhotoDaoImpl;
+import com.qg.model.PhotoModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -70,5 +71,28 @@ public class PhotoService {
 		PhotoDao photoDao = new PhotoDaoImpl();
 		result = photoDao.deletePhotoByPhotoId(photoId);
 		return result;
+	}
+	
+	/**
+	 * 获得用户个人主页展示图片的地址的集合
+	 * @param userId 用户id
+	 * @return 公开相片地址集合
+	 */
+	public List<String> getPhotoByUserId(int userId){
+		//储存相片地址的集合
+		List<String> strPhoto = new ArrayList<String>();
+		List<PhotoModel> photoList = new ArrayList<PhotoModel>();
+		
+		PhotoDao photoDao = new PhotoDaoImpl();
+		photoList = photoDao.getPhotoByUserId(userId);
+		//若获得的集合非空
+		if (!photoList.isEmpty()) {
+			for(PhotoModel photoModel : photoList){
+				String photo = userId+"/"+photoModel.getAlbumId()+"/"+photoModel.getPhotoId()+".jpg";
+				strPhoto.add(photo);
+			}
+		}
+		
+		return strPhoto;
 	}
 }

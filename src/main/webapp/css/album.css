@@ -1,0 +1,360 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+li{
+	text-align: center;
+}
+
+body{
+	font-family: "微软雅黑",sans-serif;
+	overflow-x: hidden;
+}
+
+h1{
+	text-align: right;
+}
+
+button{
+	cursor: pointer;
+}
+
+a, .pic, .pho{
+	cursor: pointer;
+}
+
+.container{
+	border: 1px solid black;
+}
+
+.main_content{
+	border: 1px solid blue;
+}
+
+.function_bar{
+	border: 1px solid red;
+}
+
+.btn_cre_alb, .btn_edit, .btn_loadup, .btn_edit_pho{
+	margin: 10px 30px;
+}
+
+.img_cov{
+	display: inline-block;
+	overflow: hidden;
+	height: 100px;
+	margin: 10px 63px;
+	padding: 6px;
+	background-color: gray;
+}
+
+.img_cov img{
+	width: 100px;
+	height: 100px;
+}
+
+.contain_album{
+	border: 1px solid blue;
+}
+
+.every_album{
+	float: left;
+	position: relative;
+	margin: 30px 30px;
+	border: 1px solid green;
+	text-align: center;
+}
+
+.every_photo{
+	float: left;
+	position: relative;
+	margin: 30px 30px;
+	border: 1px solid green;
+	text-align: center;
+}
+
+.alb_cov{
+	z-index: 1;
+	height: 146px;
+	border: 1px solid red;
+}
+
+.photo{
+	z-index: 1;
+	height: 146px;
+	border: 1px solid red;	
+}
+
+.pho_count{
+	position: relative;
+	z-index: 5;
+	margin:  -55px 11px;
+	
+}
+
+.lock{
+	float: right;
+	z-index: 6;
+	border: 1px solid purple;
+}
+
+#create_alb{
+	position: fixed;
+	top: 200px;
+	left: 500px;
+	width: 550px;
+	/*height: 350px;*/
+	border: 1px solid gray;
+	background-color: pink;
+}
+
+#enter_pw{
+	position: fixed;
+	top: 200px;
+	left: 500px;
+	width: 550px;
+	/*height: 350px;*/
+	border: 1px solid gray;
+	background-color: pink;
+}
+
+.top_bar{
+	background-color: gray;
+	/*border: 1px solid black;*/
+
+}
+
+.top_bar span{
+	margin: 0 20px;
+	font-size: 2em;
+	font-weight: bold;
+
+}
+
+.top_bar .close{
+	float: right;
+	height: 100%;
+}
+
+#last_bar{
+	margin-top:20px; 
+}
+
+#last_bar2{
+	margin-top:20px;
+}
+
+.inputarea{
+	height: 40px;
+	padding: 8px 20px;
+	/*border: 1px solid red;*/
+}
+
+.inputarea_pw, .inputarea_pw_new,.inputarea_pw_check {
+	height: 40px;
+	padding: 8px 20px;
+}
+
+.inputarea_pri{
+	height: 40px;
+	padding: 8px 20px;
+}
+
+label{
+	margin-right: 10px;
+	font-size: 1.4em;
+}
+
+input{
+	width: 218px;
+	height: 33px;
+}
+
+.btn_bar{
+	float: right;
+}
+
+.sure, #check{
+	width: 90px;
+	height: 45px;
+	background-color: blue;
+}
+
+.cancel, #cancel_check{
+	width: 90px;
+	height: 45px;
+}
+
+.nameErr1{
+	color: red;
+}
+.pwErr1{
+	color: red;
+}
+
+.pwErr2{
+	color: red;
+}
+
+.list{
+	position: absolute;
+	right: 0;
+	z-index: 10;
+	width: 80px;
+	height: 150px;
+	border: 1px solid black;
+	text-align: center;
+}
+
+.delete_btn{
+	position: absolute;
+	right: 0;
+	width: 40px;
+	height: 40px;
+	border: 1px solid black;
+	background-color: blue;
+	cursor: pointer;
+}
+
+.delete_btn img{
+	width: 40px;
+	height: 40px;
+}
+
+.list_btn{
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+
+.list_detail{
+	width: 80px;
+	height: 130px;
+	border: 1px solid red;
+	background-color: gray;
+}
+
+.change_container{
+	position: fixed;
+	top: 200px;
+	left: 500px;
+	width: 550px;
+	/*height: 350px;*/
+	border: 1px solid gray;
+	background-color: pink;
+}
+
+#bottom{
+	margin-top:20px; 
+}
+
+.inner_bar{
+	margin-left: 20px; 
+	font-size: 1.8em;
+	font-weight: bold;
+	text-align: left;
+	color: gray;
+}
+
+.sure_change{
+	width: 90px;
+	height: 45px;
+	background-color: blue;
+}
+
+/*图片上传*/
+#upload_window{
+	display: none;
+	margin: 0 auto;
+	border: 1px solid black;
+	background-color: pink;
+}
+
+.cancel_upload{
+
+}
+
+#add{
+	margin: 10px 20px;
+}
+
+#dropbox{
+	/*position: relative;*/
+	width: 90%;
+	height: 98%;
+	margin: 0 auto;
+}
+
+.file_img{
+	position: relative;
+	float: left;
+	display: inline;
+	width: 180px;
+	height: 180px;
+	margin: 10px 20px;
+}
+
+#dropbox img{
+	width: 200px;
+	height: 180px;
+}
+
+#dropbox span{
+	display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background-image: url(../img/p_list.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+}
+
+#upload{
+	display: none;
+	margin: 10px auto;
+	width: 80px;
+	padding: 20px;
+	font-size: 30px;
+	border-radius: 20px;
+	background-color: #a29e9e;
+	text-align: center;
+	cursor: pointer;
+}
+
+#close{ 
+	background:url(img/close.png) no-repeat; 
+	width:30px; 
+	height:30px; 
+	cursor:pointer; 
+	position:absolute; 
+	right:5px; 
+	top:15px; 
+	text-indent:-999em;
+	}
+
+#mask{ 
+	background-color:#000;
+	opacity:0.5;
+	filter: alpha(opacity=50); 
+	position:absolute; 
+	left:0;
+	top:0;
+	z-index:1000;
+	}
+
+#enlarge{ 
+	position:fixed;
+	z-index:1001;
+	}
+
+#enlarge_con{ 
+	position:relative; 
+	width:900px;
+	height:900px;
+	/*background:url(img/enlargeBg.png) #2A2C2E center center no-repeat;*/
+	}

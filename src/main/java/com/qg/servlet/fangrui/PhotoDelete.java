@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
 import com.qg.model.PhotoModel;
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -35,8 +36,7 @@ public class PhotoDelete extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId = 1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int state = 602;
 		AlbumService albumService = new AlbumService();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());

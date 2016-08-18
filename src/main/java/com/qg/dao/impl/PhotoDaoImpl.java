@@ -21,6 +21,8 @@ public class PhotoDaoImpl implements PhotoDao {
 	private static final Logger LOGGER = Logger.getLogger(PhotoDaoImpl.class);
 	private static final int fail = 0;
 	private static final int success = 1;
+	SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS");
+	
 	
 	private Connection con = null;
 	private PreparedStatement pStatement = null;
@@ -49,12 +51,12 @@ public class PhotoDaoImpl implements PhotoDao {
 			String strSql = "insert into photos(album_id, photo_upload_time) value(?, ?)";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, albumId);
-			pStatement.setTimestamp(2, new Timestamp(date.getTime()));
+			pStatement.setString(2, sd.format(date));
 			pStatement.executeUpdate();
 			//获取id
 			String strSql2 = "select * from photos where photo_upload_time=?";
 			pStatement = con.prepareStatement(strSql2);
-			pStatement.setTimestamp(1, new Timestamp(date.getTime()));
+			pStatement.setString(1, sd.format(date));
 			ResultSet rSet = pStatement.executeQuery();
 			if(rSet.next()){
 				result = rSet.getInt("photo_id");
@@ -113,7 +115,7 @@ public class PhotoDaoImpl implements PhotoDao {
 		} finally {
 			daoClose();
 		}
-		return success;
+		return result;
 	}
 
 	@Override
@@ -144,10 +146,10 @@ public class PhotoDaoImpl implements PhotoDao {
 			ResultSet rSet = pStatement.executeQuery();
 			if(rSet.next()){
 				int album_id = rSet.getInt("album_id");
-				Timestamp upload_time = rSet.getTimestamp("photo_upload_time");
+				String upload_time = rSet.getString("photo_upload_time");
 				photo = new PhotoModel(album_id);
 				photo.setPhotoId(photoId);
-				photo.setPhotoUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(upload_time));
+				photo.setPhotoUploadTime(upload_time);
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "通过编号获得相片实体实现类发送异常！", e);
@@ -156,21 +158,35 @@ public class PhotoDaoImpl implements PhotoDao {
 	}
 
 	@Override
-	public int getPhotoCountByAlbumId(int albumId) {
-		int result = fail;
+	public List<PhotoModel> getPhotoByUserId(int userId) {
+		//获取前两张图片的信息
+		int state = 0;
+		List<PhotoModel> photoList = new ArrayList<PhotoModel>();
+		PhotoModel photo = null;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "select count(album_id) as photo_count from photos where album_id=?";
-			pStatement = con.prepareStatement(strSql);
-			pStatement.setInt(1, albumId);
+			String strSql = "select distinct albums.album_id,photo_id from photos "
+						+ "inner join albums on "
+						+ "albums.user_id=? "
+						+ "and albums.album_state=0 "
+						+ "and albums.album_id=photos.album_id;";
+			pStatement = (PreparedStatement) con.prepareStatement(strSql);
+			pStatement.setInt(1, userId);
 			ResultSet rSet = pStatement.executeQuery();
-			if (rSet.next()) {
-				result = rSet.getInt("photo_count");
+			
+			while(rSet.next() && state<2){
+				state++;
+				int photo_id = rSet.getInt("photo_id");
+				int album_id = rSet.getInt("album_id");
+				photo = new PhotoModel(album_id);
+				photo.setPhotoId(photo_id);
+				photoList.add(photo);
 			}
-		} catch (Exception e) {
-			LOGGER.log(Level.ERROR, "查询相册中相片数量发送异常！", e);
+					
+		} catch (SQLException e) {
+			LOGGER.log(Level.DEBUG, "获取用户相片展示实现类发生异常！", e);
 		}
-		return result;
+		return photoList;
 	}
 
 }

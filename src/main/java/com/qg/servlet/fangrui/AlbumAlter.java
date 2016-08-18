@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -34,8 +35,8 @@ public class AlbumAlter extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId =1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		
 		//初始化数据
 		int state = 602; 
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
@@ -54,6 +55,8 @@ public class AlbumAlter extends HttpServlet{
 		AlbumModel album = gson.fromJson(reciveObject, AlbumModel.class);
 		album.setUserId(userId);
 		
+		System.out.println(album.getAlbumName());
+		
 		//相册不存在
 		if(success != albumService.albumIsExist(album.getAlbumId())){
 			state = 607;
@@ -65,7 +68,7 @@ public class AlbumAlter extends HttpServlet{
 		}
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 修改相册 {1} 重要信息，相册权限 {2} 相册密码 {3} 状态 {4}", 
-				userId, album.getAlbumId(), album.getAlbumState(), album.getAlbumPassword());
+				userId, album.getAlbumId(), album.getAlbumState(), album.getAlbumPassword(), state);
 		
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

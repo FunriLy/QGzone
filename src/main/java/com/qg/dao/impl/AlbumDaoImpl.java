@@ -37,7 +37,6 @@ public class AlbumDaoImpl implements AlbumDao {
 				SimpleConnectionPool.pushConnectionBackToPool(con);
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "SQL语句发送错误", e);
 		}
 	}	
@@ -138,7 +137,7 @@ public class AlbumDaoImpl implements AlbumDao {
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String strSql = "update albums set album_state=?, album_password=? album_name=? where album_id=?";
+			String strSql = "update albums set album_state=?, album_password=?, album_name=? where album_id=?";
 			pStatement = con.prepareStatement(strSql);
 			pStatement.setInt(1, album.getAlbumState());
 			pStatement.setString(2, album.getAlbumPassword());
@@ -172,7 +171,6 @@ public class AlbumDaoImpl implements AlbumDao {
 
 	@Override
 	public int uplateAlbumName(int albumId, String albumName) {
-		// TODO Auto-generated method stub
 		int result = fail;
 		try {
 			con = SimpleConnectionPool.getConnection();
@@ -184,7 +182,6 @@ public class AlbumDaoImpl implements AlbumDao {
 			//修改成功
 			result = success;
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "用户修改相册名实现类发送异常！", e);
 		} finally {
 			daoClose();
@@ -218,7 +215,6 @@ public class AlbumDaoImpl implements AlbumDao {
 				allAlbumId.add(album);
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "用户获取所有相册编号实现类发送异常！", e);
 		} finally {
 			daoClose();
@@ -239,28 +235,27 @@ public class AlbumDaoImpl implements AlbumDao {
 				result = rSet.getString("album_password");
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "获取相册密码实现类发送异常！", e);
 		}
 		return result;
 	}
 
 	@Override
-	public int isDuplicationOfName(int userId, String albumName) {
+	public int isDuplicationOfName(int userId, String albumName, int albumId) {
 		int result = success;
 		try {
 			con = SimpleConnectionPool.getConnection();
-			String srSql = "select * from albums where user_id=? and album_name=?";
+			String srSql = "select * from albums where (user_id=? and album_name=?) and album_id!=?";
 			pStatement = con.prepareStatement(srSql);
 			pStatement.setInt(1, userId);
 			pStatement.setString(2, albumName);
+			pStatement.setInt(3, albumId);
 			ResultSet rSet = pStatement.executeQuery();
 			if (rSet.next()) {
 				result = fail;
 			}
 			
 		} catch (SQLException e) {
-			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "查询相册名重复实现类发送异常！", e);
 		}
 		return result;
@@ -293,9 +288,24 @@ public class AlbumDaoImpl implements AlbumDao {
 			pStatement.executeUpdate();
 			result = success;
 		} catch (SQLException e) {
-			LOGGER.log(Level.ERROR, "增加相片数量实现类异常");
+			LOGGER.log(Level.ERROR, "增加相片数量实现类异常!");
 		}
 		return result;
+	}
+
+	@Override
+	public void deletePhotoCountByAlbumId(int albumId) {
+		
+		try {
+			con = SimpleConnectionPool.getConnection();
+			String strSql = "update albums set photo_count=? where album_id=?";
+			pStatement = con.prepareStatement(strSql);
+			pStatement.setInt(1, 0);
+			pStatement.setInt(2, albumId);
+			pStatement.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.log(Level.DEBUG, "清空相册中相片数量实现类发送异常!");
+		}
 	}
 
 }

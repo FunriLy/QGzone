@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -34,8 +35,7 @@ public class AlbumCheckPublic extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
-		int userId = 1;
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		//初始化状态码等数据
 		int state = 602;
 		

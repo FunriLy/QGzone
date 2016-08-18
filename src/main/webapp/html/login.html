@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>login</title>
+	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="../js/login.js"></script>
+</head>
+<body>
+	<div id="wrap">	
+		<div id="header">
+			<p id="name">QG空间</p>
+			<p id="infor">分享生活 , 留住感动</p>
+			<ul id="option">
+				<li class="white">登录</li>
+				<li>注册</li>
+			</ul>
+		</div>
+		<div id="login">
+			<form class="form">
+				<div>
+					<input type="text" id="l_account" class="mt25 search" placeholder="账号"> 
+					<p></p>
+				</div>
+				<div>
+					<input type="password" id="l_password" class="search" placeholder="密码">  
+					<p></p>
+				</div>
+				<p id="forget">忘记密码？</p>
+				<input type="button" value="登录" id="log" class="button" >
+			</form>
+		</div>
+		<div id="register">
+			<form class="form">
+				<div>
+					<input type="text" id="username" class="mt25 search" placeholder="昵称">
+					<p></p>
+				</div>
+				<div>
+					<input type="password" id="r_password" class="search" placeholder="密码">  
+					<p></p>
+				</div>
+				<div>
+					<input type="password" id="r_repassword" class="search" placeholder="确认密码">
+					<p></p>
+				</div>
+				<p class="p_question">密保问题</p> 
+				<span id="hid">
+	   			<select class="question">
+	   				<option value="1">QG最帅的是 ?</option>
+	   				<option value="2">密保问题2</option>
+	   				<option value="3">密保问题3</option>
+	   			</select>
+	   			</span>
+	   			<div>
+					<input type="text" id="r_answer"  class="search" placeholder="输入答案">  
+					<p></p>
+				</div>
+				<input type="button" value="注册" id="reg" class="button">
+			</form>
+		</div>
+		<div id="forgetPassword">
+			<form class="form">
+				<div>
+					<input type="text" id="f_account" class="mt25 search" placeholder="账号"> 
+					<p></p>
+				</div>
+				<p class="p_question">密保问题</p> 
+				<span id="hid">
+	   			<select class="question">
+	   				<option value="1">QG最帅的是 ?</option>
+	   				<option value="2">密保问题2</option>
+	   				<option value="3">密保问题3</option>
+	   			</select>
+	   			</span>
+	   			<div>
+					<input type="text" id="f_answer" class="search" placeholder="输入答案">  
+					<p></p>
+				</div>
+					<div>
+					<input type="password" id="f_password" class="search" placeholder="新密码">  
+					<p></p>
+				</div>
+				<div>
+					<input type="password" id="f_repassword" class="search" placeholder="确认密码">
+					<p></p>
+				</div>
+				<input type="button" value="确认" id="sure" class="button">
+			</form>
+		</div>
+	</div>
+</body>
+</html>

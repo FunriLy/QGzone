@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我的好友</title>
+	<link rel="stylesheet" type="text/css" href="../css/friend.css">
+	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="../js/friend.js"></script>
+</head>
+<body>	
+	<div id="nev_1">
+		<ul id="nevLeft">
+			<li class="circle_1_paddingSmall"><div id="circle_1"></div></li>
+			<li class="borderRight paddingLeft">QG空间</li>
+			<li class="borderRight"><a href="#">个人中心</a></li>
+			<li class="borderRight"><a href="#">我的主页</a></li>
+			<li class="borderRight"><a href="#">我的好友</a></li>
+		</ul>
+		<ul id="nevRight">
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><p>QGBB</p></li>
+			<li id="diamonds_1_paddingSmall"><div id="circle_2"></div></li>
+		</ul>
+		<div id="whiteLine"></div>
+	</div>
+	<div id="header">
+		<div id="h_photo"><img src="../images/head.jpg"></div>
+		<ul id="nev2">
+			<li><a href="#">说说</a></li>
+			<li><a href="#">相册</a></li>
+			<li><a href="#">留言板</a></li>
+			<li><a href="#">个人档</a></li>
+		</ul>
+		<div id="white_bar"></div>
+	</div>
+	<div id="side_bar">
+		<ul>
+			<li class="color_white" index="friend_list">好友列表</li>
+			<li index="add_friend">添加好友</li>
+			<li index="add_request">好友请求</li>
+		</ul>
+	</div>
+	<div id="wrap">
+		<div id="friend_list" >  
+			<div id="find_my_friend">
+				<input type="text" placeholder="搜索好友">
+				<div id="glass"></div>
+			</div>
+			<ul id="friends" class="border_top">
+				<li class="not_find hide">你这个单身狗，没有好友，快去约啦……</li>
+			</ul>
+			<ul id="find_my_friend_result" class="border_top">
+				<li class="not_find hide">未找到结果</li>
+			</ul>
+		</div>
+		<div id="add_friend" class="hide">
+			<div id="search">
+				<div id="option_button">
+					<span id="of_name" class="haveChouce">按昵称</span >
+					<span  id="of_account">按账号</span >
+				</div>
+				<div id="find">
+					<input type="text" >
+					<span id="find_account" class="hide">查找</span>
+					<span id="find_name">查找</span>
+				</div>
+			</div>
+			<ul id="find_result_list" class="border_bottom">
+				<li class="not_find hide">未找到结果</li>
+				
+			</ul>
+		</div>
+		<div id="add_request"  class="hide">
+			<ul id="request_list" class="border_bottom">
+				<li class="not_find">目前暂时没有请求记录</li>
+				
+			</ul>
+		</div>
+	</div>
+</body>
+<script>
+$(function(){
+	
+})
+</script>
+</html>
+

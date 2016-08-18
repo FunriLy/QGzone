@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.AlbumModel;
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
@@ -23,7 +24,7 @@ import com.qg.util.Logger;
  * @author zggdczfr
  * <p>
  * 获取用户所有的相册列表,用户访问个人相册输入0
- * 状态码: 601-成功; 602-相册为空; 606-非好友关系;
+ * 状态码: 601-成功; 605-相册为空; 606-非好友关系;
  * </p>
  */
 
@@ -36,8 +37,7 @@ public class Albums extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		int userId = 1;
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		List<AlbumModel> allAlbum = new ArrayList<AlbumModel>();
@@ -60,7 +60,7 @@ public class Albums extends HttpServlet {
 			allAlbum = albumService.getAllAlbumByUserId(userId);
 			if (allAlbum.isEmpty()) {
 				//相册为空
-				state = 602;
+				state = 605;
 			} else {
 				state = 601;
 			}
@@ -71,7 +71,7 @@ public class Albums extends HttpServlet {
 				allAlbum = albumService.getAllAlbumByUserId(t_userId);
 				if (allAlbum.isEmpty()) {
 					//相册为空
-					state = 602;
+					state = 605;
 				} else {
 					state = 601;
 				}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -30,8 +31,7 @@ public class FriendDelete extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id 与 操作对象id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId =1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		
 		//初始化状态码
 		int state = 302; 

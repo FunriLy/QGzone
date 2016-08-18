@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -31,8 +32,7 @@ public class AlbumIsDuplication extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId = 1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		
@@ -47,7 +47,7 @@ public class AlbumIsDuplication extends HttpServlet{
 		
 		//获得Json
 		String albumName = request.getParameter("albumName");
-		state = albumService.isDuplicationOfName(userId, albumName);
+		state = albumService.isDuplicationOfName(userId, albumName, 0);
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 检查相册名 {1} 是否重复，状态: {2} ", userId, albumName, state);
 		

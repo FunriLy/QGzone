@@ -3,6 +3,7 @@ package com.qg.util;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class ImgCompress
     		//获取文件名
     		//String imgName = pictiurePath.substring(pictiurePath.lastIndexOf("/"));
     		// 规定相片的长度
-    		imgCompress.resize(100, 100, photoPath, photoId);
+    		imgCompress.resizeFix(imgCompress.width/10, imgCompress.height/10, photoPath, photoId);
     		result = success;
 		} catch (IOException e) {
 			result =fail;
@@ -53,7 +54,7 @@ public class ImgCompress
     		//获取文件名
     		//String imgName = pictiurePath.substring(pictiurePath.lastIndexOf("/"));
     		// 规定相片的长度
-    		imgCompress.resize(200, 200, photoPath, photoName);
+    		imgCompress.resize(400, 400, photoPath, photoName);
     		result = success;
 		} catch (IOException e) {
 			result =fail;

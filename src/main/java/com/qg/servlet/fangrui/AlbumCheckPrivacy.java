@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.JsonUtil;
@@ -37,8 +38,7 @@ public class AlbumCheckPrivacy extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获取用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId = 1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();		
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		if (request.getParameter("jsonObject")== null || request.getParameter("jsonObject")=="") {
@@ -55,6 +55,7 @@ public class AlbumCheckPrivacy extends HttpServlet {
 		AlbumService albumService  = new AlbumService();
 		
 		List<Integer> allPhotoId = new ArrayList<Integer>();
+		
 		
 		state = albumService.checkPrivacyAlbum(album, userId);
 		//如果状态码为601

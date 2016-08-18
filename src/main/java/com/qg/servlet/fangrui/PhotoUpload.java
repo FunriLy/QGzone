@@ -21,6 +21,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
 import com.qg.util.ImgCompress;
@@ -49,13 +50,14 @@ public class PhotoUpload extends HttpServlet{
 		//初始化状态码
 		int state = 602;
 		//获得用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId = 1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		//相册id
 		int albumId = 0;
 		AlbumService albumService = new AlbumService();
 		
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
+		//获得相册地址
+		albumId = Integer.valueOf(request.getParameter("albumId"));
 		
 		//解析表单
 		try {
@@ -75,23 +77,28 @@ public class PhotoUpload extends HttpServlet{
 			
 			for(FileItem fileItem : list){
 				if(fileItem.isFormField()){
-					String value = fileItem.getString("utf-8");
 					
-					albumId = Integer.valueOf(value);
-					LOGGER.log(Level.DEBUG, "上传图片: 用户账号 {0} 相册账号 {1}", userId, albumId);
+					String name = fileItem.getFieldName();
+					
+					if (name.equals("albumId")) {
+						String value = fileItem.getString("utf-8");
+						
+						//albumId = Integer.valueOf(value);
+						LOGGER.log(Level.DEBUG, "上传图片: 用户账号 {0} 相册账号 {1}", userId, albumId);
+						//System.out.println("AlbumId = "+albumId);
+					}
+					
 				} else {
-					// 定义限制上传的文件类型的字符串数组
-					//String[] suffixs = new String[] { ".jpg", ".png", "bmp", "jpeg", "jpeg2000", "tiff", "psd", "swf" };
-					// 创建文件后缀过滤器
-					//SuffixFileFilter filter = new SuffixFileFilter(suffixs);
+					String fileEnd = fileItem.getName().toLowerCase();
 					if(fail == albumService.albumIsExist(albumId)){
 						//相册不存在
 						state = 604;
 					} else if(userId != albumService.getAlbumByAlbumId(albumId).getUserId()){
 						state = 605;
-					} else {
+					} else  if((fileEnd.endsWith(".jpg") || fileEnd.endsWith(".png") || fileEnd.endsWith(".bmp")
+							|| fileEnd.endsWith(".swf") || fileEnd.endsWith(".jpeg") || fileEnd.endsWith(".jpeg2000")
+							|| fileEnd.endsWith(".tiff"))){
 						//用户上传相片
-						//if (filter.accept((File)fileItem)){
 							InputStream in = new BufferedInputStream(fileItem.getInputStream());
 							PhotoService photoService = new PhotoService();
 							int id = photoService.savePhotoByAlbumId(albumId);
@@ -106,7 +113,7 @@ public class PhotoUpload extends HttpServlet{
 								while((len = in.read(b)) != -1){
 									out.write(b, 0, len);
 								}
-								
+								System.out.println("id = "+id);
 								ImgCompress.ImageCompress(path + userId + "/" + albumId + "/", id);
 								albumService.changePhotoCount(success, albumId);
 								out.close();
@@ -115,11 +122,7 @@ public class PhotoUpload extends HttpServlet{
 							} else {
 								state = 602;
 							}
-							
-						//} else {
-							//格式错误
-							//state = 603;
-						//}
+						
 						
 					}
 				}

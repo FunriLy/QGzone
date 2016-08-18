@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.MessageModel;
+import com.qg.model.UserModel;
 import com.qg.service.SearchService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -34,8 +35,7 @@ public class SearchbyUserName extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户id
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId =1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		int state = 302;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		

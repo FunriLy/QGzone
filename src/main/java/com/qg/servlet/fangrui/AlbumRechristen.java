@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.qg.model.AlbumModel;
+import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -34,8 +35,7 @@ public class AlbumRechristen extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//获得用户在账号
-		int userId = 1;
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
 		AlbumService albumService = new AlbumService();
 		int state = 602;
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
@@ -59,7 +59,7 @@ public class AlbumRechristen extends HttpServlet{
 			//判断用户是否拥有相应的权限
 			if (userId == albumService.getAlbumByAlbumId(album.getAlbumId()).getUserId()) {
 				state = albumService.uplateAlbumName(album.getAlbumId(), album.getAlbumName());
-			} else if (602 == albumService.isDuplicationOfName(userId, album.getAlbumName())) {
+			} else if (602 == albumService.isDuplicationOfName(userId, album.getAlbumName(), 0)) {
 				state = 604;
 			} else {
 				state = 602;

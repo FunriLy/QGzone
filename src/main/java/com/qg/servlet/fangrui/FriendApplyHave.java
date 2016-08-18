@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -32,8 +33,8 @@ public class FriendApplyHave extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		//int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
-		int userId = 1;
+		int userId = ((UserModel)request.getSession().getAttribute("user")).getUserId();
+//		int userId = 1;
 		int state = 302;
 		FriendService friendService = new FriendService();
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());

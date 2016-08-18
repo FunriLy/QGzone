@@ -78,7 +78,7 @@ public interface AlbumDao {
 	 * @param albumName 相册姓名
 	 * @return 若重复返回fail，否则返回success
 	 */
-	public int isDuplicationOfName(int userId, String albumName);
+	public int isDuplicationOfName(int userId, String albumName, int albumId);
 	
 	/**
 	 * 将相册中相片数目+1
@@ -93,4 +93,10 @@ public interface AlbumDao {
 	 * @return 成功返回success, 否则返回fail
 	 */
 	public int subtractPhotoCount(int albumId);
+	
+	/**
+	 * 清空相册时应该将相片数量清空
+	 * @param albumId 相册id
+	 */
+	public void deletePhotoCountByAlbumId(int albumId);
 }
