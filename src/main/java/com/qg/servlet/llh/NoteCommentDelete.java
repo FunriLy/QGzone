@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.service.NoteCommentService;
+import com.qg.model.UserModel;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
 import com.qg.util.Logger;
@@ -33,8 +34,8 @@ public class NoteCommentDelete extends HttpServlet {
 		// 获取说说评论id
 		int commentId = Integer.parseInt(request.getParameter("commentId"));
 		//获取当前用户Id
-//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int userId =3;
+		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId =3;
 		// 删除服务器上的说说评论信息
 		if (!new NoteCommentService().deleteComment(commentId,userId)) {
 			state = 502;

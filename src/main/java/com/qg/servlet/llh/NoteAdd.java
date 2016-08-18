@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteModel;
+import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.service.NoteService;
 import com.qg.util.JsonUtil;
@@ -38,8 +39,8 @@ public class NoteAdd extends HttpServlet {
 		int targetId = Integer.parseInt((request.getParameter("targetId")));
 		String note = request.getParameter("note");
 		// 当前用户=留言者
-		int noteManId=3;
-//		int noteManId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int noteManId=3;
+		int noteManId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		if(new FriendService().isFriend(noteManId, targetId)==1||targetId==noteManId){
 			if (!(note.length() > 120)) {
 				// 获取留言的实体类

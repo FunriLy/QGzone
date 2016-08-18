@@ -23,7 +23,7 @@ import com.qg.util.Logger;
  * @author dragon
  * <pre>
  * 这是一个获取好友的说说的类
- * 201-获取成功 202-获取失败
+ * 201-获取成功 202-获取失败 206-非好友无法访问
  * </pre>
  */
 @WebServlet("/TwitterOfOthers")
@@ -37,19 +37,20 @@ public class TwitterOfOthers  extends HttpServlet {
 		int totalPage = 0;
 		//获取当前登陆id
 		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId = 3;
 		//获取被访问者的id
-		int targetId = Integer.parseInt(request.getParameter("targetId"));
+		int targetId = Integer.parseInt(request.getParameter("userId"));
 		//获取页码
 		String page = request.getParameter("page");
 		try {
 			// 判断是否为好友
-			if (new FriendService().isFriend(userId, targetId) == 1) {
+			if (new FriendService().isFriend(userId, targetId) == 1||targetId==userId) {
 				// 获取说说列表
 				twitters = new TwitterService().getTwitterByTalkId(Integer.parseInt(page), targetId);
 				//获取总页数
 				totalPage = new TwitterService().twitterPage(userId, new TwitterService().userTwitterNumber(userId));
 			} else
-				state = 202;
+				state = 206;
 		} catch (Exception e) {
 			state = 202;
 			LOGGER.log(Level.ERROR, "获取说说异常", e);

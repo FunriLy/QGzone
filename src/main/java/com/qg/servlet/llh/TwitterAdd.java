@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 import com.qg.model.TwitterModel;
+import com.qg.model.UserModel;
 import com.qg.service.TwitterService;
 import com.qg.util.Logger;
 import com.qg.util.ImgCompress;
@@ -61,8 +62,8 @@ public class TwitterAdd extends HttpServlet {
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		
 		// 获取当前登陆用户id
-//		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int talkId = 10000;
+		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int talkId = 10000;
 		
 		
 		try {

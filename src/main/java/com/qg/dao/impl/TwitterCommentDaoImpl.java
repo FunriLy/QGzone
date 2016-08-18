@@ -55,7 +55,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 		}
     	return twitterComments;
     }
-    public int addTwitterComment(TwitterCommentModel twitterComment){
+    public TwitterCommentModel addTwitterComment(TwitterCommentModel twitterComment){
     	Date newTime = new Date();
 		int twitterId = 0;
 		int twitterCommentId=0;
@@ -63,7 +63,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into twitter_comment(comment, twitter_id, commenter_id, "
 					+ "target_id, time) value(?,?,?,?,?)";
-			pStatement = conn.prepareStatement(sql);
+			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			pStatement.setString(1, twitterComment.getComment());
 			pStatement.setInt(2, twitterComment.getTwitterId());
 			pStatement.setInt(3, twitterComment.getCommenterId());
@@ -71,16 +71,17 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 			pStatement.setTimestamp(5,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
 			
-			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT twitter_id,comment_id FROM twitter_comment WHERE time=?";
-			pStatement = conn.prepareStatement(SQL);
-			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
-			rs = pStatement.executeQuery();
+			rs = pStatement.getGeneratedKeys();
+			
+		    if(rs.next()){  
+		    	twitterCommentId= Integer.valueOf(((Long)rs.getObject(1)).toString());
+            } 
 			
 			
-			if (rs.next()){
-				twitterId = rs.getInt("twitter_id");
-				twitterCommentId = rs.getInt("comment_id");}
+			twitterComment.setTime(Format.format(newTime));
+			twitterComment.setCommentId(twitterCommentId);
+			twitterId = twitterComment.getTwitterId();
+			
 			// 插入与我相关表
 			RelationModel relation = new RelationModel("tc", twitterComment.getComment(), twitterComment.getTargetId(),
 					twitterComment.getCommenterId(), 0, twitterId);
@@ -91,7 +92,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 		} finally {
 			close(null, pStatement, conn);
 		}
-    	return twitterCommentId;
+    	return twitterComment;
 	}
     public TwitterCommentModel geTwitterCommentById(int commentId) {
     	TwitterCommentModel twitterComment = null;

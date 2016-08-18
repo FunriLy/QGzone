@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qg.service.TwitterService;
 import com.qg.util.JsonUtil;
+import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -31,8 +32,8 @@ public class TwitterSupport extends HttpServlet{
 		// 获取说说id和当前用户id
 		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
 		
-//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int userId =3;
+		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId =3;
 		
 		LOGGER.log(Level.DEBUG, "{0}想给{1}说说点赞", userId,twitterId);
 		int state = new TwitterService().twitterSupport(twitterId, userId) ? 201 : 202;

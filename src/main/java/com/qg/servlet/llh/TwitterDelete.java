@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qg.service.TwitterService;
 import com.qg.util.JsonUtil;
+import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -32,15 +33,14 @@ public class TwitterDelete extends HttpServlet{
 		// 获取说说id
 		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
 		//获取当前用户Id
-		int userId = 3;
-//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId = 10000;
+		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		
 		TwitterService twitterService = new TwitterService();
 		// 获取路径
 		String path = getServletContext().getRealPath("/twitterPhotos/");
 		// 获取图片张数
 		int picture = twitterService.twitterPicture(twitterId);
-		LOGGER.log(Level.DEBUG, " {0}想删除说说，说说id为{1}，其图片张数为：{2}", userId,twitterId,picture);
 		try {
 			// 循环删除服务器上的图片
 			while (picture > 0) {
@@ -61,6 +61,7 @@ public class TwitterDelete extends HttpServlet{
 			LOGGER.log(Level.ERROR, "删除说说失败", e);
 			state = 202;
 		} finally {
+			LOGGER.log(Level.DEBUG, " {0}想删除说说，说说id为{1}，其图片张数为：{2},结果为{3}", userId,twitterId,picture,state);
 			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 			output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 			output.close();

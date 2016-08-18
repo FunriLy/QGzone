@@ -65,7 +65,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into note_comment(comment, note_id, commenter_id, "
 					+ "target_id, time) value(?,?,?,?,?)";
-			pStatement = conn.prepareStatement(sql);
+			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			pStatement.setString(1, noteComment.getComment());
 			pStatement.setInt(2, noteComment.getNoteId());
 			pStatement.setInt(3, noteComment.getCommenterId());
@@ -73,14 +73,13 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 			pStatement.setTimestamp(5, new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
 			
-			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT note_id,comment_id FROM note_comment WHERE time=?";
-			pStatement = conn.prepareStatement(SQL);
-			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
-			rs = pStatement.executeQuery();
-			if (rs.next()){
-				noteId = rs.getInt("note_id");
-				noteCommentId=rs.getInt("comment_id");}
+			rs = pStatement.getGeneratedKeys();
+			//获取插入数据库后留言的id
+		    if(rs.next()){  
+		    	noteCommentId= Integer.valueOf(((Long)rs.getObject(1)).toString());
+            } 
+		    //获取留言id
+		    noteId = noteComment.getNoteId();
 			// 插入与我相关表
 			RelationModel relation = new RelationModel("nc", noteComment.getComment(), noteComment.getTargetId(),
 					noteComment.getCommenterId(), 0, noteId);

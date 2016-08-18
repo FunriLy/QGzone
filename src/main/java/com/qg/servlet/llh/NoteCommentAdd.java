@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.qg.model.UserModel;
 import com.qg.model.NoteCommentModel;
 import com.qg.service.NoteCommentService;
 import com.qg.service.NoteService;
@@ -38,8 +38,8 @@ public class NoteCommentAdd extends HttpServlet {
 		int targetId = Integer.parseInt(request.getParameter("targetId"));
 		String comment = request.getParameter("comment");
 		// 获取当前登陆用户
-//		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int commenterId = 10000;
+		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int commenterId = 10000;
 		LOGGER.log(Level.DEBUG, " {0}想评论{1}的留言，留言id为{2}，内容为：{3}", commenterId,targetId,noteId,comment);
 		if (!(comment.length() > 50)) {
 

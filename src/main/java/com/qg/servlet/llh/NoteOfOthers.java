@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qg.model.NoteModel;
+import com.qg.model.UserModel;
 import com.qg.service.FriendService;
 import com.qg.service.NoteService;
 import com.qg.util.JsonUtil;
@@ -23,7 +24,7 @@ import com.qg.util.Logger;
  * @author dragon
  * <pre>
  * 查看好友留言板
- * 501获取成功，502获取失败
+ * 501获取成功，502获取失败，506非好友无法访问
  * </pre>
  */
 public class NoteOfOthers extends HttpServlet {
@@ -35,21 +36,21 @@ public class NoteOfOthers extends HttpServlet {
 		List<NoteModel> notes = null;
 		int totalPage = 0;
 		// 获取当前用户id
-//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int userId =3;
+		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId =3;
 		//获取被访问者的id
-		int targetId = Integer.parseInt(request.getParameter("targetId"));
+		int targetId = Integer.parseInt(request.getParameter("userId"));
 		// 获取页码
 		String page = request.getParameter("page");
 		
 		try {
-			if (new FriendService().isFriend(userId, targetId) == 1) {
+			if (new FriendService().isFriend(userId, targetId) == 1||targetId==userId) {
 				// 获取全部留言
 				notes = new NoteService().getNote(Integer.parseInt(page), targetId);
 				//获取总页数
 				totalPage = new NoteService().notePage(userId, new NoteService().noteNumber(userId));
 			} else
-				state = 502;
+				state = 506;
 		} catch (Exception e) {
 			state = 502;
 			LOGGER.log(Level.ERROR, "获取留言异常", e);

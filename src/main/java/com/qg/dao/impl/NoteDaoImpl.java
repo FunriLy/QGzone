@@ -32,20 +32,19 @@ public class NoteDaoImpl implements NoteDao {
     	try {
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into note(note, target_id, note_man_id,time) value(?,?,?,?)";
-			pStatement = conn.prepareStatement(sql);
+			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			pStatement.setString(1, note.getNote());
 			pStatement.setInt(2, note.getTargetId());
 			pStatement.setInt(3, note.getNoteManId());
 			pStatement.setTimestamp(4,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
+			
+			rs = pStatement.getGeneratedKeys();
+			
 			//获取插入数据库后留言的id
-			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT note_id FROM note WHERE time=?";
-			pStatement = conn.prepareStatement(SQL);
-			pStatement.setTimestamp(1, new Timestamp(newTime.getTime()));
-			rs = pStatement.executeQuery();
-			if (rs.next())
-				noteId = rs.getInt("note_id");
+		    if(rs.next()){  
+		    	noteId= Integer.valueOf(((Long)rs.getObject(1)).toString());
+            } 
 			//插入与我相关表
 			RelationModel relation = new RelationModel("na",note.getNote(),note.getTargetId(),note.getNoteManId(),0,noteId);
 			new RelationDaoImpl().addRelation(relation);

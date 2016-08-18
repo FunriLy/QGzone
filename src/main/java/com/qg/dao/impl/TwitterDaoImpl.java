@@ -41,7 +41,7 @@ public class TwitterDaoImpl implements TwitterDao{
 			conn = SimpleConnectionPool.getConnection();
 			String sql = "insert into twitter(twitter_word, twitter_picture, talker_id, "
 					+ "support, time) value(?,?,?,?,?)";
-			pStatement = conn.prepareStatement(sql);
+			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			pStatement.setString(1, twitter.getTwitterWord());
 			pStatement.setInt(2, twitter.getTwitterPicture());
 			pStatement.setInt(3, twitter.getTalkId());
@@ -49,13 +49,12 @@ public class TwitterDaoImpl implements TwitterDao{
 			pStatement.setTimestamp(5,new Timestamp(newTime.getTime()));
 			pStatement.executeUpdate();
 			
-			conn = SimpleConnectionPool.getConnection();
-			String SQL = "SELECT twitter_id FROM twitter WHERE time=?";
-			 pStatement = conn.prepareStatement(SQL);
-			pStatement.setTimestamp(1,new Timestamp(newTime.getTime()));
-			rs=pStatement.executeQuery();
-			if(rs.next())
-			tiwtterId=rs.getInt("twitter_id");
+			rs = pStatement.getGeneratedKeys();
+			
+		    if(rs.next()){  
+		    	tiwtterId= Integer.valueOf(((Long)rs.getObject(1)).toString());
+            }  
+			
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加说说异常！", e);
 			throw new Exception("添加说说异常!");

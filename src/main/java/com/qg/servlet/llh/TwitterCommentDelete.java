@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qg.service.TwitterCommentService;
 import com.qg.util.JsonUtil;
+import com.qg.model.UserModel;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 
@@ -32,8 +33,8 @@ public class TwitterCommentDelete extends HttpServlet{
 		// 获取说说评论id
 		int commentId = Integer.parseInt(request.getParameter("commentId"));
 		//获取当前用户Id
-//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-		int userId=3;
+		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+//		int userId=3;
 		// 删除服务器上的说说评论信息
 		LOGGER.log(Level.DEBUG, " {0}想删除说说评论，其id为{1}", userId,commentId);
 		if (!new TwitterCommentService().deleteComment(commentId,userId)) {

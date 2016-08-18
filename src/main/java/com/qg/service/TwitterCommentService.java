@@ -22,7 +22,7 @@ public class TwitterCommentService {
 	  * @param twitterComment 说说评论
 	  * @return true false
 	  */
-	 public int addTwitterComment(TwitterCommentModel twitterComment){
+	 public TwitterCommentModel addTwitterComment(TwitterCommentModel twitterComment){
 		 return twitterCommentDao.addTwitterComment(twitterComment);
 	 }
 	 /***
