@@ -68,16 +68,18 @@ public class TwitterDaoImpl implements TwitterDao{
 		 try {
 			 int number=(pageNumber-1)*12;
 			 String sql = 	"SELECT DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time FROM twitter "
-					 		+"INNER JOIN friends ON" 
-					 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
-					 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
+					 		+"LEFT JOIN friends ON" 
+					 
+					 		
+							+"(twitter.talker_id=friends.f_user_id ANd friends.user_id=?) OR twitter.talker_id=? "
+					 		
 					 		+"ORDER BY twitter_id DESC LIMIT ?,12";
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, userId);
-			 pStatement.setInt(3, userId);
-			 pStatement.setInt(4, number);
+//			 pStatement.setInt(3, userId);
+			 pStatement.setInt(3, number);
 			 rs=pStatement.executeQuery();
 			 UserDaoImpl userDaoImpl = new UserDaoImpl();
 				SupportDaoImpl supportDao = new SupportDaoImpl();
@@ -244,19 +246,20 @@ public class TwitterDaoImpl implements TwitterDao{
 		int twitterNumber = 0;
 		try {
 			 String sql = 	"SELECT  COUNT(DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time) FROM twitter "
-				 		+"INNER JOIN friends ON" 
-				 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
-				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)";
+				 		+"LEFT JOIN friends ON" 
+					 
+				 		+"(twitter.talker_id=friends.f_user_id ANd friends.user_id=?) OR twitter.talker_id=?";
+				 		
 			 conn = SimpleConnectionPool.getConnection();				
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, userId);
-			 pStatement.setInt(3, userId);
+//			 pStatement.setInt(3, userId);
 			 rs = pStatement.executeQuery();
 			 while(rs.next()){
 				 twitterNumber = rs.getInt(1);
 		       }
-			 LOGGER.log(Level.DEBUG, "获取了{0}条说说", twitterNumber);
+			 LOGGER.log(Level.DEBUG, "  asd 获取了{0}条说说", twitterNumber);
 		} catch (Exception e) {
 			LOGGER.log(Level.ERROR, "获取说说数目异常！", e);
 		}finally{

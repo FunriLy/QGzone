@@ -1,0 +1,372 @@
+   /*******************头部***********************************/
+   body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+
+ul{
+	list-style-type: none;
+}
+li{
+	text-align: center;
+}
+body{
+	font-family: "微软雅黑",sans-serif;
+	width:100%;
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+a:active{
+	color: white; 
+}
+
+#nev_1{
+	position: fixed;
+    top: 2px;
+    z-index: 1;
+    width: 100%;
+	overflow: hidden;
+	font-size:20px;
+	background-color: #f3f3f3;
+	z-index:60;
+}
+
+#nevLeft li{
+	float: left;
+	padding: 25px 3.7%;
+}
+.borderRight{
+	border-right: 1px solid black;
+}
+
+#nevLeft .paddingLeft{
+	padding-left: 0;
+	padding-right: 2.4%;
+}
+#nevLeft .circle_1_paddingSmall{
+	padding: 17px 8px 10px 3.7%;
+}
+#nevLeft #circle_1{
+	height: 40px;
+	width: 40px;
+	overflow:hidden;
+	border-radius: 50%;
+}
+#circle_1 img{
+	height: 40px;
+	width: 40px;	
+}
+#nevRight{
+	float: right;
+}
+
+#nevRight li{
+	float: right;
+	padding: 16px 10px;
+}
+
+#nevRight .diamonds_1_paddingSmall{
+	padding: 15px 0 0 0;
+}
+#nevRight #diamonds_1{
+	height: 40px;
+	width: 40px;
+	overflow:hidden;
+	border-radius: 50%;
+}
+#diamonds_1 img{
+	height: 40px;
+	width: 40px;
+}
+#whiteLine{
+	clear: both;
+	height: 3px;
+	background-color: white;
+	border-top: 1px solid black;
+}
+/*header-----------------------------------------------------------*/
+#header{
+	width: 100%;
+	margin: 20px auto ;
+	position: relative;
+	padding: 0.1px;
+	height: 220px;
+	background-color: #999999;
+}
+
+#header #h_photo{
+	overflow: hidden;
+    width: 100px;
+    height: 100px;
+    margin: 82px auto;
+    margin-left: 5%;
+    position: relative;
+    z-index:40;
+}
+#h_photo img{
+	width: 100px;
+    height: 100px;
+}
+#header .username{
+	margin: -13% 0 0 -68%;
+    position: relative;
+    z-index: 30;
+    font-size: 24px;
+}
+#nev2{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	text-align:center;
+	background-color: #999999;
+}
+#nev2 li{
+	display: inline-block;
+	padding: 1% 0;
+	width: 15%;
+	font-size:22px;
+}
+   
+   /***********************/
+    body {
+    font-size: 16px;
+    line-height: 120%;
+    text-align: center;
+    font-family: "微软雅黑",sans-serif;
+    width:100%;
+    }
+    a {
+    text-decoration: none;
+    }
+    a:hover {
+    text-decoration: underline;
+    }
+    .clearfix:after {
+    content:".";
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+    }
+    /*****content******/
+    #wrapper{
+    width:100%;
+    margin:auto;
+    }
+    /*发表说说样式*/
+    #create-note{
+	position: relative;
+    margin: 1px auto;
+    width: 79.5%;
+    height: 152px;
+    padding: 19px;
+    background: #f3f3f3;
+    background-size: cover;
+    }
+    #create-note .txt{
+    border: 1px solid #eee;
+    display: block;
+    margin: 0 auto;
+    height: 90px;
+    width: 1025px;
+    padding: 5px;
+    resize: none;   
+    font-size:22px;
+    border:1px #323232 solid;
+    border-radius:7px;
+    }
+    #create-note .create-btn {
+    position: absolute;
+    right: 54px;
+    width: 72px;
+    height: 36px;
+    margin-top: 16px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #0C528D;
+    color: #fff;
+    background: #999999;
+    border-radius:7px;
+    }
+    #create-note .btn-off {
+    border: 1px solid #ccc;
+    color: #ccc;
+    background: #F7F7F7;
+    }
+    #create-note .word{
+    position: absolute;
+    right: 141px;
+    top: 139px;
+    margin: 7px 10px 0 0;
+    padding: 1px;
+    color: #666;
+    }
+    /*****Twitter******/
+    #list {
+    margin: 0 auto;
+    text-align: left;
+    width: 82%;
+    padding: 25px;
+    font-size:16px;
+    }
+    .box {
+ 	border-top: 1px solid #eee;
+    position: relative;
+    width: 91%;
+    padding: 20px 0;
+    margin: auto;
+    }
+    .box:hover .close {
+    display: block;
+    }
+    .close {
+    display: none;
+    top:0px;
+    right: 0px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #eee;
+    position: absolute;
+    background: #f2f4f7;
+    line-height: 27px;
+    text-align: center;
+    }
+    .close:hover {
+    background: #c8d2e2;
+    text-decoration: none;
+    }
+    .head {
+	float: left;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin: 0 0 0 8%;
+    }
+    .content {
+    float: left;
+    width: 83%;
+    }
+    .main {
+    margin-bottom: 10px;
+    }
+    .txt {
+    margin-bottom: 10px;
+    }
+    .user {
+    font-size: 22px;
+    color: #369;
+    display: inline-block;
+    margin: 2% 14px 7px 2%;;
+    }
+    .user+span{
+    display: block;
+    width:92%;
+    margin: 13px;
+    }
+    .pic {
+	margin: 2px 6px 8px 13px;
+    height: 166px;
+    width: 190px;
+    text-align: center;
+    border: 6px solid #eee;
+    box-shadow: 0 0 5px;
+}
+    }
+    .info {
+    height: 20px;
+    line-height: 19px;
+    font-size: 12px;
+    margin: 0 0 10px 0;
+    padding:10px;
+    }
+    .info .time {
+    color: #ccc;
+    float: left;
+    height: 20px;
+    padding-left: 20px;
+    background: url("../images/bg1.jpg") no-repeat left top;
+    }
+    .comment-box {
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    }
+    .comment-box:hover {
+    background: rgb(247, 247, 247);
+    }
+    .comment-box .myhead {
+    float: left;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    margin-right: 3px;
+    margin-left: 10px;
+    }
+    .comment-box .comment-content {
+    float: left;
+    width: 750px;
+    }
+    .comment-box .comment-content .comment-time {
+    color: #ccc;
+    margin-top: 3px;
+    line-height: 16px;
+    position: relative;
+    }
+    .comment-box .comment-content .comment-operate {
+    display: none;
+    color: #369;
+    height: 20px;
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    }
+    .comment-box .comment-content:hover .comment-operate {
+    display: inline-block;
+    }
+    .text-box .comment {
+    border: 1px solid #eee;
+    display: block;
+    height: 15px;
+    width: 97%;
+    padding: 11px;
+   	margin-top:16px;
+    resize: none;
+    border:1px solid #323232;
+    border-radius:7px;
+    color:#323232;
+    }
+    .text-box .btn {
+    font-size: 12px;
+    font-weight: bold;
+    display: none;
+    float: right;
+    width: 65px;
+    height: 25px;
+    border: 1px solid #0C528D;
+    color: #fff;
+    background: #4679AC;
+    }
+    .text-box .btn-off {
+    border: 1px solid #ccc;
+    color: #ccc;
+    background: #F7F7F7;
+    }
+    .text-box .word{
+    display: none;
+    float: right;
+    margin: 7px 10px 0 0;
+    color: #666;
+    }
+    .text-box-on .comment{
+    height: 50px;
+    color: #333;
+    }
+    .text-box-on .btn{
+    display: inline;
+    }
+    .text-box-on .word{
+    display: inline;
+    }
+    
+    
+    
+     
+    

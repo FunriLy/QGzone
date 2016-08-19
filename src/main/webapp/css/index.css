@@ -1,0 +1,276 @@
+
+#wrap{
+	width: 82%;
+	margin: auto;
+}
+a:hover {
+    text-decoration: underline;
+}
+#header{
+	position: relative;
+	width: 82%;
+	margin: 78px auto 0;
+	padding: 0.1px;
+	height: 250px;
+	background-color: #999999;
+}
+
+#header #h_photo{
+	overflow: hidden;
+	width: 100px; 
+	height: 100px;
+	margin: 40px auto;
+	border-radius: 50%;
+}
+
+#nev2{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background-color: #f3f3f3;
+}
+#nev2 li{
+	display: inline-block;
+	padding: 15px 0;
+	width: 24%;
+}
+
+
+#container{
+	overflow: hidden;
+}
+
+#container #left{
+	float: left;
+	width: 26%;
+	margin: 20px 0;
+}
+
+#container .name{
+	text-align: left;
+	padding: 20px 0 20px 30px;
+	background-color: #f3f3f3;
+	border-bottom: 1px solid black;
+}
+
+#container .more{
+	text-align: center;
+	margin-bottom: 20px;
+	padding: 5px 0 5px 0;
+	background-color: #f3f3f3;
+}
+div#message textarea{
+	resize: none;
+    width: 98%;
+    height: 80px;
+    margin-top: 5px;
+}
+div#message input[type="button"]{
+	width: 50%;
+    height: 30px;
+    margin: 4px 20%;
+}
+#container #right{
+	float: right;
+    width: 70%;
+    margin:20px 0;
+}
+
+.liuyan{
+	
+}
+
+	/*说说的样式***************************************************************/
+    .clearfix:after {
+    content:".";
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+    }
+    /*****Twitter******/
+    #list {
+    margin: 0 auto;
+    text-align: left;
+    width: 100%;
+    }
+    .box {
+	position: relative;
+    width: 97%;
+    margin: auto;
+    padding:10px;
+    margin-top:20px
+   	border-top: 1px solid #eee;
+   	margin-bottom: 30px;
+    }
+    .box:hover .close {
+    display: block;
+    }
+    .close {
+    display: none;
+    top:0px;
+    right: 0px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #eee;
+    position: absolute;
+    background: #f2f4f7;
+    line-height: 27px;
+    text-align: center;
+    }
+    .close:hover {
+    background: #c8d2e2;
+    text-decoration: none;
+    }
+    .head {
+	float: left;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    }
+    .content {
+    float: left;
+    width: 83%;
+    }
+    .main {
+    margin-bottom: 10px;
+    }
+    .txt {
+    margin-bottom: 10px;
+    }
+    .user {
+    font-size: 18px;
+    color: #369;
+    display: inline-block;
+    margin: 2% 0px 7px 2%;;
+    }
+    .user+span{
+    display: block;
+    width:92%;
+    margin: 13px;
+    }
+    .piclist{
+    margin-left: 82px;
+    width: 60%;
+    }
+    .pic {
+	margin: 5px 0px 3px 3px;
+    height: 90px;
+    width: 90px;
+    text-align: center;
+    border: 2px solid #cbcbcb;
+    box-shadow: 0 0 3px;
+}
+    }
+    .info {
+    height: 20px;
+    line-height: 19px;
+    font-size: 12px;
+    margin: 0 0 10px 0;
+    padding:10px;
+    }
+    .info .time {
+    color: #ccc;
+    float: left;
+    height: 20px;
+    padding-left: 20px;
+    margin-left: 4px;
+    background: url("../images/bg1.jpg") no-repeat left top;
+    }
+    .info .praise {
+    color: #369;
+    float: right;
+    height: 20px;
+    padding-left: 18px;
+    background: url("../images/bg2.jpg") no-repeat left top;
+    }
+    .info .praise:hover {
+    text-decoration: underline;
+    background: url("../images/bg3.jpg") no-repeat left top;
+    }
+    .praises-total {
+	margin: 15px 0 10px 0;
+    height: 20px;
+    background: url("../images/praise.png") no-repeat 5px 5px rgb(247, 247, 247);
+    padding: 5px 0 5px 25px;
+    line-height: 20px;
+    }
+    .comment-box {
+    padding: 5px 0;
+    border-top: 1px solid #eee;
+    }
+    .comment-box:hover {
+    background: rgb(247, 247, 247);
+    }
+    .comment-box .myhead {
+	float: left;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    /* margin-right: 1px; */
+    margin-left: 10px;
+    }
+    .comment-box .comment-content {
+    float: left;
+    width: 90%;;
+    }
+    .comment-box .comment-content .comment-time {
+    color: #ccc;
+    margin-top: 3px;
+    line-height: 16px;
+    position: relative;
+    }
+    .comment-box .comment-content .comment-operate {
+    display: none;
+    color: #369;
+    height: 20px;
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    }
+    .comment-box .comment-content:hover .comment-operate {
+    display: inline-block;
+    }
+    .text-box .comment {
+    border: 1px solid #eee;
+    display: block;
+    height: 15px;
+    width: 97%;
+    padding: 11px;
+   	margin-top:16px;
+    resize: none;
+    border:1px solid #323232;
+    color:#323232;
+    }
+    .text-box .btn {
+    font-size: 12px;
+    font-weight: bold;
+    display: none;
+    float: right;
+    width: 65px;
+    height: 25px;
+    border: 1px solid #0C528D;
+    color: #fff;
+    background: #4679AC;
+    }
+    .text-box .btn-off {
+    border: 1px solid #ccc;
+    color: #ccc;
+    background: #F7F7F7;
+    }
+    .text-box .word{
+    display: none;
+    float: right;
+    margin: 7px 10px 0 0;
+    color: #666;
+    }
+    .text-box-on .comment{
+    height: 50px;
+    color: #333;
+    }
+    .text-box-on .btn{
+    display: inline;
+    }
+    .text-box-on .word{
+    display: inline;
+    }

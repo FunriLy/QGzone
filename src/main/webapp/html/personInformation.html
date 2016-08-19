@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人档</title>
+	<link rel="stylesheet" type="text/css" href="../css/nev.css">
+	<link rel="stylesheet" type="text/css" href="../css/personInformation.css">
+	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
+	<script type="text/javascript" src="../js/personInformation.js"></script>
+</head>
+<body>
+	<div id="nev_1">
+		<ul id="nevLeft">
+			<li class="circle_1_paddingSmall"><div id="circle_1"></div></li>
+			<li class="borderRight paddingLeft">QG空间</li>
+			<li class="borderRight"><a href="#">个人中心</a></li>
+			<li class="borderRight"><a href="#">我的主页</a></li>
+			<li class="borderRight"><a href="#">我的好友</a></li>
+		</ul>
+		<ul id="nevRight">
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><a href="#"><img src="../images/002.png"></a></li>
+			<li><p>QGBB</p></li>
+			<li class="diamonds_1_paddingSmall"><img id="diamonds_1" src=""></li>
+		</ul>
+		<div id="whiteLine"></div>
+	</div>
+	<div id="nev2">
+		<div id="diamonds_2"><img src=""></div>
+		<p id="n_name">QGBB</p>
+		<div id="option">
+			<ul>
+				<li class="marginSmall"><a href="#">说说</a></li>
+				<li><a href="#">相册</a></li>
+				<li><a href="#">留言板</a></li>
+				<li><a href="#">个人档</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="container_1">
+		<img id="photo_2" src="">
+		<div id="c1_right">
+			<p>基本资料</p>
+			<ul>
+				<li>账号</li>
+				<li>性别</li>
+				<li>生日</li>
+				<li>所在地</li>
+				<li>电话</li>
+				<li>邮箱</li>
+			</ul>
+			<ul id="val">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+		<p id="change">修改</p>
+	</div>
+	<div id="container_2"  class="hide">
+		<div id="c2_left">
+			<div><span>QGBB个人资料</span></div>
+			<ul>
+				<li class="color_white" index="first">基本资料</li>
+				<li  index="second">头像</li>
+				<li index="third">账户安全</li>
+			</ul>
+		</div>
+		<div id="c2_right">
+			<div id="first">
+				<p class="p1">基本资料</p>
+				<div id="username" class="whiteDiv">
+					<span class="name">昵称</span><input type="text">
+					<span class="toChange">修改</span>
+				</div>
+				<div id="sex" class="whiteDiv">
+					<span class="name">性别</span><select  id="select_sex">
+						<option value="男">男</option>
+						<option value="女">女</option>
+						<option value="未设置">未知</option>
+					</select>
+					<span class="toChange">修改</span>
+				</div>
+				<div id="birthday" class="whiteDiv">
+					<span class="name">生日</span><input type="date" >
+					<span class="toChange">修改</span>
+				</div>
+				<div id="address" class="whiteDiv">
+					<span class="name car_right">所在地</span>
+					<input type="text" ><span class="toChange">修改</span>
+				</div>
+				<div id="phone" class="whiteDiv">
+					<span class="name">电话</span><input type="text" >
+					<span class="toChange">修改</span>
+				</div>
+				<div id="email" class="whiteDiv">
+					<span class="name">邮箱</span><input type="text" >
+					<span class="toChange">修改</span>
+				</div>
+			</div>
+			<div id="second" class="hide">
+				<p class="p1">头像设置</p>
+				<img src="">
+				<input type="file" value="">
+				<input type="button" value="更换">
+			</div>
+			<div id="third" class="hide">
+				<p class="p1" >账号安全</p>
+				<div class="whiteDiv">
+					<span class="name">密码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**********</span>
+					<span class="toChange" index="Password">修改</span>
+				</div>
+				<div class="whiteDiv">
+					<span class="name">密保问题及答案</span>
+					<span class="toChange" index="Problem">修改</span>
+				</div>
+			</div>
+		<div id="changePassword" class="hide">
+			<p class="p2">修改密码<input class="closeButton" type="button"></p>
+			<div>
+				<label>输入旧密码：<input type="password" id="oldPassword"></label>
+				<span class="eye"></span>
+			</div>
+			<div>
+				<label>输入新密码：<input type="password" id="newPassword"></label>
+				<span class="eye"></span>
+			</div>
+			<div><label>确定新密码：<input type="password" id="rePassword"></label></div>
+			<input type="button" class="right_button" name="cancel" value="取消">
+			<input type="button" class="right_button" name="sure" value="确定">
+		</div>
+		<div id="changeProblem" class="hide">
+			<p class="p2">修改密保<input class="closeButton" type="button"></p>
+			<span class="hid">旧密保问题：<select class="question" id="oldSelect">
+   				<option value="1">QG最帅的是 ?</option>
+   				<option value="2">密保问题2</option>
+   				<option value="3">密保问题3</option>
+   			</select>
+   			</span>
+   			<div class="left_space">
+				答案：<input type="text" id="oldSelectAnswer"  class="search" placeholder="输入答案">  
+			</div>
+			<span class="hid">新密保问题：<select class="question" id="newSelect">
+   				<option value="1">QG最帅的是 ?</option>
+   				<option value="2">密保问题2</option>
+   				<option value="3">密保问题3</option>
+   			</select>
+   			</span>
+   			<div class="left_space">
+				答案：<input type="text" id="newSelectAnswer"  class="search" placeholder="输入答案">  
+			</div>
+			<input type="button" class="right_button" name="cancel" value="取消">
+			<input type="button" class="right_button" name="sure" value="确定">
+		</div>
+	</div>
+</body>
+</html>

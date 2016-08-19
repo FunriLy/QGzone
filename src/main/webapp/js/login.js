@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var IP = "192.168.1.100";
+	var IP = "192.168.1.109";
 	sessionStorage["par1"]="123";
 
 	var lo = $($("#option").children()[0]);
@@ -102,7 +102,7 @@ $(document).ready(function(){
 				 	var user = data.user;
 				 	var userId = user.userId;
 				 	console.log("success:"+userId);
-				 	window.location.href="http://"+IP+":8080/QGzone/html/pirvate_album.html"
+				 	window.location.href="http://"+IP+":8080/QGzone/html/selfIndex.html?userId="+userId;
 				 	return ;
 				 }
 				 if(state=="112"){

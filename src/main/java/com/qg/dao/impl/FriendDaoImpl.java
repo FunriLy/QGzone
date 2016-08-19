@@ -202,6 +202,15 @@ public class FriendDaoImpl implements FriendDao {
 				friendApply.setApplyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time));
 				allFriendApply.add(friendApply);
 			}
+			//将好友申请中未读的设置为已读
+			String strSql2 = "update f_apply set apply_state=? where responser_id=? and apply_state=?";
+			pStatement = con.prepareStatement(strSql2);
+			pStatement.setInt(1, 2);
+			pStatement.setInt(2, userId);
+			pStatement.setInt(3, 0);
+			pStatement.executeUpdate();
+			
+			rSet.close();
 		} catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "获得用户未读好友申请列表实现类发生异常！", e);

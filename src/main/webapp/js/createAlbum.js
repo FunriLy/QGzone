@@ -3,44 +3,128 @@ $(function(){
 	var IP = "192.168.1.100";
 	var hostId;
 
-	sessionStorage["friendId"]="1";
-	var friendId = sessionStorage["friendId"];
-	console.log(friendId);
-
-	var zoneUrl = "http://192.168.1.100:8080/QGzone/html/pirvate_album.html";
-	// var zoneAlbumUrl；
-//	window.location.href = zoneUrl;
-	$.post("http://"+IP+":8080/QGzone/Albums",{admit:-1},function(data){
-		console.log(data);
-		var state = data.state;
-		if(state==undefined){
-			alert("服务器异常");
-		}else if(state==606){
-			alert("您与此相册主人非好友关系");
-		}
-		else if(state==602){
-			console.log("加载相册页面出错");
-			return ;
-		}else if(state==601){
-			alert("你已经成功进入相册");
-			for(var i=jsonList.length;i>=0;i--){
-				var id = jsonList[i].albumId;
-				var name = jsonList[i].albumName;
-				var status = jsonList[i].albumState;
-				var time = jsonList[i].albumUploadTime;
-				var count = jsonList[i].photoCount;
-				if(statue==1){
-					createPrivateAlbum(albumId,status,count,name);
-				}else if(status==0){
-					createAlbum(albumId,status,count,name);
-				}else{
-					console.log(albumName+"相册加载出错");
-					return ;
-				}
+	// sessionStorage["friendId"]="1";
+	// var friendId = sessionStorage["friendId"];
+	// console.log(friendId);
+	//获取主人ID-----------------------------------------------------------------------------------------------------------
+	function getUrlInformation(){
+		var qs = (location.search.length>0 ? location.search.substring(1) : "" ),
+			args = {},
+			items = qs.length ? qs.split("&") : [],
+			item = null,
+			name = null,
+			value = null;
+		for(var i=0 ; i<items.length; i++){
+			item = items[i].split("=");
+			name = decodeURIComponent(item[0]);
+			value = decodeURIComponent(item[1]);
+			if(name.length){
+				args[name]=value;
 			}
 		}
+		return args;
+	}
+	var host = getUrlInformation();
+	hostId = host.userId;
+	userId = "1";
+	hostId = "1";
+	console.log("主人用户ID是"+hostId);
+
+	//当前在线的用户id--------------------------------------------------------------------------------
+	var currentId;
+	// var img_url;
+	$.post("http://"+IP+":8080/QGzone/MessageGet",function(data){
+		console.log(data);
+		var state = data.state;
+		if(state == undefined){
+			alert("服务器异常!");
+		}
+		if(state == "161"){
+			var message = data.message;
+			currentId = message.userId;
+			// img_url = HEAD_IMG_URL + message.userImage;
+			// username = message.userName;
+		}
+		if(state == "162"){
+			alert("获取个人资料失败,请稍后重试!");
+		}
 	},"json");
-	
+
+	//判断当前访问人与相册的关系-----------------------------------------------------------------------------------------
+	// var zoneUrl = "http://192.168.1.100:8080/QGzone/html/pirvate_album.html";
+	function judge(){
+		if(hostId!=null){
+			if(currentId==hostId){
+				$.post("http://"+IP+":8080/QGzone/Albums",{admit:"-1"},function(data){
+					console.log(data);
+					var state = data.state;
+					if(state==undefined){
+						alert("服务器异常");
+					}else if(state==606){
+						alert("您与此相册主人非好友关系");
+					}
+					else if(state==602){
+						console.log("加载相册页面出错");
+						return ;
+					}else if(state==601){
+						for(var i=jsonList.length;i>=0;i--){
+							var id = jsonList[i].albumId;
+							var name = jsonList[i].albumName;
+							var status = jsonList[i].albumState;
+							var time = jsonList[i].albumUploadTime;
+							var count = jsonList[i].photoCount;
+							if(statue==1){
+								createPrivateAlbum(albumId,status,count,name);
+							}else if(status==0){
+								createAlbum(albumId,status,count,name);
+							}else{
+								console.log(albumName+"相册加载出错");
+								return ;
+							}
+						}
+					}
+				},"json");
+			}
+			else if(currentId!=hostId){
+				$.post("http://"+IP+":8080/QGzone/Albums?",{hostId},function(data){
+					console.log(data);
+					var state = data.state;
+					if(state==undefined){
+						alert("服务器异常");
+					}else if(state==606){
+						alert("您与此相册主人非好友关系");
+					}
+					else if(state==602){
+						console.log("加载相册页面出错");
+						return ;
+					}else if(state==601){
+						alert("现在是好友访问界面！！！！！！！！！！！！！");
+						$(".function_bar").remove();
+						for(var i=jsonList.length;i>=0;i--){
+							var id = jsonList[i].albumId;
+							var name = jsonList[i].albumName;
+							var status = jsonList[i].albumState;
+							// var time = jsonList[i].albumUploadTime;
+							var count = jsonList[i].photoCount;
+							if(statue==1){
+								createPrivateAlbum(albumId,status,count,name);
+							}else if(status==0){
+								createAlbum(albumId,status,count,name);
+							}else{
+								console.log(albumName+"相册加载出错");
+								return ;
+							}
+						}
+					}
+				},"json");
+				$(".btn_cre_alb").hide();
+				$(".btn_edit").hide();
+			}
+		}
+	}
+
+	judge();
+	console.log("我判断过是谁进来相册了！！！！");
 //隐藏元素--------------------------------------------------------------
 	// $(".nameErr1").hide();
 	// $(".pwErr").hide();
@@ -71,8 +155,8 @@ $(function(){
 	var albPw;
 
 //当前在线的用户id--------------------------------------------------------------------------------
-	var userId;
-	var img_url;
+	var currentId;
+	// var img_url;
 	$.post("http://"+IP+":8080/QGzone/MessageGet",function(data){
 		console.log(data);
 		var state = data.state;
@@ -81,7 +165,7 @@ $(function(){
 		}
 		if(state == "161"){
 			var message = data.message;
-			userId = message.userId;
+			currentId = message.userId;
 			// img_url = HEAD_IMG_URL + message.userImage;
 			// username = message.userName;
 		}
@@ -120,108 +204,12 @@ $(function(){
  		var container = $(".container");
  		container.prepend(album);
  	}
+	alert("我要创建新相册！！！！");
+	createPrivateAlbum(1,1,1,1);
 
-//进入相册页面------------------------------------------------------------------------------------------------------
-	function getUrlInformation(){
-		var qs = (location.search.length>0 ? location.search.substring(1) : "" ),
-			args = {},
-			items = qs.length ? qs.split("&") : [],
-			item = null,
-			name = null,
-			value = null;
-		for(var i=0 ; i<items.length; i++){
-			item = items[i].split("=");
-			name = decodeURIComponent(item[0]);
-			value = decodeURIComponent(item[1]);
-			if(name.length){
-				args[name]=value;
-			}
-		}
-		return args;
-	}
-	var host = getUrlInformation();
-	hostId = host.userId;
-//	userId = "1";
-//	hostId = "1";
-	console.log("主人用户ID是"+hostId);
-//	function judge(){
-//		// var userId;
-//		// var userId = '<s:property value="#session['LOGIN_USER'].userName" />';
-//		if(hostId!=null){
-//			if(userId==hostId){
-//				$.post("http://"+IP+":8080/QGzone/Albums",-1,function(data){
-//					console.log(data);
-//					var state = data.state;
-//					if(state==undefined){
-//						alert("服务器异常");
-//					}else if(state==606){
-//						alert("您与此相册主人非好友关系");
-//					}
-//					else if(state==602){
-//						console.log("加载相册页面出错");
-//						return ;
-//					}else if(state==601){
-//						for(var i=jsonList.length;i>=0;i--){
-//							var id = jsonList[i].albumId;
-//							var name = jsonList[i].albumName;
-//							var status = jsonList[i].albumState;
-//							var time = jsonList[i].albumUploadTime;
-//							var count = jsonList[i].photoCount;
-//							if(statue==1){
-//								createPrivateAlbum(albumId,status,count,name);
-//							}else if(status==0){
-//								createAlbum(albumId,status,count,name);
-//							}else{
-//								console.log(albumName+"相册加载出错");
-//								return ;
-//							}
-//						}
-//					}
-//				},"json");
-//			}
-//			else if(userId!=hostId){
-//				$.post("http://"+IP+":8080/QGzone/Albums",hostId,function(data){
-//					console.log(data);
-//					var state = data.state;
-//					if(state==undefined){
-//						alert("服务器异常");
-//					}else if(state==606){
-//						alert("您与此相册主人非好友关系");
-//					}
-//					else if(state==602){
-//						console.log("加载相册页面出错");
-//						return ;
-//					}else if(state==601){
-//						alert("现在是好友访问界面！！！！！！！！！！！！！");
-//						$(".function_bar").remove();
-//						for(var i=jsonList.length;i>=0;i--){
-//							var id = jsonList[i].albumId;
-//							var name = jsonList[i].albumName;
-//							var status = jsonList[i].albumState;
-//							// var time = jsonList[i].albumUploadTime;
-//							var count = jsonList[i].photoCount;
-//							if(statue==1){
-//								createPrivateAlbum(albumId,status,count,name);
-//							}else if(status==0){
-//								createAlbum(albumId,status,count,name);
-//							}else{
-//								console.log(albumName+"相册加载出错");
-//								return ;
-//							}
-//						}
-//					}
-//				},"json");
-//				$(".btn_cre_alb").hide();
-//				$(".btn_edit").hide();
-//			}
-//		}
-//	}
-//	judge();
-//	
-//相册列表------------------------------------------------------------
 //创建相册-----------------------------------------------------------
 	$(".btn_cre_alb").click(function(){
-//		$("#create_alb").toggle();
+		$("#create_alb").toggle();
 	});
 		
 	function cancel(){
@@ -281,7 +269,7 @@ $(function(){
 			$(".nameErr1").detach();
 			staName = 1;
 		}
-		//异步检查命名
+		//异步检查命名-------------------------------------------------------------------
 		var name = $(".alb_name").val();
 		$.ajax({
 			type : "POST",
@@ -301,7 +289,7 @@ $(function(){
 			dataType : "json"
 		});
 	});
-//根据权限判断是否填密码---------------------------------------------
+//根据权限判断是否填密码--------------------------------------------------------------------
 	$("#last_bar .privacy_sel").blur(function(){
 		var status = $(this).val();
 		if($(".inputarea_pw").is(":visible")){
@@ -315,7 +303,7 @@ $(function(){
 		}
 	});
 
-//设置密码可见--------------------------------------------------------
+//设置密码可见-----------------------------------------------------------------------------
 	$(document).on("click",".click",function(){
 		if ($(".password").attr("type")=="password")
 		{
@@ -465,7 +453,7 @@ $(function(){
 			}
 		});
 	});
-	//无异步加载
+	//无异步加载----------------------------------------------------------------------
 	$(".alb_name_change").blur(function(){
 		var txtValue = $(this).val();
 		var judAlbName = /[^\w\u4e00-\u9fa5]/g;
@@ -623,7 +611,7 @@ $(function(){
 		if(alarm){
 			parent2.children(".pho_count").text("0");
 			parent2.children(".pic").attr("src","../img/alb_cov.png");
-			$.post("http://"+IP+":8080/QGzone/EmptyAlbum",albumId,function(state){
+			$.post("http://"+IP+":8080/QGzone/EmptyAlbum",{albumId},function(state){
 				console.log(state);
 				if(status==undefined){
 					alert("服务器异常");
@@ -656,7 +644,7 @@ $(function(){
 		console.log(albumId,count);
 		var alarm = confirm("你确定删除相册"+name+"？");
 		if(alarm){
-			$.post("http://"+IP+":8080/QGzone/DeleteAlbum",albumId,function(state){
+			$.post("http://"+IP+":8080/QGzone/DeleteAlbum",{albumId},function(state){
 				console.log(state);
 				if(status==undefined){
 					alert("服务器异常");
@@ -742,11 +730,11 @@ $(function(){
 		var idAlb = tg.parents(".every_album").attr("albumId");
 		// console.log("我现在正在访问的相册ID是："+idAlb);
 		var ss = tg.parents(".every_album").attr("status");
-		var albUrl = "innerAlbums.html?userId="+hostId+"&albumId="+idAlb;
+		var albUrl = "innerAlbums.html?userId="+hostId+"&albumId="+idAlb+"status"+ss;
 		// console.log("我现在正在访问的相册权限是："+ss);
 		if(ss==0){
 			// window.location.href="file:///C:/Users/hp/Desktop/project/html/innerAlbums.html?"+hostId+"&"+tg.albumId;
-			$.post("http://"+IP+":8080/QGzone/CheckPublicAlbum",idAlb,function(data){
+			$.post("http://"+IP+":8080/QGzone/CheckPublicAlbum",{idAlb},function(data){
 				console.log(data);
 				var state = data.state;
 				if(state==undefined){
@@ -778,7 +766,7 @@ $(function(){
 					albumPassword : "",
 					albumState : ss
 				};
-				$.post("http://"+IP+":8080/QGzone/ CheckPrivacyAlbum",obj,function(data){
+				$.post("http://"+IP+":8080/QGzone/CheckPrivacyAlbum",obj,function(data){
 					var state = data.state;
 					if(state==undefined){
 						alert("服务器异常");
@@ -824,7 +812,7 @@ $(function(){
 								alert("密码错误");
 							}else if(state==601){
 								console.log("密码正确！！！！");
-								$.post("http://"+IP+":8080/QGzone/ CheckPrivacyAlbum",obj,function(data){
+								$.post("http://"+IP+":8080/QGzone/CheckPrivacyAlbum",obj,function(data){
 									var state = data.state;
 									if(state==undefined){
 										alert("服务器异常");
@@ -836,12 +824,11 @@ $(function(){
 										alert("您与此相册主人非好友关系，没有访问此相册的权限");
 									}else if(state==601){
 										window.location.href = albUrl;
-										for(var i=jsonList.length;i>=0;i--){
-										var pId = jsonList[i].photoId;
-										var pTime = jsonList[i].photoUploadTime;
-										createPhoto(pId,idAlb,userId);
-										}
-										 // window.location.href="login.jsp?backurl="+window.location.href; 
+										// for(var i=jsonList.length;i>=0;i--){
+										// var pId = jsonList[i].photoId;
+										// var pTime = jsonList[i].photoUploadTime;
+										// createPhoto(pId,idAlb,userId);
+										// }
 									}
 								});
 							}
@@ -853,99 +840,5 @@ $(function(){
 			}
 		}
 	});
-// 	//上传图片------------------------------------------------------------------------------------------
-// 	$(".btn_loadup").click(function(){
-// 		$(".contain_photo").hide();
-// 		$("#upload_window").show();
 
-
-// 	});
-// 	$(".cancel_upload").click(function(){
-// 		$("#upload_window").hide();
-// 		$(".contain_photo").show();
-// 		$(".file_img").remove();
-// 	})
-	
-// 	//查看大图------------------------------------------------------------------------------------------
-// 	// $(".photo").click(function(event){
-// 	// 	var tg = $(event.target);
-// 	// 	var pare = tg.parents(".every_photo");
-// 	// 	var picId = pare.attr("photoId");
-// 	// 	alert("我点到了图片哦~~~~~~~");
-// 	// });
-// 	function openNew(){
-// 	//获取页面的高度和宽度
-// 	var sWidth=document.body.scrollWidth;
-// 	var sHeight=document.body.scrollHeight;
-	
-// 	//获取页面的可视区域高度和宽度
-// 	var wHeight=document.documentElement.clientHeight;
-	
-// 	var oMask=document.createElement("div");
-// 		oMask.id="mask";
-// 		oMask.style.height=sHeight+"px";
-// 		oMask.style.width=sWidth+"px";
-// 		document.body.appendChild(oMask);
-// 	var oEnlarge=document.createElement("div");
-// 		oEnlarge.id="enlarge";
-// 		oEnlarge.innerHTML="<div class='enlarge_con'>"+
-// 				"<div id='close'>点击关闭</div>"+
-// 				"<img src='"+getPho+".jpg'></div>";
-// 		document.body.appendChild(oEnlarge);
-// 	//获取浮出层框的宽和高
-// 	var dHeight=oEnlarge.offsetHeight;
-// 	var dWidth=oEnlarge.offsetWidth;
-// 	//设置浮出层框的left和top
-// 		oEnlarge.style.left=sWidth/2-dWidth/2+"px";
-// 		oEnlarge.style.top=wHeight/2-dHeight/2+"px";
-// 	//点击关闭按钮
-// 	var oClose=document.getElementById("close");
-	
-// 		//点击浮出层框以外的区域也可以关闭浮出层框
-// 		oClose.onclick=oMask.onclick=function(){
-// 					document.body.removeChild(oEnlarge);
-// 					document.body.removeChild(oMask);
-// 					};
-// 					};
-					
-// 		$(".pho").click(function(event){
-// 			var tg = $(event.target);
-// 			var pare = tg.parents(".every_photo");
-// 			var getPho = pare.attr("photoId");
-// 			console.log("我要打开大图了！"+getPho);
-// 			openNew();
-// 				// return false;
-// 		});
-// 		$("#close").click(function(){
-// 			$("#mask").remove();
-// 			$("#enlarge").remove();
-// 		});
-
-
-// 	//删除图片------------------------------------------------------------------------------------------
-// 	$(".delete_btn").hide();
-// 	$(".btn_edit_pho").click(function(){
-// 		$(".delete_btn").toggle();
-// 	});
-// 	var photoInfo = getUrlInformation();
-// 	$(".delete_btn").click(function(event){
-// 		var tg = $(event.target);
-// 		var tgAlbId = photoInfo.albumId;
-// 		var phot = tg.parents(".every_photo");
-// 		var photId = phot.attr("photoId");
-// 		var obj = {
-// 			albumId : tgAlbId,
-// 			photoId : photId
-// 		};
-// 		$.post("http://"+IP+":8080/QGzone/DeletePhoto",obj,function(state){
-// 			if(state==undefined){
-// 				alert("服务器异常");
-// 			}else if(state==602){
-// 				alert("删除图片失败");
-// 			}else if(state==601){
-// 				console.log("删除图片："+obj.photoId);
-// 				phot.remove();
-// 			}
-// 		});
-// 	});
 });

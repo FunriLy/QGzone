@@ -1,0 +1,300 @@
+
+#nev2{
+/* 	border-top: 1px solid black; */
+	overflow: hidden;
+	margin-top: 75px;
+	height: 230px;
+	background-color: #999999;
+}
+
+#diamonds_2 img{
+	float: left;
+	margin: 50px 0 0 50px;
+	height: 120px;
+	width: 120px;
+}
+
+#n_name{
+	float: left;
+	margin-top: 55px;
+	margin-left: 10px;
+}
+
+#nev2 #option{
+	margin-top: 170px;
+	text-align: center;
+}
+
+#nev2 ul{
+	display: inline;
+}
+#nev2 .marginSmall{
+	margin-left: 0;
+}
+#nev2 li{
+	display: inline;
+	color: white;
+	font-size: 30px;
+	margin-left: 14%;
+	font-family: "微软雅黑";
+}
+
+#nev2 a{
+	text-decoration: none;
+	color: white;
+}
+#nev2 a:active{
+	color: black; 
+}
+/*--------------------------------------------------------------------------------*/
+#container_1{
+	overflow: hidden;
+	width: 76%;
+	margin: 10px auto 0;
+	background-color: #f2f2f2;
+}
+
+#container_1 #photo_2{
+	float: left;
+	width: 200px;
+	height: 200px;
+	margin: 40px 50px;
+}
+
+#container_1 #c1_right{
+	float: left;
+	height: 630px;
+	border-left: 1px solid black; 
+}
+
+#container_1 p{
+	font-size: 20px;
+	margin: 40px 20px 20px 20px;
+}
+
+#container_1 ul{
+	float: left;
+	margin-left: 20px;
+}
+#container_1 li{
+	line-height: 40px;
+	text-align: left;
+}
+#container_1 .p1{
+	margin-right: 50px;
+	border: 1px solid red;
+	text-align: left;
+}
+
+#container_1 #change{
+	float: right;
+	margin: 50px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+#container_1 #val{
+	margin-left: 50px;
+}
+
+
+/*--------------------------------------------------------------------------------*/
+#container_2{
+	position: relative;
+	overflow: hidden;
+	width: 76%;
+	margin: 10px auto 0;
+	background-color: #f2f2f2;
+}
+
+#container_2 #c2_left{
+	float: left;
+	width: 26%;
+}
+#c2_left span{
+	position: relative;
+	top: 20px;
+	padding: 2px;
+	font-size: 30px;
+	background-color: #f2f2f2;
+}
+#c2_left div{
+	margin-bottom: 100px;
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+#c2_left li{
+	padding: 20px;
+	font-size: 25px;
+	cursor: pointer;
+}
+.color_white{
+	background-color: white;
+}
+
+#c2_right{
+	float: left;
+	width: 70%;
+	height: 630px;
+	border-left: 1px solid black;
+}
+
+#select_sex{
+	padding-left: 10px;
+	width: 41.4%;
+	height: 41px;
+	font-size: 18px;
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: ' ';
+    border:1px solid white;
+	-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+	-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+	box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+.hide{
+	display: none;
+}
+#c2_right .p1{
+	margin: 25px;
+	font-size: 25px;
+}
+
+#c2_right .name{
+	line-height: 44px;
+	margin-left: 10px;
+	padding-right: 50px;
+	background-color: white;
+}
+#c2_right #first .car_right{
+	padding-right: 29px;
+}
+#c2_right .toChange{
+	float: right;
+	line-height: 44px;
+	margin-right: 20px;
+	cursor: pointer;
+}
+.whiteDiv{
+	margin: 10px auto;
+	width: 90%;
+	height: 44px;
+	background-color: white;
+}
+
+#c2_right #first input{
+	margin-top: 2px;
+	width: 40%;
+	height: 40px;
+	padding-left: 10px;
+	font-size: 18px;
+	border:1px solid white;
+	-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+	-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+	box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
+}
+/*日历格式*/
+::-webkit-inner-spin-button { visibility: hidden; }
+/* ::-webkit-clear-button {
+     -webkit-appearance: none; 
+} */
+#second img{
+	height: 220px;
+	width: 220px;
+	margin: 0 0 0 30px;
+}
+
+#changePassword{
+	position: absolute;
+	top: 130px;
+	left: 40%;
+	background-color: rgba(153, 153, 153, 0.78);
+	width: 500px;
+}
+
+.p2{
+	font-size: 24px;
+	padding-left: 10px;
+	line-height: 40px;
+	background-color: rgba(153, 153, 153, 0.80); 
+}
+
+#changePassword label{
+	font-size: 18px;
+}
+
+#changePassword input[type="password"]{
+	width: 60%;
+	height: 25px;
+}
+#changePassword input[type="text"]{
+	width: 60%;
+	height: 25px;
+}
+#changePassword .eye{
+    display: inline-block;
+    position: relative;
+    top: 10px;
+    right: 35px;
+    width: 28px;
+    height: 28px;
+    background: url(../images/005.png) no-repeat 0 -0.5px;
+    background-size: cover;
+    cursor: pointer;
+}
+#changePassword div{
+	margin-left: 30px;
+	margin-top: 18px;
+}
+
+.right_button{
+	margin: 40px 30px 20px 0;
+	float: right;
+	width: 80px;
+	height: 40px;
+}
+.closeButton{
+	float: right;
+	margin: 10px 30px 0 0;
+	width: 20px;
+	height: 20px;
+}
+#changeProblem{
+	position: absolute;
+	top: 130px;
+	left: 40%;
+	width: 500px;
+	font-size: 18px;
+	background-color: rgba(153, 153, 153, 0.78);
+}
+.hid{
+	display: block;
+	margin-left: 30px;
+    overflow: hidden;
+}
+.question{
+	margin-top: 18px;
+	padding-left: 10px;
+	width: 61%;
+	height: 25px;
+	background-image: url(../images/001.png);
+	background-repeat: no-repeat;
+	background-size: 16px;
+	background-position: 323px -1px;
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: ' ';
+}
+.left_space{
+	margin-left: 30px;
+}
+.left_space input[type="text"]{
+	margin-top: 18px;
+	width: 60%;
+	margin-left: 54px;
+	height: 25px;
+}

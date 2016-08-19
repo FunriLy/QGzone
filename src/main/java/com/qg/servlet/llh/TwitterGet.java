@@ -35,10 +35,11 @@ public class TwitterGet  extends HttpServlet {
 		int totalPage = 0;
 		List<TwitterModel> twitters = null;
 		//获取当前登陆id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int userId = 3;
+//		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+		int userId = 6869601;
 		//获取页码
 				String page = request.getParameter("page");
+				System.out.println(page);
 				try {
 					//获取说说列表
 					twitters = new TwitterService().getTwitter(Integer.parseInt(page), userId);

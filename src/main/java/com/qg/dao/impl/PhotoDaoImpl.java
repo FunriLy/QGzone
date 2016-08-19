@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
 import com.qg.dao.PhotoDao;
 import com.qg.model.PhotoModel;
 import com.qg.util.Level;
@@ -49,19 +50,18 @@ public class PhotoDaoImpl implements PhotoDao {
 			con = SimpleConnectionPool.getConnection();
 			//存进数据库
 			String strSql = "insert into photos(album_id, photo_upload_time) value(?, ?)";
-			pStatement = con.prepareStatement(strSql);
+			pStatement = con.prepareStatement(strSql, Statement.RETURN_GENERATED_KEYS);
 			pStatement.setInt(1, albumId);
 			pStatement.setString(2, sd.format(date));
 			pStatement.executeUpdate();
-			//获取id
-			String strSql2 = "select * from photos where photo_upload_time=?";
-			pStatement = con.prepareStatement(strSql2);
-			pStatement.setString(1, sd.format(date));
-			ResultSet rSet = pStatement.executeQuery();
-			if(rSet.next()){
-				result = rSet.getInt("photo_id");
+			ResultSet rSet = pStatement.getGeneratedKeys();
+			
+			if (rSet.next()) {
+				result = (Integer)rSet.getObject(1);
 				LOGGER.log(Level.DEBUG, "保存相册信息 相册id:{0}, 相片id:{1}", albumId, result);
 			}
+			
+			rSet.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 			LOGGER.log(Level.ERROR, "保存相册实现类发生异常", e);

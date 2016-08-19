@@ -1,7 +1,7 @@
 
 $(function(){
 		var HEAD_IMG_URL = "http://192.168.1.100:8080/QGzone/jpg/";
-		var IP = "192.168.1.100";
+		var IP = "192.168.1.109";
 		var MAIN_PAGE = "个人主页的路径";//不含参数；
 		
 		$("#find_account").hide();
