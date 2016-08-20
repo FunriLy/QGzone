@@ -57,7 +57,7 @@ public class PhotoDaoImpl implements PhotoDao {
 			ResultSet rSet = pStatement.getGeneratedKeys();
 			
 			if (rSet.next()) {
-				result = (Integer)rSet.getObject(1);
+				result = Integer.valueOf(((Long)rSet.getObject(1)).toString());
 				LOGGER.log(Level.DEBUG, "保存相册信息 相册id:{0}, 相片id:{1}", albumId, result);
 			}
 			

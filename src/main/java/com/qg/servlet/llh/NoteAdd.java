@@ -53,7 +53,7 @@ public class NoteAdd extends HttpServlet {
 		}else {
 			state =504;
 		}
-		LOGGER.log(Level.DEBUG, "留言:{0}  被留言者id:{1}  当前用户Id:{2}  留言id为:{3}", note,targetId,noteManId,noteId);
+		LOGGER.log(Level.DEBUG, "{4}留言:{0}  被留言者id:{1}  当前用户Id:{2}  留言id为:{3}  状态为{5}", note,targetId,noteManId,noteId,noteManId,state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state,noteId).getBytes("UTF-8"));
 		output.close();

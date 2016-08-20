@@ -26,7 +26,7 @@ public interface NoteCommentDao {
 	 * @param noteComment 留言评论对象
 	 * @return true false
 	 */
-	int addNoteComment(NoteCommentModel noteComment);
+	NoteCommentModel addNoteComment(NoteCommentModel noteComment);
 	/***
 	 * 这是一个通过留言id获取留言对象的方法
 	 * @param commentId 留言评论id

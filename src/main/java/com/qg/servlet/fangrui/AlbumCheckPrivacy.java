@@ -55,9 +55,14 @@ public class AlbumCheckPrivacy extends HttpServlet {
 		AlbumService albumService  = new AlbumService();
 		
 		List<Integer> allPhotoId = new ArrayList<Integer>();
-		
+		AlbumModel realAlbum = new AlbumModel();
 		
 		state = albumService.checkPrivacyAlbum(album, userId);
+		//如果相册为空或者完成
+		if (601==state || 605==state) {
+			realAlbum = albumService.getAlbumByAlbumId(album.getAlbumId());
+			realAlbum.setAlbumPassword("");
+		}
 		//如果状态码为601
 		if (601 == state) {
 			PhotoService photoService = new PhotoService();
@@ -67,7 +72,7 @@ public class AlbumCheckPrivacy extends HttpServlet {
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 查看私密相册 {1} 状态: {2}", userId, album.getAlbumId(), state);
 		
-		output.write(JsonUtil.tojson(state, allPhotoId).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state, allPhotoId, realAlbum).getBytes("UTF-8"));
 		output.close();
 	}
 	

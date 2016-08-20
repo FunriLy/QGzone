@@ -37,7 +37,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 		List<NoteCommentModel> noteComments = new ArrayList<NoteCommentModel>();
 		try {
 			conn = SimpleConnectionPool.getConnection();
-			String sql = "SELECT * FROM note_comment WHERE note_id=? ORDER BY comment_id DESC";
+			String sql = "SELECT * FROM note_comment WHERE note_id=? ORDER BY comment_id ";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
 			rs = pStatement.executeQuery();
@@ -57,7 +57,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	}
 
 	@Override
-	public int addNoteComment(NoteCommentModel noteComment) {
+	public NoteCommentModel addNoteComment(NoteCommentModel noteComment) {
 		Date newTime = new Date();
 		int noteCommentId=0;
 		int noteId = 0;
@@ -80,6 +80,10 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
             } 
 		    //获取留言id
 		    noteId = noteComment.getNoteId();
+		    
+		    noteComment.setTime(Format.format(newTime));
+		    noteComment.setCommentId(noteCommentId);
+		    
 			// 插入与我相关表
 			RelationModel relation = new RelationModel("nc", noteComment.getComment(), noteComment.getTargetId(),
 					noteComment.getCommenterId(), 0, noteId);
@@ -90,7 +94,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 		} finally {
 			close(null, pStatement, conn);
 		}
-		return noteCommentId;
+		return noteComment;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class TwitterDelete extends HttpServlet{
 		// 获取说说id
 		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
 		//获取当前用户Id
-//		int userId = 10000;
+//		int userId = 3;
 		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 		
 		TwitterService twitterService = new TwitterService();

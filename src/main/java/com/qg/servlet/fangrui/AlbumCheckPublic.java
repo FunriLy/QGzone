@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qg.model.AlbumModel;
 import com.qg.model.UserModel;
 import com.qg.service.AlbumService;
 import com.qg.service.PhotoService;
@@ -52,8 +53,13 @@ public class AlbumCheckPublic extends HttpServlet {
 		int albumId = Integer.valueOf(request.getParameter("albumId"));
 		AlbumService albumService = new AlbumService();
 		List<Integer> allPhotoId = new ArrayList<Integer>();
-		
+		AlbumModel realAlbum = new AlbumModel();
 		state = albumService.checkPublicAlbum(albumId,userId);
+		//如果相册为空或者完成
+		if (601==state || 605==state) {
+			realAlbum = albumService.getAlbumByAlbumId(albumId);
+			realAlbum.setAlbumPassword("");
+		}
 		//获取相册中图片信息
 		if (state == 601) {
 			PhotoService photoService = new PhotoService();
@@ -62,7 +68,7 @@ public class AlbumCheckPublic extends HttpServlet {
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 查看公开相册 {1} 状态: {2}", userId, albumId, state);
 		
-		output.write(JsonUtil.tojson(state,allPhotoId).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state,allPhotoId, realAlbum).getBytes("UTF-8"));
 		output.close();
 		
 	}

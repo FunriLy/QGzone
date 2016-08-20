@@ -46,6 +46,7 @@ public class TwitterOfOthers  extends HttpServlet {
 			// 判断是否为好友
 			if (new FriendService().isFriend(userId, targetId) == 1||targetId==userId) {
 				// 获取说说列表
+				
 				twitters = new TwitterService().getTwitterByTalkId(Integer.parseInt(page), targetId);
 				//获取总页数
 				totalPage = new TwitterService().twitterPage(userId, new TwitterService().userTwitterNumber(userId));
@@ -55,6 +56,7 @@ public class TwitterOfOthers  extends HttpServlet {
 			state = 202;
 			LOGGER.log(Level.ERROR, "获取说说异常", e);
 		} finally {
+			LOGGER.log(Level.DEBUG, " {0}查看{1}的说说列表，状态码{2}", userId,targetId,state);
 			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 			output.write(JsonUtil.tojson(state, twitters,totalPage).getBytes("UTF-8"));
 			output.close();

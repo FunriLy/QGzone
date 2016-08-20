@@ -161,7 +161,7 @@ $(function(){
 
             box.innerHTML = 
 
-            '<a href="selfIndex.html?='+talkid+'"><img src="'+h_photo+'" class="head" /></a>' +   
+            '<a href="index.html?userId='+talkid+'"><img src="'+h_photo+'" class="head" /></a>' +   
                     isMine(m_status)+
                 '<div class="content">'+
                     '<div class="main">'+
@@ -224,10 +224,15 @@ $(function(){
                     text+='赞</a></div>'+
                     '<div class="praises-total" total='+pra_total+'; style="display:none;">'+
                         '</div>';
-                    }else{
+                    }else if(pra_total>1){
                         text+='赞</a></div>'+
                     '<div class="praises-total" total='+pra_total+'; style="display:block;">'+
                     (pra_total-1)+'个人觉得很赞</div>';
+                    }else if(pra_total=1){
+                        text+='赞</a></div>'+
+                        '<div class="praises-total" total='+pra_total+'; style="display:block;">'+
+                        pra_total+'个人觉得很赞</div>';
+                    	
                     }
             }
             return text;
@@ -513,7 +518,7 @@ $(function(){
                     '<div class="comment-content">' +
                     '<p class="comment-text"><span class="user">'+username+
                     '</span> &nbsp回复' + 
-                  +box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
+                  box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
                     '<p class="comment-time">' +
                     formateDate(new Date()) +
                     '<a href="javascript:;" class="comment-operate">删除</a>' +
@@ -715,7 +720,12 @@ $(function(){
             }
 
         }
+        	$('img').bind("error",function() {
+        		$(this).attr("src", "../jpg/all.jpg");
+        	});
     }
-
+	$('img').bind("error",function() {
+		$(this).attr("src", "../jpg/all.jpg");
+	});
 
 })

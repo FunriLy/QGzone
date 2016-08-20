@@ -65,7 +65,9 @@ public class TwitterService {
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
 		LOGGER.log(Level.ERROR, "页码数{0}", this.twitterPage(talkId, twitterNumber));
 		if (!(this.twitterPage(talkId, twitterNumber) < pageNumber))
+			
 			return twitterDao.getMyTwitter(pageNumber, talkId);
+		
 		else
 			return twitters;
 	}

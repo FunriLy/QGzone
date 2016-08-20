@@ -55,6 +55,7 @@ public class NoteOfOthers extends HttpServlet {
 			state = 502;
 			LOGGER.log(Level.ERROR, "获取留言异常", e);
 		} finally {
+			LOGGER.log(Level.DEBUG, " {0}进入{1}的留言板,状态{2}", userId,targetId,state);
 			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 			output.write(JsonUtil.tojson(state, notes,totalPage).getBytes("UTF-8"));
 			output.close();

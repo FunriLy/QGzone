@@ -1,139 +1,39 @@
-   /*******************头部***********************************/
-   body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
 
-ul{
-	list-style-type: none;
-}
-li{
-	text-align: center;
-}
-body{
-	font-family: "微软雅黑",sans-serif;
-	width:100%;
-}
-a{
-	text-decoration: none;
-	color: black;
-}
-a:active{
-	color: white; 
-}
-
-#nev_1{
-	position: fixed;
-    top: 2px;
-    z-index: 1;
-    width: 100%;
-	overflow: hidden;
-	font-size:20px;
-	background-color: #f3f3f3;
-	z-index:60;
-}
-
-#nevLeft li{
-	float: left;
-	padding: 25px 3.7%;
-}
-.borderRight{
-	border-right: 1px solid black;
-}
-
-#nevLeft .paddingLeft{
-	padding-left: 0;
-	padding-right: 2.4%;
-}
-#nevLeft .circle_1_paddingSmall{
-	padding: 17px 8px 10px 3.7%;
-}
-#nevLeft #circle_1{
-	height: 40px;
-	width: 40px;
-	overflow:hidden;
-	border-radius: 50%;
-}
-#circle_1 img{
-	height: 40px;
-	width: 40px;	
-}
-#nevRight{
-	float: right;
-}
-
-#nevRight li{
-	float: right;
-	padding: 16px 10px;
-}
-
-#nevRight .diamonds_1_paddingSmall{
-	padding: 15px 0 0 0;
-}
-#nevRight #diamonds_1{
-	height: 40px;
-	width: 40px;
-	overflow:hidden;
-	border-radius: 50%;
-}
-#diamonds_1 img{
-	height: 40px;
-	width: 40px;
-}
-#whiteLine{
-	clear: both;
-	height: 3px;
-	background-color: white;
-	border-top: 1px solid black;
-}
 /*header-----------------------------------------------------------*/
 #header{
-	width: 100%;
-	margin: 20px auto ;
+	width: 76%;
+	margin: 54px auto ;
 	position: relative;
 	padding: 0.1px;
-	height: 220px;
-	background-color: #999999;
+	height: 222px;
+	background-color: #a3e7fd;
 }
 
 #header #h_photo{
 	overflow: hidden;
-    width: 100px;
-    height: 100px;
-    margin: 82px auto;
-    margin-left: 5%;
-    position: relative;
-    z-index:40;
+	width: 100px; 
+	height: 100px;
+	margin: 40px auto;
+	border-radius: 50%;
 }
 #h_photo img{
-	width: 100px;
-    height: 100px;
-}
-#header .username{
-	margin: -13% 0 0 -68%;
-    position: relative;
-    z-index: 30;
-    font-size: 24px;
+	width: 100px; 
+	height: 100px;	
 }
 #nev2{
 	position: absolute;
 	bottom: 0px;
 	width: 100%;
-	text-align:center;
-	background-color: #999999;
+	background-color: #98d9ec;
 }
 #nev2 li{
 	display: inline-block;
-	padding: 1% 0;
-	width: 15%;
-	font-size:22px;
+	padding: 15px 0;
+	width: 24%;
 }
-   
-   /***********************/
-    body {
-    font-size: 16px;
-    line-height: 120%;
-    text-align: center;
-    font-family: "微软雅黑",sans-serif;
-    width:100%;
-    }
+
+
+
     a {
     text-decoration: none;
     }
@@ -152,14 +52,15 @@ a:active{
     width:100%;
     margin:auto;
     }
-    /*发表说说样式*/
+    /*发表留言样式*/
     #create-note{
 	position: relative;
-    margin: 1px auto;
-    width: 79.5%;
+    margin: auto;
+    margin-top: -41px;
+    width: 74.5%;
     height: 152px;
-    padding: 19px;
-    background: #f3f3f3;
+    padding: 11px;
+    background: #caebf4;
     background-size: cover;
     }
     #create-note .txt{
@@ -167,11 +68,10 @@ a:active{
     display: block;
     margin: 0 auto;
     height: 90px;
-    width: 1025px;
+    width: 93%;
     padding: 5px;
     resize: none;   
     font-size:22px;
-    border:1px #323232 solid;
     border-radius:7px;
     }
     #create-note .create-btn {
@@ -182,9 +82,8 @@ a:active{
     margin-top: 16px;
     font-weight: bold;
     font-size: 14px;
-    border: 1px solid #0C528D;
     color: #fff;
-    background: #999999;
+    background: #ff946a;
     border-radius:7px;
     }
     #create-note .btn-off {
@@ -209,7 +108,7 @@ a:active{
     font-size:16px;
     }
     .box {
- 	border-top: 1px solid #eee;
+ 	border-top: 1px solid #caebf4;
     position: relative;
     width: 91%;
     padding: 20px 0;
@@ -343,6 +242,7 @@ a:active{
     border: 1px solid #0C528D;
     color: #fff;
     background: #4679AC;
+    margin-top:4px;
     }
     .text-box .btn-off {
     border: 1px solid #ccc;

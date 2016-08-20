@@ -78,7 +78,7 @@ public class NoteDaoImpl implements NoteDao {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "获得留言集合异常！", e);
-			throw new Exception("添加说说异常!");
+			throw new Exception("获得留言集合异常!");
 		}finally{
 			close(rs, pStatement, conn);
 		}

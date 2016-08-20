@@ -34,7 +34,8 @@
 			   	$.get('../MessageSearch?userId='+userId,function(json){
 			   		
 			   		currentName=json.message.userName;
-
+			   		
+			   		currentPhoto = '../jpg/'+json.message.userImage
 			   		
 			   		$('#nevRight li:eq(3) p').html(json.message.userName);
 			   		
@@ -42,6 +43,36 @@
 			   		$('#diamonds_1 img').attr('src','../jpg/'+json.message.userImage);
 			   		
 			   	},'json');
+			   	
+			  
+			   	
+			   	
+		        //触发发表留言的事件
+		        
+		        $("#create-note .create-btn").click(function(){
+		        	
+		        	var note = $('#create-note .txt').val();
+		        	
+		        	$.post('../NoteAdd',{targetId:currentId,note:note},function(json){
+		        		
+		        		if(json.state==501){
+		        			
+		        			createNote(userId,userName,userPhoto,json.id);
+		        			
+		        			 updateEvent(userId,userPhoto,userName);
+		    		    	
+		        			
+		        		}else{
+		        			
+		        			alert("请刷新重试!");
+		        			
+		        		}
+		  
+		        	},'json');
+		        	
+		        })
+		        
+		        updateEvent();
 			   
 		   },'json');		
 		
@@ -64,6 +95,8 @@
 	   	$.get('../MessageSearch?userId='+currentId,function(json){
 	   		
 	   		$('#h_photo img').attr('src','../jpg/'+json.message.userImage);
+	   		
+	   		
 	   		
 	   	},'json');	
    	
@@ -183,6 +216,10 @@
 
                     var box = showNote(jsonList[i].noteManId,jsonList[i].noteId,headPhoto,jsonList[i].noteManName,jsonList[i].note,jsonList[i].noteTime,myState);
                     
+    		    	$('img').bind("error",function() {
+    					$(this).attr("src", "../jpg/all.jpg");
+    				});
+                    
                     $("#list").append(box);
 
                     var comments = jsonList[i].comment;
@@ -280,7 +317,7 @@
 	        	
 	        	box.innerHTML = 
 	        		
-	        		'<a href="selfIndex.html?='+notemanid+'"><img src="'+h_photo+'" class="head" /></a>'+
+	        		'<a href="selfIndex.html?='+userid+'"><img src="'+userphoto+'" class="head" /></a>'+
 	                '<a href="javascript:;" class="close">x</a>'+
 	                '<div class="content">'+
 	                    '<div class="main">'+
@@ -300,41 +337,20 @@
 	        	$('#list').prepend(box);
 	        	
 	        	$('#create-note .txt').val('');
-	        	updateEvent();
+	        	
 	        }
 	        
-	        //触发发表留言的事件
-	        
-	        $("#create-note .create-btn").click(function(){
-	        	
-	        	var note = $('#create-note .txt').val();
-	        	
-	        	$.post('../NoteAdd',{targetId:currentId,note:note},function(json){
-	        		
-	        		if(json.state==501){
-	        			
-	        			createNote(userId,userName,userPhoto,json.id);
-	        			
-	        		}else{
-	        			
-	        			alert("请刷新重试!");
-	        			
-	        		}
-	  
-	        	},'json');
-	        	
-	        })
 	 
 /*********************************************************************对留言的操作*****************************************************************/
 	        
 	        //删除节点
 	        function removeNode(node){
 	        	
-	        	if(confirm('确定删除吗？')){
+	        	
 	        		
 	        		$(node).remove();
 	        		
-	        	}	
+	        	
 	        }
 	        
 	        //触发删除留言的函数
@@ -509,7 +525,7 @@
 	                        '<div class="comment-content">' +
 	                        '<p class="comment-text"><span class="user">'+username+
 	                        '</span> 回复' + 
-	                      +box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
+	                      box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
 	                        '<p class="comment-time">' +
 	                        formateDate(new Date()) +
 	                        '<a href="javascript:;" class="comment-operate">删除</a>' +
@@ -545,8 +561,9 @@
 
 	                                        if(json.state==501){
 
-	                                            var commentBox =  reply(el.parentNode.parentNode.parentNode,el,userId,userPhoto,userName);
+	                                            var commentBox =  reply(el.parentNode.parentNode.parentNode,el,currentId,currentPhoto,currentName);
 	                                            commentBox.id = json.id;
+	                                         
 
 	                                         }else{
 
@@ -565,9 +582,11 @@
 
                                         if(json.state==501){
 
-                                            var commentBox =commentReply(el.parentNode.parentNode.parentNode, el,userId,userPhoto,userName); 
+                                            var commentBox =commentReply(el.parentNode.parentNode.parentNode, el,currentId,currentPhoto,currentName); 
                                     
                                             commentBox.id = json.id;
+                                            
+                                            
                                            
                                         }else{
                                             alert("操作失败，请刷新重试！");
@@ -590,13 +609,17 @@
 	        //包装执行函数
 	        function updateEvent(){
 	        	
-	        	
+		    	$('img').bind("error",function() {
+					$(this).attr("src", "../jpg/all.jpg");
+				});
 	        	removeNote();
 	        	commentInput();
 	        	toComment();
 	        	
 	        }
 	        
-	        updateEvent();
+	       
+	        
+	        updateEvent()
 	        
 	})

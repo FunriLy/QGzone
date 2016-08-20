@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.sql.Connection;
 
+import com.mysql.jdbc.Statement;
 import com.qg.dao.AlbumDao;
 import com.qg.model.AlbumModel;
 import com.qg.util.Level;
@@ -50,7 +51,7 @@ public class AlbumDaoImpl implements AlbumDao {
 			con = SimpleConnectionPool.getConnection();
 			//将数据存进数据库
 			String strSql = "insert into albums(user_id, album_name, album_state, album_password, album_upload_time, photo_count) value(?,?,?,?,?,?)";
-			pStatement = con.prepareStatement(strSql);
+			pStatement = con.prepareStatement(strSql, Statement.RETURN_GENERATED_KEYS);
 			pStatement.setInt(1, album.getUserId());
 			pStatement.setString(2, album.getAlbumName());
 			pStatement.setInt(3, album.getAlbumState());
@@ -58,16 +59,13 @@ public class AlbumDaoImpl implements AlbumDao {
 			pStatement.setTimestamp(5, new Timestamp(date.getTime()));
 			pStatement.setInt(6, 0);
 			pStatement.executeUpdate();
-			
+			ResultSet rSet = pStatement.getGeneratedKeys();
 			//获取存进数据库的实体的编号
-			String strSql2 = "select * from albums where album_upload_time=?";
-			pStatement = con.prepareStatement(strSql2);
-			pStatement.setTimestamp(1, new Timestamp(date.getTime()));
-			ResultSet rSet = pStatement.executeQuery();
 			if(rSet.next()){
-				result = rSet.getInt("album_id");
+				result = Integer.valueOf(((Long)rSet.getObject(1)).toString());
+				LOGGER.log(Level.DEBUG, "保存相册信息 用户id:{0}, 相册id:{1}", album.getUserId(), result);
 			}
-			
+			rSet.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "创建相册实现类发生异常！", e);
 		} finally {

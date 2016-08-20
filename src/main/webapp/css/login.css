@@ -5,9 +5,16 @@ ul{
 li{
 	display: inline;
 }
+html{
+	height: 100%;
+}
 body{
 	font-family: "微软雅黑";
-	background-color: #d7d7d7;
+	background-image: url(../images/c_login_background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 0 -50px;
+	background-attachment:fixed;
 }
 a{
 	text-decoration: none;
@@ -26,38 +33,34 @@ a:active{
 	box-shadow:inset 0 1px 2px rgba(0,0,0,.1)
 }
 
+#logo{
+	float: left;
+	margin: 240px 13%;
+}
+#logo img{
+	width: 430px;
+}
 #wrap{
+	float: right;
+	margin: 180px 10%;
 	text-align: center;
 }
-
-#login{
-	width: 460px;
-	margin: auto;
-}
-
-#name {
-	margin-bottom: 16px;
-	font-size: 60px;
-	font-weight: bold;
-}
-
-#infor{
-	font-size: 21px;
-    font-weight: 500;
-    margin-bottom: 28px;
-}
-
 #header{
-	margin-top: 50px;
 	margin-bottom: 18px;
 }
-
 #option li{
-	margin: auto 85px;
+	margin: auto;
 	font-size: 28px;
-	font-weight: bold;
-	border-bottom: 4px solid; 
 	cursor: pointer;
+	color: #a3aeb4;
+}
+#option li.margin{
+	margin: 100px;
+}
+#option li.be_select{
+	font-weight: bold;
+	color: #696f73;
+	border-bottom: 3px solid; 
 } 
 #option{
 	margin-bottom: 10px;
@@ -65,10 +68,10 @@ a:active{
 .form{
 	width: 390px;
 	margin: auto;
-	background-color: #f2f2f2;
-	border-radius: 12px;
-	-moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
+	background-color: #ffffff;
+	border-radius:5px;
+	-moz-border-radius:5px;
+    -webkit-border-radius:5px;
 }
 #hid{
 	display: block;
@@ -79,10 +82,12 @@ a:active{
 .form select{
 	padding-left: 10px;
 	width: 340px;
-	background-image: url(../images/001.png);
+	background-image: url(../images/c_triangle.png);
 	background-repeat: no-repeat;
-	background-size: 16px;
-	background-position: 323px -1px;
+	background-position: 305px 20px;
+    background-size: 22px;
+    font-family: "微软雅黑";
+    border: 0.1px solid #d9d9db;
 	-webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 0.01px;
@@ -94,12 +99,26 @@ a:active{
     height: 52px;
     font-size:  20px;
     font-family: "微软雅黑";
-    border-radius: 12px;
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    border: 0;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
 }
-
+.form input[type="password"],.form input[type="text"]{
+	border: 0.1px solid #d9d9db;
+}
+.form div{
+	position: relative;
+}
+.form .eye{
+	display: inline-block;
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    width: 40px;
+    height: 17px;
+	background: url(../images/c_eye.png) no-repeat;
+	cursor: pointer;
+}
 .form p{
 	text-align: left;
 	margin: auto;
@@ -107,7 +126,6 @@ a:active{
 	padding-left: 20px;
 	height: 30px;
 	width: 340px;
-	font-family: "微软雅黑";
 	color: red;
 }
 
@@ -122,9 +140,8 @@ a:active{
 	color: black;
 }
 .form .button{
-	background-color: #199ed8;
-	height: 65px;
-	font-family: "微软雅黑"; 
+	background-color: #09abf4;
+	height: 52px;
 	font-size: 30px;
 	font-weight: 900;
 	color: white;
@@ -133,20 +150,20 @@ a:active{
 
 #wrap .p_question{
 	margin-top: -12px;
-	margin-bottom: 8px;
+	margin-bottom: 3px;
 	text-align: left;
-	font-size: 24px;
-	font-weight: bold;
+	font-size: 18px;
 	color: black;
 }
 
 .question{
 	margin-bottom: 20px;
 	width: 340px;
-	height: 40px;
+	height: 52px;
 	font-size: 18px;
 	font-weight: 500;
 	color: #afafaf;
+	border-radius:5px;
 }
 
 #register{
@@ -155,10 +172,6 @@ a:active{
 
 #forgetPassword{
 	display: none;
-}
-
-.white{
-	color: white;
 }
 
 .fade{

@@ -40,7 +40,7 @@ public class NoteCommentDelete extends HttpServlet {
 		if (!new NoteCommentService().deleteComment(commentId,userId)) {
 			state = 502;
 		}
-		LOGGER.log(Level.DEBUG, " {0}想删除留言评论，其id为{1}", userId,commentId);
+		LOGGER.log(Level.DEBUG, " {0}想删除留言评论，其id为{1},状态为", userId,commentId,state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

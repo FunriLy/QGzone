@@ -22,7 +22,7 @@ public class NoteCommentService {
 	 * @param noteComment 留言评论
 	 * @return true false
 	 */
-	public int addNoteComment(NoteCommentModel noteComment){
+	public NoteCommentModel addNoteComment(NoteCommentModel noteComment){
 		return noteCommentDao.addNoteComment(noteComment);
 	}
 	/***

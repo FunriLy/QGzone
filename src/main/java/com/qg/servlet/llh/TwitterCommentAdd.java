@@ -32,7 +32,6 @@ public class TwitterCommentAdd extends HttpServlet{
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		int state = 201;
-		int twitterCommentId=0;
 		TwitterCommentModel twitterCommentModel = null;
 		/* 获取说说id，被评论方id,评论内容 */
 		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
@@ -41,7 +40,6 @@ public class TwitterCommentAdd extends HttpServlet{
 		// 获取当前登陆用户
 		int commenterId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 //		int commenterId=3;
-		LOGGER.log(Level.DEBUG, " {0}想评论{1}的说说，说说id为{2}，内容为：{3}", commenterId,targetId,twitterId,comment);
 		if (!(comment.length() > 150)) {
 
 			// 获取说说评论的实体类
@@ -50,12 +48,13 @@ public class TwitterCommentAdd extends HttpServlet{
 			// 存进数据库
 			if (! new TwitterService().existTwitter(twitterId))
 				state = 202;
-			else twitterCommentId= new TwitterCommentService().addTwitterComment(twitterCommentModel).getCommentId();
+			else twitterCommentModel= new TwitterCommentService().addTwitterComment(twitterCommentModel);
 		} else
 			state = 203;
 		// 打包发送
+		LOGGER.log(Level.DEBUG, " {0}想评论{1}的说说，说说id为{2}，内容为：{3}，状态码为{4}", commenterId,targetId,twitterId,comment,state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-		output.write(JsonUtil.tojson(state,twitterCommentModel,twitterCommentId).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state,twitterCommentModel,twitterCommentModel.getCommentId()).getBytes("UTF-8"));
 		output.close();
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse resp)

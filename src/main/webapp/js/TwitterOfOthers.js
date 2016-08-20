@@ -29,6 +29,17 @@ $(function(){
 	   		
 	   		$(b[i]).attr('href',url);
 	   		}
+	   	
+	   	//给更多附上currrentid
+	   	var c = $('div#left a');
+	   	for(var i=0;i<c.length;i++){
+	   		
+	   		var url =$(c[i]).attr('href');
+	   		
+	   		url+= '?userId='+currentId;
+	   		
+	   		$(c[i]).attr('href',url);
+	   		}
 	    //设置一级头像 	
 	   	$.get('../MessageSearch?userId='+userId,function(json){
 	   		
@@ -48,6 +59,38 @@ $(function(){
 	   		
 	   	},'json'); 	
 	   	
+	   	
+	   	$('.liuyan').click(function(){
+	   		var note = $('.neirong').val();
+	   		$.post('../NoteAdd',{targetId:userId,note:note},function(json){
+	   			if(json.state==502){
+	   				alert('留言失败');
+	   			}
+	   			$('.neirong').val('');
+	   		})
+	   		
+	   	})
+	   	
+	    getList(currentPage,currentId,userId);
+	    
+
+	    window.onscroll= function(){
+
+	        var docHeight = $(document).height();
+	        var winHeight  = $(window).height();
+	        var scrollHeight = $(window).scrollTop();
+
+	        if(scrollHeight+winHeight>=docHeight-30){
+	        		if(currentPage<=totalPage){
+	        			getList(++currentPage,currentId,userId);
+	        		}else{
+	        			return ;
+	        		}           
+
+	        }
+	    
+	    }
+	   	
 	   
    },'json')
    
@@ -66,43 +109,31 @@ $(function(){
    
    	var currentId = GetQueryString('userId');
    	var currentName;
-   	
-   	//为页面中的url附上用户的id
-   	var url = $('a').attr('href');
-   	url+= '?userId='+currentId;
-   	$('a').attr('href',url);
+   	var currentPhoto;
    	
    	/*********************************获取个人档案信息*********************************/
    	
-   	$.get('MessageSearch?'+userId+'='+currentId,function(json){
+   	$.get('../MessageSearch?userId='+currentId,function(json){
    		currentName=json.userName;
-   		$('#personFile li:eq(1)').text(json.userSex);
-   		$('#personFile li:eq(2)').text(json.userAddress);
-   		$('#personFile li:eq(3)').text(json.userEmail);
+   		$('#personFile li:eq(1)').html(json.message.userSex);
+   		$('#personFile li:eq(2)').html(json.message.userAddress);
+   		$('#personFile li:eq(3)').html(json.message.userEmail);
    		
-   		$('#nevRight li:eq(3) p').html(json.userName);
-   		
-   		$('#h_photo img').attr('src','QGzone/jpg/'+json.userImage);
+   		$('#nevRight li:eq(3) p').html(json.message.userName);
+   		  		   		
+   		currentPhoto = '../jpg/'+json.message.userImage;
    	},'json');
    	
    	/***************************个人相册信息*********************************/
    	
-   	$.post('photoSearch',{userId:currentId},function(json){
+   	$.post('../photoSearch',{userId:currentId},function(json){
    		if(json.state==601){
-   	   		$('#a_photo img:eq(0)').attr('src','QGzone/album'+json.jsonList[0]);
-   	   		$('#a_photo img:eq(1)').attr('src','QGzone/album'+json.jsonList[1]);
+   	   		$('#a_photo img:eq(0)').attr('src','../album'+json.jsonList[0]);
+   	   		$('#a_photo img:eq(1)').attr('src','../album'+json.jsonList[1]);
    		}
    	},'json');
   /************************************发表留言**********************************************/
-   	$('.liuyan').click(function(){
-   		var note = $('.neirong').val();
-   		$.post('NoteAdd',{targetId:userId,note:note},function(json){
-   			if(json.state==502){
-   				alert('留言失败');
-   			}
-   		})
-   		
-   	})
+
 	    //发表框keyup事件
 	        $('.neirong').keyup(function(){
 
@@ -127,29 +158,11 @@ $(function(){
     var currentPage = 1;
     var totalPage = 0;
     
-    getList(currentPage,currentId);
-  
 
-    window.onscroll= function(){
 
-        var docHeight = $(document).height();
-        var winHeight  = $(window).height();
-        var scrollHeight = $(window).scrollTop();
+    function getList(pageNum,currentid,userid){
 
-        if(scrollHeight+winHeight>=docHeight-30){
-        		if(currentPage<=totalPage){
-        			getList(++currentPage,currentId);
-        		}else{
-        			return ;
-        		}           
-
-        }
-    
-    }
-
-    function getList(pageNum,currentId){
-
-        $.get("TwitterOfOthers?page="+pageNum,{userId:currentId},function(json){
+        $.get("../TwitterOfOthers?page="+pageNum,{userId:currentid},function(json){
     
         if(json.state==201){
                     
@@ -158,13 +171,13 @@ $(function(){
             
 
                 for(var i = 0; i<jsonList.length;i++){
-                
-                var picUrl = "twitterPhotos/_"+jsonList[i].twitterId;
-                var headPhoto = '/QGzone/jpg/'+jsonList[i].talkId+'.jpg';
+                               
+                var picUrl = "../twitterPhotos/_"+jsonList[i].twitterId;
+                var headPhoto = '../jpg/'+jsonList[i].talkId+'.jpg';
 
                 var myState,zanState,comState;
 
-                if(userId==jsonList[i].talkId){
+                if(userid==jsonList[i].talkId){
                     myState = true;
                 }else{
                     myState = false;
@@ -182,7 +195,7 @@ $(function(){
 
                     for( var j= 0 ; j<supporterId.length; j++){
 
-                        if(userId==supporterId[j]){
+                        if(userid==supporterId[j]){
                             zanState = true;
                         }else{
                             zanState = false;
@@ -199,13 +212,13 @@ $(function(){
 
                     for( var k = 0;k<comments.length;k++){
                         
-                        if(userId == comments[k].commenterId){
+                        if(userid == comments[k].commenterId){
                             comState = true;
                         }else{
                             comState =false;
                         }
     
-                        var commenterPicUrl = comments[k].commenterId+'.jpg';
+                        var commenterPicUrl = '../jpg/'+comments[k].commenterId+'.jpg';
     
                         var commentbox = showComment(comments[k].commenterId,comments[k].commentId,
                                 commenterPicUrl,
@@ -243,7 +256,7 @@ $(function(){
 
             box.innerHTML = 
 
-            '<a href="mainPage.jsp?='+talkid+'"><img src="'+h_photo+'" class="head" /></a>' +   
+            '<a href="index.html?userId='+talkid+'"><img src="'+h_photo+'" class="head" /></a>' +   
                     isMine(m_status)+
                 '<div class="content">'+
                     '<div class="main">'+
@@ -306,10 +319,15 @@ $(function(){
                     text+='赞</a></div>'+
                     '<div class="praises-total" total='+pra_total+'; style="display:none;">'+
                         '</div>';
-                    }else{
+                    }else if(pra_total>1){
                         text+='赞</a></div>'+
                     '<div class="praises-total" total='+pra_total+'; style="display:block;">'+
                     (pra_total-1)+'个人觉得很赞</div>';
+                    }else if(pra_total=1){
+                        text+='赞</a></div>'+
+                        '<div class="praises-total" total='+pra_total+'; style="display:block;">'+
+                        pra_total+'个人觉得很赞</div>';
+                    	
                     }
             }
             return text;
@@ -376,149 +394,6 @@ $(function(){
         return y + '-' + m + '-' + d + ' ' + h + ':' + mi;
 
     }
-/******************************************************发表说说****************************************/
-////发表说说函数
-//    function createShare(userphoto,username,userid,twitterid){
-//
-//        var createshare = document.getElementById("create-share");
-//        var word = createshare.getElementsByClassName("txt")[0];
-//
-//        var box = document.createElement('div');
-//        box.className = 'box clearfix';
-//        box.setAttribute("talkid", userid);
-//        box.setAttribute("talkername",username);
-//        box.id = twitterid;
-//
-//        box.innerHTML = 
-//
-//        	'<a href="mainPage.jsp?='+talkid+'"><img src="'+userphoto+'" class="head" /></a>' + 
-//            '<a href="javascript:;" class="close">x</a>'+
-//            '<div class="content">'+
-//                '<div class="main">'+
-//                    '<p class="txt">'+
-//                    '<span class="user">'+username+'</span><span>'+word.value+
-//                    '</span></p>'+
-//                '</div>'+
-//                '<div class="info clearfix">'+
-//                    '<span class="time">'+formateDate(new Date())+'</span>'+
-//                    '<a href="javascript:;" class="praise">赞</a></div>'+
-//                    '<div class="praises-total" total="0" style="display: none;"></div>'+
-//                    '<div class="comment-list"></div>'+
-//                    '<div class="text-box">'+
-//                    '<textarea class="comment" autocomplete="off">评论…</textarea>'+
-//                    '<button class="btn ">回 复</button>'+
-//                    '<span class="word"><span class="length">0</span>/120</span>'+
-//                    '</div>';
-//       
-//        $(list).prepend(box);
-//        $('#'+userid+' p.txt').after($(".photo-list .pic"));
-//        txt.value = '';
-//        $('.photo-list').html('');
-//
-//        updateEvent(boxs);   
-//    }
-//
-////图片预览功能
-//    fileInput.onchange=function () {
-//
-//        var file = this.files;
-//
-//        if(file.length>9){
-//
-//            lert("至多选九张图！");
-//
-//            return false;
-//
-//        }
-//                
-//        for(var i=0;i<file.length;i++){
-//             
-//            if(!file[i].type.match(/image.*/)){
-//
-//                alert("不支持此类型文件！");
-//
-//                return false;
-//
-//            }
-//
-//            var reader = new FileReader();
-//
-//            reader.readAsDataURL(file[i]);
-//                    
-//            reader.onload = function (e) {
-//
-//                var data = e.target.result;
-//
-//                var html ='<img src="'+data+'"class="sharephoto pic"/>';
-//                            
-//                $('.photo-list').append(html);
-//
-//            }        
-//                    
-//            $('.photo-list').css("display","block");
-//
-//        };
-//
-//        return true;
-//
-//    }
-//
-////再次选择删除预览框的图片
-//    fileInput.onclick = function(){
-//
-//        $('.photo-list .pic').remove();
-//
-//        $('.photo-list').css("display","none");
-//
-//    }
-//
-////说说的keyup事件
-//    txt.onkeyup = function () {
-//
-//        var val = this.value;
-//        var len = val.length;
-//        var els = this.parentNode.children;
-//        var word = els[1];
-//        var btn = els[2];
-//
-//        if (len <0 || len > 150) {
-//
-//            btn.className = 'create-btn btn-off1';
-//            btn.setAttribute("disabled", true);
-//
-//        }else {
-//
-//            btn.className = 'create-btn';
-//            btn.removeAttribute("disabled");
-//
-//        }
-//
-//        word.innerHTML = len + '/150';
-//
-//    };
-//
-////触发发表说说事件
-//    $("#create-share .create-btn").click(function(){
-//
-//        $.ajax({
-//                url: 'TwitterAdd',
-//                type: 'POST',
-//                cache: false,
-//                data: new FormData($('#sharePost')[0]),
-//                processData: false,
-//                contentType: false,
-//                success: function(json){
-//                	var json1 = JSON.parse(json);
-//                    createShare(userPhoto,userName,userId,json1.id);
-//                    $('.photo-list').css("display","none");
-//                },
-//                error: function(e){
-//                    if(e.state == 202){
-//                    alert("发表失败，请刷新重试!");
-//                    }
-//                }
-//              });
-//    });
 
 /*****************************************点赞*********************************************************/
 
@@ -562,7 +437,7 @@ $(function(){
                     '<div class="comment-content">' +
                     '<p class="comment-text"><span class="user">'+username+' </span>' + 
                     '回复 '+box.getAttribute("talkername")+' : '+
-                    textarea.value + '</p>' +
+                    $(textarea).val()+ '</p>' +
                     '<p class="comment-time">' +
                     formateDate(new Date()) +
                     '<a href="javascript:;" class="comment-operate">删除</a>' +
@@ -595,7 +470,7 @@ $(function(){
                     '<div class="comment-content">' +
                     '<p class="comment-text"><span class="user">'+username+
                     '</span> &nbsp回复' + 
-                  +box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
+                  box.getAttribute("targetname")+' :'+ textarea.value + '</p>' +
                     '<p class="comment-time">' +
                     formateDate(new Date()) +
                     '<a href="javascript:;" class="comment-operate">删除</a>' +
@@ -640,7 +515,7 @@ $(function(){
         	  //删除自己的评论
             var commentbox = removeNode(commentBox);
           //向后台发送请求
-          $.post('TwitterCommentDelete',{commentId: commentbox.id},function(json){
+          $.post('../TwitterCommentDelete',{commentId: commentbox.id},function(json){
 
           },'json');
 
@@ -667,7 +542,7 @@ $(function(){
                         //删除说说
                         case 'close':
 
-                            $.post('TwitterDelete',{twitterId:el.parentNode.id},function(json){
+                            $.post('../TwitterDelete',{twitterId:el.parentNode.id},function(json){
 
                                 if(json.state==202){
 
@@ -686,7 +561,7 @@ $(function(){
                         //赞说说
                         case 'praise':
 
-                            $.post('TwitterSupport',{twitterId:el.parentNode.parentNode.parentNode.id},function(json){
+                            $.post('../TwitterSupport',{twitterId:el.parentNode.parentNode.parentNode.id},function(json){
 
                                     if(json.state==202){
 
@@ -705,18 +580,21 @@ $(function(){
                           //回复按钮蓝
                         case 'btn':
 
-                $.post('TwitterCommentAdd',{twitterId:el.parentNode.parentNode.parentNode.id,
+                $.post('../TwitterCommentAdd',{twitterId:el.parentNode.parentNode.parentNode.id,
                     targetId:el.parentNode.parentNode.parentNode.getAttribute("talkid"),
                     comment:el.parentNode.children[0].value},function(json){
 
                                 if(json.state==201){
 
-                                    var commentBox =  reply(el.parentNode.parentNode.parentNode,el,userId,userPhoto,userName);
+                                    var commentBox =  reply(el.parentNode.parentNode.parentNode,el,currentId,currentPhoto,currentName);
                                     commentBox.id = json.id;
+                                    
+                                    location.reload();
 
                                  }else{
 
                                     alert("操作失败，请刷新重试！");
+                                    
                                 };
 
                          },'json')
@@ -732,14 +610,15 @@ $(function(){
                             //回复评论
                         case 'btn replybtn':
 
-                        	$.post('TwitterCommentAdd',{twitterId:el.parentNode.parentNode.parentNode.id,
+                        	$.post('../TwitterCommentAdd',{twitterId:el.parentNode.parentNode.parentNode.id,
                         		targetId:el.parentNode.parentNode.parentNode.getAttribute("targetid"),
                                 comment:el.parentNode.children[0].value},function(json){
 
                                         if(json.state==201){
 
-                                            var commentBox =commentReply(el.parentNode.parentNode.parentNode, el,userId,userPhoto,userName); 
+                                            var commentBox =commentReply(el.parentNode.parentNode.parentNode, el,currentId,currentPhoto,currentName); 
                                             commentBox.id = json.id;
+                                            location.reload();
                                            
                                         }else{
                                             alert("操作失败，请刷新重试！");
@@ -798,6 +677,8 @@ $(function(){
 
         }
     }
-
+	$('img').bind("error",function() {
+		$(this).attr("src", "../jpg/all.jpg");
+	});
 
 })

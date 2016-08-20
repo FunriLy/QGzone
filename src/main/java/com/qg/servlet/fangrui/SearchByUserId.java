@@ -64,7 +64,7 @@ public class SearchByUserId extends HttpServlet {
 		
 		LOGGER.log(Level.DEBUG, "用户 {0} 搜索账号 {1}", userId, searchUserId);
 		
-		output.write(JsonUtil.tojson(state, allMessage,0).getBytes("UTF-8"));
+		output.write(JsonUtil.tojson(state, allMessage).getBytes("UTF-8"));
 		output.close();
 	}
 	

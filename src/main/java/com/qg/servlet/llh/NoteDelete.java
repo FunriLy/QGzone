@@ -35,12 +35,11 @@ public class NoteDelete extends HttpServlet {
 		//获取当前用户Id
 		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 //		int userId =3;
-		LOGGER.log(Level.DEBUG, " {0}想删除留言，其id为{1}", userId,noteId);
 		// 删除服务器上的说说评论信息
 		if (!new NoteService().deleteNote(noteId,userId)) {
 			state = 502;
 		}
-
+		LOGGER.log(Level.DEBUG, " {0}想删除留言，其id为{1} 状态{2}", userId,noteId,state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

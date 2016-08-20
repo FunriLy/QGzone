@@ -2,7 +2,7 @@
 
 $(function(){
 	var HEAD_IMG_URL = "/QGzone/jpg/"; // 放置用户头像的文件夹路径;
-	var IP = "192.168.3.49";  //主机号；
+	var IP = "192.168.1.109";  //主机号；
 	var LOGIN_USER_ID;              //登陆人的id
 	var URL_USER_ID;                //url上的id
 	var IS_LOGIN = true;           //判断是登陆人访问的还是好友访问的

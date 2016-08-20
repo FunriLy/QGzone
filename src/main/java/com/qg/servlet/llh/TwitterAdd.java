@@ -63,7 +63,7 @@ public class TwitterAdd extends HttpServlet {
 		
 		// 获取当前登陆用户id
 		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int talkId = 10000;
+//		int talkId = 3;
 		
 		
 		try {
@@ -124,7 +124,6 @@ public class TwitterAdd extends HttpServlet {
 					// 存进数据库并且获得说说id
 					twitterId = new TwitterService().addTwitter(twitter);
 				}
-				LOGGER.log(Level.DEBUG, "说说内容{0},图片张数{1}",value ,twitterPicture);
 				if (twitterPicture <= 9) {
 					// 遍历集合
 					for (FileItem fileItem : list) {
@@ -168,6 +167,7 @@ public class TwitterAdd extends HttpServlet {
 			state = 202;
 			LOGGER.log(Level.ERROR, "发表说说异常", e);
 		} finally {
+			LOGGER.log(Level.DEBUG, "{2}发表说说，说说内容{0},图片张数{1},状态码{3}",value ,twitterPicture,talkId,state);
 			output.write(JsonUtil.tojson(state, twitterId).getBytes("UTF-8"));
 			output.close();
 		}

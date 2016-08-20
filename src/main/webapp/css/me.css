@@ -1,0 +1,84 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+ul{
+	list-style-type: none;
+}
+li{
+	text-align: center;
+}
+body{
+	font-family: "微软雅黑",sans-serif
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+a:active{
+	color: white; 
+}
+
+.hide{
+	display: none;
+}
+
+#info_list{
+	overflow: hidden;
+	width: 76%;
+	margin: -40px auto 100px;
+}
+#info_list li{
+	margin-top: 40px;
+	overflow: hidden;
+	text-align: left;
+}
+#info_list li.center{
+	text-align: center;
+	background-color: #f3f3f3;
+	padding: 20px 0;
+	margin-top: 20px;
+}
+#info_list .info_header{
+	overflow: hidden;
+	background-color: #f3f3f3;
+}
+#info_list .friend_head_img{
+	margin: 10px 10px;
+	float: left;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+}
+.info .rough_info{
+	float: left;
+	margin-top: 15px;
+	margin-left: 10px;
+	text-align: left;
+}
+.rough_info .h_name{
+	font-size: 15px;
+}
+.rough_info .h_content{
+	padding-left: 30px;
+}
+.rough_info p.time{
+	font-size: 10px;
+}
+.info_header .button{
+	float: right;
+	margin: 10px 30px 0 0;
+}
+.info_content{
+	overflow: hidden;
+	background-color: #dee6ec;
+}
+.info_content .c_name{
+	float: left;
+	margin: 10px 0 0 20px;
+	font-size: 13px;
+}
+.info_content .c_content{
+	float: left;
+	margin: 10px 0 0 10px;
+	padding-bottom: 20px;
+	width: 86%;
+	font-size: 13px;
+}

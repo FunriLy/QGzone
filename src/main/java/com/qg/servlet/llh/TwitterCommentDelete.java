@@ -36,11 +36,11 @@ public class TwitterCommentDelete extends HttpServlet{
 		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
 //		int userId=3;
 		// 删除服务器上的说说评论信息
-		LOGGER.log(Level.DEBUG, " {0}想删除说说评论，其id为{1}", userId,commentId);
 		if (!new TwitterCommentService().deleteComment(commentId,userId)) {
 			state = 202;
 		}
-
+		
+		LOGGER.log(Level.DEBUG, " {0}想删除说说评论，其id为{1},状态为{2}", userId,commentId,state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

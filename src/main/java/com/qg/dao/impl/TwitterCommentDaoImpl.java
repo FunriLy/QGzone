@@ -37,8 +37,8 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     public List<TwitterCommentModel>getTwitterCommentByTwitterId(int twitterId){
     	List<TwitterCommentModel>twitterComments = new ArrayList<TwitterCommentModel>();
     	try {
-			conn = SimpleConnectionPool.getConnection();
-			String sql = "SELECT * FROM twitter_comment WHERE twitter_id=? ORDER BY comment_id DESC";
+    		conn = SimpleConnectionPool.getConnection();
+			String sql = "SELECT * FROM twitter_comment WHERE twitter_id=? ORDER BY comment_id ";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
 			rs = pStatement.executeQuery();
