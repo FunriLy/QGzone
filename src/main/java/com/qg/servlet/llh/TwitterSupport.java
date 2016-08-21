@@ -29,15 +29,23 @@ public class TwitterSupport extends HttpServlet{
 	private static final Logger LOGGER = Logger.getLogger(TwitterSupport.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-		// 获取说说id和当前用户id
-		int twitterId = Integer.parseInt(request.getParameter("twitterId"));
-		
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int userId =3;
-		
-		LOGGER.log(Level.DEBUG, "{0}想给{1}说说点赞", userId,twitterId);
-		int state = new TwitterService().twitterSupport(twitterId, userId) ? 201 : 202;
+		int state = 201;// 状态码
+		int userId = 0;// 登陆id
+		int twitterId = 0;// 说说id
 
+		/* 判断点赞者id是否为null */
+		if (request.getParameter("twitterId").equals(null)||request.getParameter("twitterId").equals("")) {
+			state = 202;
+			LOGGER.log(Level.ERROR, " 点赞出现空指针");
+		} else {
+
+			// 获取说说id和当前用户id
+			twitterId = Integer.parseInt(request.getParameter("twitterId"));
+			userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+
+			state = new TwitterService().twitterSupport(twitterId, userId) ? 201 : 202;
+		}
+		LOGGER.log(Level.DEBUG, "{0}想给{1}说说点赞，状态码为{2}", userId, twitterId, state);
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();

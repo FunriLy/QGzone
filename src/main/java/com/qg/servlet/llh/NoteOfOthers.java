@@ -32,34 +32,49 @@ public class NoteOfOthers extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(NoteOfOthers.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-		int state = 501;
-		List<NoteModel> notes = null;
-		int totalPage = 0;
-		// 获取当前用户id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int userId =3;
-		//获取被访问者的id
-		int targetId = Integer.parseInt(request.getParameter("userId"));
-		// 获取页码
-		String page = request.getParameter("page");
-		
-		try {
-			if (new FriendService().isFriend(userId, targetId) == 1||targetId==userId) {
-				// 获取全部留言
-				notes = new NoteService().getNote(Integer.parseInt(page), targetId);
-				//获取总页数
-				totalPage = new NoteService().notePage(userId, new NoteService().noteNumber(userId));
-			} else
-				state = 506;
-		} catch (Exception e) {
+
+		int state = 501;//状态码
+		List<NoteModel> notes = null;//留言集合
+		int totalPage = 0;//总页数
+		int userId = 0;//当前登陆Id
+		int targetId = 0;//留言板主人id
+
+		/* 判断被访问者的id是否为null */
+		if (request.getParameter("userId").equals(null)||request.getParameter("page").equals(null)) {
 			state = 502;
-			LOGGER.log(Level.ERROR, "获取留言异常", e);
-		} finally {
-			LOGGER.log(Level.DEBUG, " {0}进入{1}的留言板,状态{2}", userId,targetId,state);
-			DataOutputStream output = new DataOutputStream(resp.getOutputStream());
-			output.write(JsonUtil.tojson(state, notes,totalPage).getBytes("UTF-8"));
-			output.close();
+			LOGGER.log(Level.ERROR, " 访问留言板出现空指针");
+		} else {
+
+			// 获取当前用户id
+			userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+			// 获取被访问者的id
+			targetId = Integer.parseInt(request.getParameter("userId"));
+			// 获取页码
+			String page = request.getParameter("page");
+
+			try {
+				/* 判断是否为好友以及是否是自己留言 */
+				if (new FriendService().isFriend(userId, targetId) == 1 || targetId == userId) {
+
+					// 获取全部留言
+					notes = new NoteService().getNote(Integer.parseInt(page), targetId);
+					// 获取总页数
+					totalPage = new NoteService().notePage(userId, new NoteService().noteNumber(userId));
+
+				} else
+					state = 506;
+
+			} catch (Exception e) {
+				state = 502;
+				LOGGER.log(Level.ERROR, "获取留言异常", e);
+			}
 		}
+		
+		LOGGER.log(Level.DEBUG, " {0}进入{1}的留言板,页码数为{3},状态{2}", userId, targetId, state,totalPage);
+		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
+		output.write(JsonUtil.tojson(state, notes, totalPage).getBytes("UTF-8"));
+		output.close();
+		
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(request, resp);

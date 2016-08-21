@@ -14,9 +14,9 @@ import java.util.List;
 import com.qg.dao.TwitterCommentDao;
 import com.qg.model.RelationModel;
 import com.qg.model.TwitterCommentModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
-import com.qg.util.SimpleConnectionPool;
 
 public class TwitterCommentDaoImpl implements TwitterCommentDao{
 	private static final Logger LOGGER = Logger.getLogger(TwitterCommentDaoImpl.class);
@@ -25,11 +25,14 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 	private ResultSet rs = null;
 	SimpleDateFormat Format = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
 	
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
+	
     public  void close(ResultSet rs,Statement stat,Connection conn){
         try {
             if(rs!=null)rs.close();
             if(stat!=null)stat.close();
-            if(conn!=null)SimpleConnectionPool.pushConnectionBackToPool(conn);
+            if(conn!=null)conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
        }
@@ -37,7 +40,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     public List<TwitterCommentModel>getTwitterCommentByTwitterId(int twitterId){
     	List<TwitterCommentModel>twitterComments = new ArrayList<TwitterCommentModel>();
     	try {
-    		conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "SELECT * FROM twitter_comment WHERE twitter_id=? ORDER BY comment_id ";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -60,7 +63,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
 		int twitterId = 0;
 		int twitterCommentId=0;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "insert into twitter_comment(comment, twitter_id, commenter_id, "
 					+ "target_id, time) value(?,?,?,?,?)";
 			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
@@ -97,7 +100,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     public TwitterCommentModel geTwitterCommentById(int commentId) {
     	TwitterCommentModel twitterComment = null;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql =  "SELECT * FROM twitter_comment WHERE comment_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
@@ -118,7 +121,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     public boolean deleteComment(int commentId){
     	boolean result = true;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "DELETE FROM twitter_comment WHERE comment_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
@@ -134,7 +137,7 @@ public class TwitterCommentDaoImpl implements TwitterCommentDao{
     public boolean deleteComments(int twitterId){
     	boolean result = true;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "DELETE FROM twitter_comment WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);

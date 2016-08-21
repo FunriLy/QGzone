@@ -6,13 +6,10 @@ import java.util.List;
 import com.qg.dao.NoteDao;
 import com.qg.dao.impl.NoteDaoImpl;
 import com.qg.model.NoteModel;
-import com.qg.util.Level;
-import com.qg.util.Logger;
 
 public class NoteService {
 	NoteDao noteDao = new NoteDaoImpl();
 	FriendService friendService = new FriendService();
-	private static final Logger LOGGER = Logger.getLogger(NoteService.class);
 	/***
 	 * 发表留言
 	 * @param note 留言实体类
@@ -29,13 +26,15 @@ public class NoteService {
 	 * @throws Exception
 	 */
 	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
+		//获得总数目
 		int noteNumber = noteDao.noteNumber(userId);
+
+		List<NoteModel> notes = new ArrayList<>();
 		
-		List<NoteModel>notes = new ArrayList<>();
-		LOGGER.log(Level.ERROR, "页码数{0}",this.notePage(userId,noteNumber) );
-		if (!(this.notePage(userId,noteNumber) < pageNumber))
-		return noteDao.getNote(pageNumber, userId);
-		else 
+		//判断请求页码是否超过总页码
+		if (!(this.notePage(userId, noteNumber) < pageNumber))
+			return noteDao.getNote(pageNumber, userId);
+		else
 			return notes;
 	}
 	/***
@@ -52,9 +51,10 @@ public class NoteService {
 	 * @param userId 当前用户id
 	 * @return true false
 	 */
-	public boolean deleteNote(int noteId,int userId){
-		//判断权限后删除(留言的人和被留言的人都可删除该留言)
-		return this.existNote(noteId)&&(this.getNoteById(noteId).getNoteManId()==userId||userId==this.getNoteById(noteId).getTargetId())?noteDao.deleteNote(noteId):false;
+	public boolean deleteNote(int noteId, int userId) {
+		// 判断权限后删除(留言的人和被留言的人都可删除该留言)
+		return this.existNote(noteId) && (this.getNoteById(noteId).getNoteManId() == userId
+				|| userId == this.getNoteById(noteId).getTargetId()) ? noteDao.deleteNote(noteId) : false;
 	}
 	/***
 	 * 判断留言是否存在

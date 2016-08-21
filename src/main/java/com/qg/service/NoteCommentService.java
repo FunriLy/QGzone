@@ -41,8 +41,9 @@ public class NoteCommentService {
 	 */
 	public boolean deleteComment(int commentId,int userId) {
 		//判断权限后删除(评论者和留言板本人才可以删除)
-		if (this.getNoteCommentById(commentId)!=null&&this.getNoteCommentById(commentId).getCommenterId()==userId||
-				this.getNoteCommentById(commentId)!=null&&userId==new NoteService().getNoteById(this.getNoteCommentById(commentId).getNoteId()).getTargetId())
+		if (this.getNoteCommentById(commentId) != null && this.getNoteCommentById(commentId).getCommenterId() == userId
+				|| this.getNoteCommentById(commentId) != null && userId == new NoteService()
+						.getNoteById(this.getNoteCommentById(commentId).getNoteId()).getTargetId())
 			return noteCommentDao.deleteComment(commentId);
 		else
 			return false;

@@ -14,9 +14,9 @@ import java.util.List;
 import com.qg.dao.NoteCommentDao;
 import com.qg.model.NoteCommentModel;
 import com.qg.model.RelationModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
-import com.qg.util.SimpleConnectionPool;
 
 /***
  * 
@@ -32,11 +32,13 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
 	SimpleDateFormat Format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
 
 	public List<NoteCommentModel> getNoteCommentByNoteId(int noteId) {
 		List<NoteCommentModel> noteComments = new ArrayList<NoteCommentModel>();
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "SELECT * FROM note_comment WHERE note_id=? ORDER BY comment_id ";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
@@ -62,7 +64,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 		int noteCommentId=0;
 		int noteId = 0;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "insert into note_comment(comment, note_id, commenter_id, "
 					+ "target_id, time) value(?,?,?,?,?)";
 			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
@@ -101,7 +103,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	public NoteCommentModel getNoteCommentById(int commentId) {
 		NoteCommentModel noteCommentModel = null;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "SELECT * FROM note_comment WHERE comment_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
@@ -125,7 +127,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	public boolean deleteComment(int commentId) {
 		boolean result = true;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "DELETE FROM note_comment WHERE comment_id=?";
 			pStatement = (PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, commentId);
@@ -143,7 +145,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 	public boolean deleteComments(int noteId) {
 		boolean result = true;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "DELETE FROM note_comment WHERE note_id=?";
 			pStatement = (PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
@@ -164,7 +166,7 @@ public class NoteCommentDaoImpl implements NoteCommentDao {
 			if (stat != null)
 				stat.close();
 			if (conn != null)
-				SimpleConnectionPool.pushConnectionBackToPool(conn);
+				conn.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "关闭流失败！", e);
 		}

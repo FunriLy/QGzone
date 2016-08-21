@@ -14,9 +14,9 @@ import java.util.List;
 import com.qg.dao.NoteDao;
 import com.qg.model.NoteModel;
 import com.qg.model.RelationModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
-import com.qg.util.SimpleConnectionPool;
 
 public class NoteDaoImpl implements NoteDao {
 	private static final Logger LOGGER = Logger.getLogger(NoteDaoImpl.class);
@@ -24,13 +24,16 @@ public class NoteDaoImpl implements NoteDao {
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
 	SimpleDateFormat Format = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
+		
 	
 	@Override
 	public int addNote(NoteModel note) {
 		int noteId=0;
 		Date newTime = new Date();
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "insert into note(note, target_id, note_man_id,time) value(?,?,?,?)";
 			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			pStatement.setString(1, note.getNote());
@@ -52,10 +55,11 @@ public class NoteDaoImpl implements NoteDao {
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "添加留言异常！", e);
 		} finally {
-				close(null, pStatement, conn);
+				close(rs, pStatement, conn);
 			}
     	return noteId;
 	}
+	
 
 	@Override
 	public List<NoteModel> getNote(int pageNumber, int userId) throws Exception {
@@ -63,7 +67,7 @@ public class NoteDaoImpl implements NoteDao {
 		 try {
 			 int number=(pageNumber-1)*12;
 			 String sql = "SELECT * FROM note WHERE target_id=? ORDER BY note_id DESC LIMIT ?,12";
-			 conn = SimpleConnectionPool.getConnection();				
+			 conn = pool.getConnection(); 			
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, number);
@@ -89,7 +93,7 @@ public class NoteDaoImpl implements NoteDao {
 	public NoteModel geNoteById(int noteId) {
 		NoteModel noteModel = null;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql =  "SELECT * FROM note WHERE note_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
@@ -113,7 +117,7 @@ public class NoteDaoImpl implements NoteDao {
 	public boolean deleteNote(int noteId) {
 		boolean result = true;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+			conn = pool.getConnection(); 
 			String sql = "DELETE FROM note WHERE note_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
@@ -134,7 +138,7 @@ public class NoteDaoImpl implements NoteDao {
         try {
             if(rs!=null)rs.close();
             if(stat!=null)stat.close();
-            if(conn!=null)SimpleConnectionPool.pushConnectionBackToPool(conn);
+            if(conn!=null)conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
        }
@@ -146,7 +150,7 @@ public class NoteDaoImpl implements NoteDao {
     	boolean result = false;
     	
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection(); 
 			String sql = "SELECT COUNT(1) FROM note WHERE note_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, noteId);
@@ -167,7 +171,7 @@ public class NoteDaoImpl implements NoteDao {
 		int noteNumber = 0;
 		try {
 			 String sql = 	"SELECT  COUNT(1) FROM note WHERE target_id=?";
-			 conn = SimpleConnectionPool.getConnection();				
+			 conn = pool.getConnection(); 			
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 rs = pStatement.executeQuery();

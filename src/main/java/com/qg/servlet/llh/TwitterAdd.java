@@ -34,7 +34,7 @@ import com.qg.util.Level;
  * @author dragon
  *  <pre>
  *  添加说说的类
- *  201-成功 202-添加失败 203-上传图片格式不正确  204-至多上传九张图  205-说说长度过长
+ *  201-成功  202-添加失败  203-上传图片格式不正确   204-至多上传九张图   205-说说长度过长
  *  </pre>
  */
 @WebServlet("/TwitterAdd")
@@ -63,8 +63,6 @@ public class TwitterAdd extends HttpServlet {
 		
 		// 获取当前登陆用户id
 		int talkId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int talkId = 3;
-		
 		
 		try {
 			// 构造工厂

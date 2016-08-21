@@ -9,14 +9,11 @@ import com.qg.dao.TwitterDao;
 import com.qg.dao.impl.SupportDaoImpl;
 import com.qg.dao.impl.TwitterDaoImpl;
 import com.qg.model.TwitterModel;
-import com.qg.util.Level;
-import com.qg.util.Logger;
 
 public class TwitterService {
 	TwitterDao twitterDao = new TwitterDaoImpl();
 	SupportDao supportDao = new SupportDaoImpl();
 	FriendService friendService = new FriendService();
-	private static final Logger LOGGER = Logger.getLogger(TwitterService.class);
 	/***
 	 * 添加说说
 	 * @param twitter 说说实体
@@ -34,12 +31,11 @@ public class TwitterService {
 	 * @throws Exception 
 	 */
 	public List<TwitterModel> getTwitter(int pageNumber, int userId) throws Exception {
-		int twitterNumber=twitterDao.twitterNumber(userId);
+		//获取说说总数
+		int twitterNumber = twitterDao.twitterNumber(userId);
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
-		LOGGER.log(Level.ERROR, "页码数{0}",this.twitterPage(userId,twitterNumber) );
-		
-		if (!(this.twitterPage(userId,twitterNumber) < pageNumber))
-		{
+		//判断请求页码是否超过总页码
+		if (!(this.twitterPage(userId, twitterNumber) < pageNumber)) {
 			twitters = twitterDao.getTwitter(pageNumber, userId);
 			return twitters;
 		} else
@@ -61,9 +57,10 @@ public class TwitterService {
 	 * @throws Exception 
 	 */
 	public List<TwitterModel> getTwitterByTalkId(int pageNumber, int talkId) throws Exception {
+		//获取说说总数
 		int twitterNumber = twitterDao.userTwitterNumber(talkId);
 		List<TwitterModel> twitters = new ArrayList<TwitterModel>();
-		LOGGER.log(Level.ERROR, "页码数{0}", this.twitterPage(talkId, twitterNumber));
+		//判断请求页码是否超过总页码
 		if (!(this.twitterPage(talkId, twitterNumber) < pageNumber))
 			
 			return twitterDao.getMyTwitter(pageNumber, talkId);
@@ -79,9 +76,9 @@ public class TwitterService {
 	 */
 	public boolean deleteTwitter(int twitterId,int userId) {
 		//判断权限后删除
-		if(twitterDao.existTwitter(twitterId))
-		return (userId==this.geTwitterById(twitterId).getTalkId())?twitterDao.deleteTwitter(twitterId):false;
-		else 
+		if (twitterDao.existTwitter(twitterId))
+			return (userId == this.geTwitterById(twitterId).getTalkId()) ? twitterDao.deleteTwitter(twitterId) : false;
+		else
 			return false;
 	}
 	/**
@@ -154,7 +151,9 @@ public class TwitterService {
 	 * @return true false
 	 */
 	public boolean twitterSupport(int twitterId, int userId) {
-		if(this.existTwitter(twitterId)&&(new FriendService().isFriend(userId, this.geTwitterById(twitterId).getTalkId())==1||this.geTwitterById(twitterId).getTalkId()==userId)){
+		if (this.existTwitter(twitterId)
+				&& (new FriendService().isFriend(userId, this.geTwitterById(twitterId).getTalkId()) == 1
+						|| this.geTwitterById(twitterId).getTalkId() == userId)) {
 			// 检测是否点赞
 			if (!this.findSupport(twitterId, userId)) {
 				// 实现点赞
@@ -166,7 +165,7 @@ public class TwitterService {
 					return false;
 			}
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}

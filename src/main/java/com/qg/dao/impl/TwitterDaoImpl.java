@@ -13,9 +13,9 @@ import java.util.List;
 
 import com.qg.dao.TwitterDao;
 import com.qg.model.TwitterModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
-import com.qg.util.SimpleConnectionPool;
 
 public class TwitterDaoImpl implements TwitterDao{
 	private static final Logger LOGGER = Logger.getLogger(TwitterDaoImpl.class);
@@ -23,12 +23,15 @@ public class TwitterDaoImpl implements TwitterDao{
 	private PreparedStatement pStatement = null;
 	private ResultSet rs = null;
 	SimpleDateFormat Format = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
-
+	
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
+	
     public  void close(ResultSet rs,Statement stat,Connection conn){
         try {
             if(rs!=null)rs.close();
             if(stat!=null)stat.close();
-            if(conn!=null)SimpleConnectionPool.pushConnectionBackToPool(conn);
+            if(conn!=null)conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
        }
@@ -38,7 +41,7 @@ public class TwitterDaoImpl implements TwitterDao{
 		int tiwtterId = 0;
 		Date newTime = new Date();
     	try {
-			conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection();  
 			String sql = "insert into twitter(twitter_word, twitter_picture, talker_id, "
 					+ "support, time) value(?,?,?,?,?)";
 			pStatement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
@@ -72,7 +75,7 @@ public class TwitterDaoImpl implements TwitterDao{
 				 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
 				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
 				 		+"ORDER BY twitter_id DESC LIMIT ?,12";
-			 conn = SimpleConnectionPool.getConnection();				
+		 		conn = pool.getConnection(); 	
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, userId);
@@ -100,7 +103,7 @@ public class TwitterDaoImpl implements TwitterDao{
     public TwitterModel geTwitterById(int twitterId) {
     	TwitterModel twitter = null;
     	try {
-			conn = SimpleConnectionPool.getConnection();
+     		conn = pool.getConnection(); 
 			String sql =  "SELECT * FROM twitter WHERE twitter_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -122,7 +125,7 @@ public class TwitterDaoImpl implements TwitterDao{
     public boolean deleteTwitter(int twitterId){
     	boolean result = true;
 		try {
-			conn = SimpleConnectionPool.getConnection();
+	 		conn = pool.getConnection(); 
 			String sql = "DELETE FROM twitter WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -140,7 +143,7 @@ public class TwitterDaoImpl implements TwitterDao{
     public boolean addSupport(int twitterId){
     	boolean result = true;
     	try {
-    		conn = SimpleConnectionPool.getConnection();
+    		conn = pool.getConnection();  
 			String sql = "UPDATE twitter SET support=support+1 WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -156,7 +159,7 @@ public class TwitterDaoImpl implements TwitterDao{
     public boolean deleteSupport(int twitterId){
     	boolean result=true;
     	try {
-    		conn = SimpleConnectionPool.getConnection();
+     		conn = pool.getConnection(); 
 			String sql = "UPDATE twitter SET support=support-1 WHERE twitter_id=?";
 			pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -174,7 +177,7 @@ public class TwitterDaoImpl implements TwitterDao{
 	public int twitterPicture(int twitterId) {
 		int twitterPicture=0;
 				try {
-					conn = SimpleConnectionPool.getConnection();
+			 		conn = pool.getConnection(); 
 					String sql = "SELECT twitter_picture FROM twitter WHERE twitter_id=?";
 					pStatement = conn.prepareStatement(sql);
 					pStatement.setInt(1, twitterId);
@@ -195,7 +198,7 @@ public class TwitterDaoImpl implements TwitterDao{
 		 try {
 			 int number=(pageNumber-1)*12;
 			 String sql = 	"SELECT * FROM twitter WHERE talker_id=? ORDER BY twitter_id DESC LIMIT ?,12";
-			 conn = SimpleConnectionPool.getConnection();				
+		 	 conn = pool.getConnection(); 
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, number);
@@ -223,7 +226,7 @@ public class TwitterDaoImpl implements TwitterDao{
     	boolean result = false;
     	
     	try {
-			conn = SimpleConnectionPool.getConnection();
+     		conn = pool.getConnection(); 
 			String sql = "SELECT COUNT(1) FROM twitter WHERE twitter_id=?";
 			pStatement = conn.prepareStatement(sql);
 			pStatement.setInt(1, twitterId);
@@ -247,7 +250,7 @@ public class TwitterDaoImpl implements TwitterDao{
 				 		+" JOIN friends ON" 
 				 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
 				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)";
-			 conn = SimpleConnectionPool.getConnection();				
+		 		conn = pool.getConnection(); 
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, userId);
@@ -270,7 +273,7 @@ public class TwitterDaoImpl implements TwitterDao{
 		int twitterNumber = 0;
 		try {
 			 String sql = 	"SELECT  COUNT(1) FROM twitter WHERE talker_id=?";
-			 conn = SimpleConnectionPool.getConnection();				
+		 		conn = pool.getConnection(); 
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 rs = pStatement.executeQuery();

@@ -29,17 +29,29 @@ public class NoteDelete extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(NoteDelete.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		
 		int state = 501;
-		// 获取留言id
-		int noteId = Integer.parseInt(request.getParameter("noteId"));
-		//获取当前用户Id
-		int userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
-//		int userId =3;
-		// 删除服务器上的说说评论信息
-		if (!new NoteService().deleteNote(noteId,userId)) {
+		int userId = 0;//登陆用户id
+		int noteId = 0;//留言id
+		
+		/* 判断留言对象是否为null */
+		if (request.getParameter("noteId").equals(null)||request.getParameter("noteId").equals("")) {
 			state = 502;
+			LOGGER.log(Level.ERROR, " 留言删除出现空指针");
+		} else {
+			
+			// 获取留言id
+			 noteId = Integer.parseInt(request.getParameter("noteId"));
+			// 获取当前用户Id
+			 userId = ((UserModel) request.getSession().getAttribute("user")).getUserId();
+			
+			// 删除服务器上的说说评论信息
+			if (!new NoteService().deleteNote(noteId, userId)) {
+				state = 502;
+			}
 		}
-		LOGGER.log(Level.DEBUG, " {0}想删除留言，其id为{1} 状态{2}", userId,noteId,state);
+		LOGGER.log(Level.DEBUG, " {0}想删除留言，其id为{1} 状态{2}", userId, noteId, state);
+		
 		DataOutputStream output = new DataOutputStream(resp.getOutputStream());
 		output.write(JsonUtil.tojson(state).getBytes("UTF-8"));
 		output.close();
