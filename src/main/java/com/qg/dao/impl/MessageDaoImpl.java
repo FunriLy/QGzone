@@ -10,6 +10,7 @@ import java.util.List;
 import com.qg.dao.MessageDao;
 import com.qg.model.MessageModel;
 import com.qg.model.UserModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -27,6 +28,8 @@ public class MessageDaoImpl implements MessageDao{
 	private PreparedStatement sql;//声明预处理语句
 	private ResultSet rs;//声明结果集
 	private  boolean flag=false;//判断标志
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -39,7 +42,7 @@ public class MessageDaoImpl implements MessageDao{
 				sql.close();
 			}     
 			if(conn != null){
-				SimpleConnectionPool.pushConnectionBackToPool(conn);
+				conn.close();
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "SQL语句发送错误", e);
@@ -49,7 +52,7 @@ public class MessageDaoImpl implements MessageDao{
 	public boolean addMessage(MessageModel message) {
 		
 		
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into message(user_id)"
 					+" "+"values(?)");
@@ -73,7 +76,7 @@ public class MessageDaoImpl implements MessageDao{
 	@Override
 	public boolean changeMessage(MessageModel message) {
 		
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("update message m ,user u set m.user_sex=?,m.user_email=?,m.user_phone=?,m.user_birthday=?,m.user_address=?"
@@ -107,7 +110,7 @@ public class MessageDaoImpl implements MessageDao{
 	public MessageModel getMessageById(int userId) {
 
 	
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		MessageModel message = new MessageModel();
 		try {
 			sql=conn.prepareStatement("select a.user_name,b.*" 
@@ -146,7 +149,7 @@ public class MessageDaoImpl implements MessageDao{
 	public List<MessageModel> getMessagesByName(String userName){
 	
 		List<MessageModel> messages = new ArrayList<MessageModel>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("select a.user_name,b.*" 
@@ -183,7 +186,7 @@ public class MessageDaoImpl implements MessageDao{
 	
 	public boolean changeImage(int userId,String image){
 		
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("update message set user_image=? "

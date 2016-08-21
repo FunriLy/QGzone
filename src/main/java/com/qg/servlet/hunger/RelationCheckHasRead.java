@@ -50,7 +50,6 @@ public class RelationCheckHasRead extends HttpServlet {
 			}
 		
 		else{
-			System.out.println("用户session消失");
 			state = 0;
 		}
 		//返回数据给前端（状态码+与我相关对象集合）	

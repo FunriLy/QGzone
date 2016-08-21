@@ -7,6 +7,7 @@ import com.qg.dao.UserDao;
 import com.qg.dao.impl.MessageDaoImpl;
 import com.qg.dao.impl.UserDaoImpl;
 import com.qg.model.MessageModel;
+import com.qg.util.ParameterFormatCheck;
 
 /**
  * 用户信息对象业务逻辑层
@@ -17,11 +18,7 @@ public class MessageService {
 
 	private  MessageDao messageDao =  new MessageDaoImpl();
 	private  UserDao userDao =  new UserDaoImpl();
-	public static void main(String[] args) {
-		MessageService service = new MessageService();
-		System.out.println(service.changeImage(1263675+""));
-	}
-	
+
 	
 	/**
 	 * 添加用户信息 
@@ -55,7 +52,21 @@ public class MessageService {
 	 * @param userId 账号
  	 * @return 成功：个人信息对象 失败 null
 	 */
-	public MessageModel getMessageById(int userId){
+	public MessageModel getMessageById(String string){
+		int userId = 0;
+		if(ParameterFormatCheck.checkStringOfOnlyNumber(string)==true){
+			userId = Integer.parseInt(string);
+		}
+		return messageDao.getMessageById(userId);
+	}
+	
+	
+	/**
+	 * 获取个人信息
+	 * @param userId 账号
+ 	 * @return 成功：个人信息对象 失败 null
+	 */
+	public MessageModel getMessageById(int  userId){
 		return messageDao.getMessageById(userId);
 	}
 	

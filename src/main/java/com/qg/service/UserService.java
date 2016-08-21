@@ -169,7 +169,7 @@ public class UserService {
 		if(user == null){return null;}
 		if(user.getPassword()==null||user.getUserName()==null
 				||user.getUserSecretAnswer()==null){return null;}
-		String regex1 ="[a-z0-9A-Z\u4e00-\u9fa5]{1,15}";
+		String regex1 ="[a-z0-9A-Z\u4e00-\u9fa5_]{1,15}";
 		String regex2 ="[a-z0-9A-Z_]{5,15}";
 		if(user.getPassword().matches(regex2)
 				&&user.getUserName().matches(regex1)

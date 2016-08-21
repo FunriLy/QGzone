@@ -67,6 +67,18 @@ public class UserUploadImage extends HttpServlet {
 		//获取存在session中的用户对象
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
 		MessageModel message = null;
+		//如果用户对象不存在
+		if (user==null) {
+			state = 0;
+			//返回数据给前端（状态码+用户信息对象）	
+			Map<String,Object> jsonObject = new HashMap();
+			jsonObject.put("message", message);
+			jsonObject.put("state", state+"");
+			DataOutputStream output = new DataOutputStream(response.getOutputStream());
+			output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+			output.close();	
+			return;
+		}
 		//步骤一：构造工厂
 		DiskFileItemFactory factory= new DiskFileItemFactory();
 		// 设置文件阀值大小
@@ -132,7 +144,7 @@ public class UserUploadImage extends HttpServlet {
 					//将照片名存入数据库
 					messageService.changeImage(user.getUserId()+"");
 					//取出更新后的数据
-					message = messageService.getMessageById(user.getUserId());
+					message = messageService.getMessageById(user.getUserId()+"");
 					state = 171;//成功
 				}
 			}

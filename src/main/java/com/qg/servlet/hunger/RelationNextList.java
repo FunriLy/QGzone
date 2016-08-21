@@ -50,23 +50,19 @@ public class RelationNextList extends HttpServlet {
 		List<RelationModel> relations = null;
 		if(user!=null){
 			if(page!=null){
-			relations = relationService.getRelationsById(Integer.parseInt(page), user.getUserId());
+			relations = relationService.getRelationsById(page, user.getUserId());
 			if(relations==null){
-				System.out.println("没有与我相关信息");
-				state = 403;//(改)
+				state = 403;
 				}else{
-					System.out.println("存在与我相关信息");
 					state = 401;
 				}
 			}
 			else{
-				System.out.println("传入页码为空");
 				state = 402;
 			}
 			
 		}
 		else{
-			System.out.println("用户session消失");
 			state = 0;
 		}
 		//返回数据给前端（状态码+与我相关对象集合）	
@@ -75,6 +71,7 @@ public class RelationNextList extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();	
 	}
 

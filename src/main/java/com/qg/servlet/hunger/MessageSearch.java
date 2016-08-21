@@ -40,7 +40,7 @@ public class MessageSearch extends HttpServlet {
 		String userId = request.getParameter("userId");
 		MessageModel message = null;
 		if(userId!=null){
-			message = messageService.getMessageById(Integer.parseInt(userId));
+			message = messageService.getMessageById(userId);
 			if(message!=null){
 				state = 161;//成功
 			}
@@ -54,11 +54,10 @@ public class MessageSearch extends HttpServlet {
 		//返回数据给前端（状态码+用户信息对象）	
 		Map<String,Object> jsonObject = new HashMap();
 		jsonObject.put("message", message);
-		jsonObject.put("state", state+"");
-		
-		System.out.println(gson.toJson(jsonObject));
+		jsonObject.put("state", state+"");		
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(request.getRequestURI()+"....."+jsonObject);
 		output.close();	
 	}
 

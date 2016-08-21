@@ -48,7 +48,6 @@ public class UserSignIn extends HttpServlet {
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
 		String userId= map.getOrDefault("userId", null);//账号
 		String userPassword = map.getOrDefault("password", null);//密码
-		System.out.println(userId+userPassword);
 		//判断账号密码是否符合
 		flag = userService.doSingIn(userId, userPassword);
 		UserModel user = null;
@@ -72,6 +71,7 @@ public class UserSignIn extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();
 	}
 

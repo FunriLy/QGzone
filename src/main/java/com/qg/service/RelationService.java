@@ -5,6 +5,7 @@ import java.util.List;
 import com.qg.dao.*;
 import com.qg.dao.impl.*;
 import com.qg.model.*;
+import com.qg.util.ParameterFormatCheck;
 
 /**
  * 与我相关业务逻辑包装类
@@ -14,13 +15,7 @@ import com.qg.model.*;
 public class RelationService {
 
 	private UserDao userDao = new UserDaoImpl();
-	private RelationDao relationDao = new RelationDaoImpl();
-	
-	public static void main(String[] args) {
-		RelationService  service = new RelationService();
-		RelationModel relation = new RelationModel("yellow movie", "ohh!", 1263677, 4638109, 1, 2);
-		System.out.println(service.addRelation(relation));
-	}
+	private RelationDao relationDao = new RelationDaoImpl();	
 	/**
 	 * 添加与我相关信息
 	 * @param relation 与我相关对象
@@ -35,7 +30,11 @@ public class RelationService {
 	 * @param relationId 与我相关id
 	 * @return 成功true 失败false
 	 */
-	public boolean deleteRelation(int relationId){
+	public boolean deleteRelation(String string){
+		int relationId = 0;
+		if(ParameterFormatCheck.checkStringOfOnlyNumber(string)==true){
+			relationId = Integer.parseInt(string);
+		}
 		return relationDao.deleteRelation(relationId);
 	}
 	
@@ -58,20 +57,21 @@ public class RelationService {
 	 * 点赞类型：supportTwitter( 或st )
 	 * 好友添加：friendApply( 或 fa )
 	 */
-	public Object getRelationDetails(String relationType,int relatedId){
+	public Object getRelationDetails(String relationType,String related){
 		
+		int relatedId = 0;
+		if(ParameterFormatCheck.checkStringOfOnlyNumber(related)==true){
+			relatedId = Integer.parseInt(related);
+		}
 		TwitterDao tDao = new TwitterDaoImpl();
-		TwitterCommentDao tcDao = new TwitterCommentDaoImpl();
-		NoteCommentDao ncDao = new NoteCommentDaoImpl();
-		SupportDao stDao = new SupportDaoImpl();
-		FriendDao faDao = new FriendDaoImpl();
+		NoteDao nDao = new NoteDaoImpl();
 		Object object = null;
 		switch (relationType) {
 		case "na":
-			object = ncDao.getNoteCommentById(relatedId);
+			object = nDao.geNoteById(relatedId);
 			break;
 		case "nc":
-			object = ncDao.getNoteCommentById(relatedId);
+			object = nDao.geNoteById(relatedId);
 			break;
 		case "tc":
 			object = tDao.geTwitterById(relatedId);
@@ -92,7 +92,11 @@ public class RelationService {
 	 * @param userId 账号
 	 * @return 与我相关对象集合
 	 */
-	public List<RelationModel> getRelationsById(int page, int userId){
+	public List<RelationModel> getRelationsById(String string, int userId){
+		int page = 1;
+		if(ParameterFormatCheck.checkStringOfOnlyNumber(string)==true){
+			page = Integer.parseInt(string);
+		}
 		return relationDao.getRelationsById(page, userId);
 	}
 	

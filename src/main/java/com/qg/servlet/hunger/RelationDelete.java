@@ -47,19 +47,15 @@ public class RelationDelete extends HttpServlet {
 		String reciveObject = request.getParameter("jsonObject");
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
 		String relationId= map.getOrDefault("relationId", null);//与我相关信息id
-		System.out.println(map);
 		//获取存在session中的用户对象 
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
 		//获取与我相关集合
 		List<RelationModel> relations = null;
 		if(user!=null){
-			System.out.println(relationId);
 			if(relationId==null){
-				System.out.println("删除信息失败");
 				state = 412;//失败
 				}else{
-					relationService.deleteRelation(Integer.parseInt(relationId));
-					System.out.println("删除信息成功");
+					relationService.deleteRelation(relationId);
 					state = 411;//成功
 				}
 			}

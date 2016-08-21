@@ -51,12 +51,10 @@ public class UserCheckSecret extends HttpServlet {
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
 		//获取Json并解析
-		System.out.println(reciveObject);
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
 		int  userId= Integer.parseInt(map.getOrDefault("userId", "0"));//账号
 		int oldSecretId = Integer.parseInt(map.getOrDefault("oldSecretId", "0"));//旧密保编号
 		String oldAnswer = map.getOrDefault("oldAnswer", null);//旧密保答案
-		System.out.println(userId);
 		flag = userService.checkPassword(userId, oldSecretId, oldAnswer);
 		if(flag){
 			//成功
@@ -71,6 +69,7 @@ public class UserCheckSecret extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();
 			
 	}

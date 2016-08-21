@@ -44,14 +44,12 @@ public class UserForgetPassword extends HttpServlet {
 
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
-		System.out.println(reciveObject);
 		//获取Json并解析
 		Map<String,String> map = gson.fromJson(reciveObject, Map.class);
 		int  userId= Integer.parseInt(map.getOrDefault("userId", "0"));//账号
 		int oldSecretId = Integer.parseInt(map.getOrDefault("oldSecretId", "0"));//旧密保编号
 		String oldAnswer = map.getOrDefault("oldAnswer", null);//旧密保答案
 		String newPassword = map.getOrDefault("newPassword", null);//新密码
-		System.out.println(userId+newPassword);
 		flag = userService.forgetPassword(userId, oldSecretId, oldAnswer, newPassword);
 		if(flag){
 			//成功
@@ -66,6 +64,7 @@ public class UserForgetPassword extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();
 		
 		

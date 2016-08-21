@@ -68,6 +68,7 @@ public class UserChangePassword extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();
 		
 	}

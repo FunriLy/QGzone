@@ -21,7 +21,7 @@ import com.qg.service.MessageService;
  * @author hunger
  * <p>
  * 修改个人信息
- * 状态码: 161 修改信息成功，162修改信息失败
+ * 状态码: 151 修改信息成功，152修改信息失败
  * </p>
  */
 @WebServlet("/MessageChange")
@@ -47,9 +47,7 @@ public class MessageChange extends HttpServlet {
 		MessageModel message = gson.fromJson(reciveObject, MessageModel.class);
 		//获取存在session中的用户对象
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
-		System.out.println(user+""+message);
 		if(user!=null){
-			System.out.println(message);
 			flag = messageService.changeMessage(message);
 			if(flag){
 				state = 151;//成功

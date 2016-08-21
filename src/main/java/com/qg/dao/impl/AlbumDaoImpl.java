@@ -44,7 +44,6 @@ public class AlbumDaoImpl implements AlbumDao {
 	
 	@Override
 	public int createAlbum(AlbumModel album) {
-		LOGGER.log(Level.DEBUG, "创建相册的信息 相册名: {0} ",album.getAlbumName());
 		int result = fail;
 		try {
 			Date date = new Date();

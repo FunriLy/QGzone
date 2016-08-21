@@ -56,19 +56,15 @@ public class RelatonGetDetails extends HttpServlet {
 		Object object = null;
 		//获取与我相关集合
 		if(user!=null){
-			
-			if(relatedId==null||relationType==null){
-				System.out.println("获取信息失败");
+			if(relatedId==null||relationType==null
+					||(object = relationService.getRelationDetails(relationType,relatedId))!=null){
 				state = 422;//失败
-				}else{
-					state = 421;//成功
-					object = relationService.getRelationDetails(relationType, Integer.parseInt(relatedId));
 				}
+			else{
+				state = 421;//成功
 			}
-			
-			
+		}					
 		else{
-			System.out.println("用户session消失");
 			state = 0;
 		}
 		//返回数据给前端（状态码+与我相关对象集合）	
@@ -77,6 +73,7 @@ public class RelatonGetDetails extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();		
 	
 	

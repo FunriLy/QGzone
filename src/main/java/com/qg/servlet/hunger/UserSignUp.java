@@ -50,11 +50,9 @@ public class UserSignUp extends HttpServlet {
 		//获取Json并解析
 		String reciveObject = request.getParameter("jsonObject");
 		UserModel user = gson.fromJson(reciveObject, UserModel.class);//用户对象
-		System.out.println("啊啊啊啊啊");
 		//判断注册格式，成功返回账号
-		String userId= userService.doSignUp(user);
-		if(userId!=null){
-			//成功
+		String userId= null;
+		if(user!=null&&(userId= userService.doSignUp(user))!=null){
 			state = 101;
 		}
 		else{
@@ -69,6 +67,7 @@ public class UserSignUp extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();
 		
 	}

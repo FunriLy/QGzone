@@ -11,6 +11,7 @@ import org.apache.catalina.User;
 
 import com.qg.dao.UserDao;
 import com.qg.model.UserModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -24,19 +25,9 @@ public class UserDaoImpl implements UserDao{
 	private PreparedStatement sql;//声明预处理语句
 	private ResultSet rs;//声明结果集
 	private  boolean flag=false;//判断标志
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
 	
-	public static void main(String[] args) {
-		UserDaoImpl userDao = new UserDaoImpl();
-		System.out.println(userDao.getUsersByName("linhange"));
-		System.out.println(userDao.changePassword(100012, "M7"));
-		UserModel user = new UserModel();
-		user.setPassword("aaa");
-		user.setUserId(1234567);
-		user.setUserName("linhange");
-		user.setUserSecretAnswer("fuck u");
-		user.setUserSecretId(1);
-		userDao.addUser(user);
-	}
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -49,7 +40,7 @@ public class UserDaoImpl implements UserDao{
 				sql.close();
 			}     
 			if(conn != null){
-				SimpleConnectionPool.pushConnectionBackToPool(conn);
+				conn.close();
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "SQL语句发送错误", e);
@@ -58,7 +49,7 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public boolean addUser(UserModel user) {
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into user"+" "+"values(?,?,?,?,?)");
 			sql.setInt(1, user.getUserId());
@@ -84,7 +75,7 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public UserModel getUserById(int userId) {
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		UserModel user = new UserModel();
 		try {
 
@@ -120,7 +111,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public List<UserModel> getUsersByName(String userName) {
 		List<UserModel> users = new ArrayList<UserModel>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("select a.*,b.user_image" 
@@ -153,7 +144,7 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public boolean changeSecret(int userId, int secretId, String newAnswer) {
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("update user set user_secret_id=? "
@@ -183,7 +174,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public boolean changePassword(int userId, String password) {
 				
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("update user set user_password=? "
@@ -209,7 +200,7 @@ public class UserDaoImpl implements UserDao{
 	
 	public List<String> selcetUserId(){
 		List<String> list = new ArrayList<String>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("select user_id" 

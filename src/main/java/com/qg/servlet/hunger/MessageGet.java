@@ -44,7 +44,8 @@ public class MessageGet extends HttpServlet {
 		UserModel user = (UserModel)request.getSession().getAttribute("user");
 		MessageModel message = null;
 		if(user!=null){
-			message = messageService.getMessageById(user.getUserId());
+			int userId = user.getUserId();
+			message = messageService.getMessageById(userId+"");
 			if(message!=null){
 				state = 161;//成功
 			}
@@ -61,6 +62,7 @@ public class MessageGet extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(request.getRequestURI()+"....."+jsonObject);
 		output.close();	
 	
 	

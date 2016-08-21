@@ -11,6 +11,7 @@ import com.qg.dao.MessageDao;
 import com.qg.dao.RelationDao;
 import com.qg.model.RelationModel;
 import com.qg.model.TwitterModel;
+import com.qg.util.ConnectionPool;
 import com.qg.util.Level;
 import com.qg.util.Logger;
 import com.qg.util.SimpleConnectionPool;
@@ -24,15 +25,9 @@ public class RelationDaoImpl implements RelationDao{
 	private ResultSet rs;//声明结果集
 	private boolean flag=false;//判断标志
 	private MessageDao messageDao= new MessageDaoImpl();
-	public static void main(String[] args) {
-		RelationDaoImpl dao = new RelationDaoImpl();
-//		RelationModel relation = new RelationModel
-//				("d", "always online", 1794993, 1800057, 1, 20);
-//		System.out.println(dao.addRelation(relation));
-//		System.out.println(dao.hasRelationUnread(3462578));
-		System.out.println(dao.getUnReadRelationsById(3763322));
+	//获得连接池
+	ConnectionPool pool = ConnectionPool.getInstance();
 
-	}
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -45,7 +40,7 @@ public class RelationDaoImpl implements RelationDao{
 				sql.close();
 			}     
 			if(conn != null){
-				SimpleConnectionPool.pushConnectionBackToPool(conn);
+				conn.close();
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.ERROR, "SQL语句发送错误", e);
@@ -55,7 +50,7 @@ public class RelationDaoImpl implements RelationDao{
 	public boolean addRelation(RelationModel relation) {
 		
 		
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into relation"
 					+ "(relation_type,relation_content,related_id,receiver_id,sender_id)"
@@ -82,7 +77,7 @@ public class RelationDaoImpl implements RelationDao{
 	}
 	@Override
 	public boolean deleteRelation(int relationId) {
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("delete from relation where relation_id=?");
 			sql.setInt(1, relationId);
@@ -106,7 +101,7 @@ public class RelationDaoImpl implements RelationDao{
 	public List<RelationModel> getRelationsById(int userId) {
 		
 		List<RelationModel> relations = new ArrayList<RelationModel>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 
 			sql=conn.prepareStatement("select * from relation where receiver_id=?");
@@ -143,7 +138,7 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public List<RelationModel> getRelationsById(int page,int userId) {
 		List<RelationModel> relations = new ArrayList<RelationModel>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		 try {
 			int number=(page-1)*3;
 			sql=conn.prepareStatement("select * from relation where receiver_id=?"
@@ -181,7 +176,7 @@ public class RelationDaoImpl implements RelationDao{
 		}
 	@Override
 	public boolean hasRelationUnread(int userId){
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("select relation_has_read from relation where receiver_id=?");
 			sql.setInt(1, userId);
@@ -209,7 +204,7 @@ public class RelationDaoImpl implements RelationDao{
 	}
 	@Override
 	public boolean changeRelationHasRead(int userId){
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("update  relation set relation_has_read = ?"
 					+ " where receiver_id=?");
@@ -233,7 +228,7 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public List<RelationModel> getUnReadRelationsById(int userId){
 		List<RelationModel> relations = new ArrayList<RelationModel>();
-		conn = SimpleConnectionPool.getConnection();
+		conn = pool.getConnection();
 		 try {
 			sql=conn.prepareStatement("select * from relation where receiver_id=?"
 					+ " and relation_has_read=0"

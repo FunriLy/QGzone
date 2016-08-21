@@ -33,7 +33,6 @@ public class RelationsGet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("get runs");
 		doPost(request, response);
 		
 	}
@@ -55,23 +54,20 @@ public class RelationsGet extends HttpServlet {
 		List<RelationModel> relations = null;
 		if(user!=null){
 			if(page!=null){
-			relations = relationService.getRelationsById(Integer.parseInt(page), user.getUserId());
+			relations = relationService.getRelationsById(page, user.getUserId());
 			if(relations==null){
-				System.out.println("没有与我相关信息");
-				state = 403;//(改)
+				state = 403;
 				}else{
 					state = 401;
 					relationService.changeRelationHasRead(user.getUserId());
 				}
 			}
 			else{
-				System.out.println("传入页码为空");
 				state = 402;
 			}
 			
 		}
 		else{
-			System.out.println("用户session消失");
 			state = 0;
 		}
 		
@@ -81,6 +77,7 @@ public class RelationsGet extends HttpServlet {
 		jsonObject.put("state", state+"");
 		DataOutputStream output = new DataOutputStream(response.getOutputStream());
 		output.write(gson.toJson(jsonObject).getBytes("UTF-8"));
+		System.out.println(jsonObject);
 		output.close();		
 	}
 
