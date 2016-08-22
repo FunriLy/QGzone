@@ -29,8 +29,9 @@ public class UserHasSignedIn implements Filter {
 		String projectName = "/QGzone/";
 		String url = httpServletRequest.getRequestURI();
 		System.out.println("访问路径："+url);
-		String[] ex = {"UserSignIn","UserForgetPassword","UserSignUp","UserForgetPassword"
+		String[] ex = {"UserSignIn","UserForgetPassword","UserSignUp","UserForgetPassword","UserCheckSecret"
 				,"html","js","css","jpg","images"
+				,"twitterPhotos","album"
 				,"Interceptor"
 				};
 		for (int i = 0; i < ex.length; i++) {
