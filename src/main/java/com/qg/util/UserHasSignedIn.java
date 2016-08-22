@@ -1,4 +1,4 @@
-package com.qg.util;
+﻿package com.qg.util;
 
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -23,7 +23,7 @@ public class UserHasSignedIn implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		// 使用与HTTP协议相关 API，需要将参数转为子类型
+		// （林寒戈）使用与HTTP协议相关 API，需要将参数转为子类型
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		String projectName = "/QGzone/";
