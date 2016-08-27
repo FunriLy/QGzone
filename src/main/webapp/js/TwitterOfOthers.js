@@ -49,7 +49,7 @@ $(function(){
 	   		$('#nevRight li:eq(3) p').html(json.message.userName);
 	   		
 	   		
-	   		$('#diamonds_1 img').attr('src','../jpg/'+json.message.userImage);
+	   		$('#circle_2 img').attr('src','../jpg/'+json.message.userImage);
 	   		
 	   	},'json');
 	   	//设置主头像
@@ -115,11 +115,11 @@ $(function(){
    	
    	$.get('../MessageSearch?userId='+currentId,function(json){
    		currentName=json.userName;
-   		$('#personFile li:eq(1)').html(json.message.userSex);
-   		$('#personFile li:eq(2)').html(json.message.userAddress);
-   		$('#personFile li:eq(3)').html(json.message.userEmail);
+   		$('#personFile li:eq(1)').html(json.message.userSex == ""?"未设置" :json.message.userSex);
+   		$('#personFile li:eq(2)').html(json.message.userAddress == ""?"未设置":json.message.userAddress);
+   		$('#personFile li:eq(3)').html(json.message.userEmail == ""?"未设置":json.message.userEmail);
    		
-   		$('#nevRight li:eq(3) p').html(json.message.userName);
+   		$('#nevRight li:eq(3) p').html(json.message.userName == ""?"未设置":json.message.userName);
    		  		   		
    		currentPhoto = '../jpg/'+json.message.userImage;
    	},'json');

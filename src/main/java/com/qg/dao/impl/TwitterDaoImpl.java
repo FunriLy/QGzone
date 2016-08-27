@@ -76,7 +76,7 @@ public class TwitterDaoImpl implements TwitterDao{
 				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)"
 				 		+"ORDER BY twitter_id DESC LIMIT ?,12";
 		 		conn = pool.getConnection(); 	
-			 pStatement=(PreparedStatement) conn.prepareStatement(sql);
+			 pStatement=conn.prepareStatement(sql);
 			 pStatement.setInt(1, userId);
 			 pStatement.setInt(2, userId);
 			 pStatement.setInt(3, userId);
@@ -244,11 +244,11 @@ public class TwitterDaoImpl implements TwitterDao{
 
 	@Override
 	public int twitterNumber(int userId) {
-		int twitterNumber = 0;
+		int twitterNumber = 1;
 		try {
 			 String sql = 	"SELECT COUNT(DISTINCT twitter_id,twitter_word,twitter_picture,talker_id,support,time) FROM twitter "
 				 		+" JOIN friends ON" 
-				 		+"(friends.user_id=? ANd friends.f_user_id=twitter.talker_id) OR"
+				 		+"(friends.user_id=? AND friends.f_user_id=twitter.talker_id) OR"
 				 		+"(friends.f_user_id= ? AND friends.user_id=twitter.talker_id) OR (twitter.talker_id=?)";
 		 		conn = pool.getConnection(); 
 			 pStatement=(PreparedStatement) conn.prepareStatement(sql);

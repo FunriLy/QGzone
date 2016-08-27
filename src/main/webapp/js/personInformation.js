@@ -1,39 +1,13 @@
 //可以加个过滤器判断登陆人和url后面跟的id是不是本人或好友关系
 
 $(function(){
-	var HEAD_IMG_URL = "/QGzone/jpg/"; // 放置用户头像的文件夹路径;
-	var IP = "192.168.1.109";  //主机号；
+	var HEAD_IMG_URL = "../jpg/"; // 放置用户头像的文件夹路径;
 	var LOGIN_USER_ID;              //登陆人的id
 	var URL_USER_ID;                //url上的id
 	var IS_LOGIN = true;           //判断是登陆人访问的还是好友访问的
 	
 //页面动态操作：-----------------------------------------------
 
-//获取登陆人的id-----------------------------------------------
-	$.ajax({
-		url:"http://"+IP+":8080/QGzone/MessageGet",
-		type:"POST",
-		success:function(data){
-					console.log("here:"+data);
-					var state = data.state;
-					if(state == undefined){
-						alert("服务器异常!");
-					}
-					if(state == "161"){
-						var message = data.message;
-						LOGIN_USER_ID = message.userId;
-						if(URL_USER_ID!=LOGIN_USER_ID){
-							IS_LOGIN = false;
-							$("#container_1 #change").remove();
-							$("#container_2").remove();
-						}
-					}
-					if(state == "162"){
-						alert("获取个人资料失败,请稍后重试!");
-					}
-				},
-		dataType:"json"
-	});
 	
 //获取在URL后面要显示信息人的id------------------------------------------
 	function getUrlInformation(){
@@ -55,8 +29,36 @@ $(function(){
 	}
 	var info = getUrlInformation();
 
-URL_USER_ID = info.userId;
-//URL_USER_ID = LOGIN_USER_ID; //之后要修改=========================================================
+	URL_USER_ID = info.userId;
+
+	
+//获取登陆人的id-----------------------------------------------
+	$.ajax({
+		url:"../MessageGet",
+		type:"POST",
+		async: false,
+		success:function(data){
+					console.log("here:"+data);
+					var state = data.state;
+					if(state == undefined){
+						alert("服务器异常!");
+					}
+					if(state == "161"){
+						var message = data.message;
+						LOGIN_USER_ID = message.userId;
+						if(URL_USER_ID!=LOGIN_USER_ID){
+							IS_LOGIN = false;
+							$("#container_1 #change").remove();
+							$("#container_2").remove();
+						}
+					}
+					if(state == "162"){
+						alert("获取个人资料失败,请稍后重试!");
+					}
+				},
+		dataType:"json"
+	});
+
 	
 
 //判断是否是通过登陆来访问页面的------------------------------------
@@ -123,13 +125,14 @@ URL_USER_ID = info.userId;
 			$("#c2_right #second img").attr("src",img_url);
 			//嵌入信息
 			var lis = $("#val").children();
-			$(lis[0]).text(username);
+			$(lis[0]).text(userId);
 			$(lis[1]).text(sex);
 			$(lis[2]).text(birthday);
 			$(lis[3]).text(address);
 			$(lis[4]).text(phone);
 			$(lis[5]).text(email );
-			
+			$("#n_name").text(username);
+			$("#b_name").text(username);
 			//修改信息部分：-------------------------------------------------------
 			$("#username input").val( username=="未设置" ? "" : username );
 			$("#select_sex").val( sex =="未设置" ? "未设置":sex );
@@ -141,13 +144,13 @@ URL_USER_ID = info.userId;
 	}
 	//显示好友访问时的界面
 	if(!IS_LOGIN){
-		var url = "http://"+IP+":8080/QGzone/MessageSearch";
+		var url = "../MessageSearch";
 		var info = {
 			userId : URL_USER_ID
 		};
 		showInfomation(url,info);
 	}else{ //显示登陆后访问的界面
-		var url = "http://"+IP+":8080/QGzone/MessageGet";
+		var url = "../MessageGet";
 		var info = {};
 		showInfomation(url,info);
 	}
@@ -193,7 +196,7 @@ URL_USER_ID = info.userId;
 			userEmail : email
 		}
 		console.log(info);
-		$.post("http://"+IP+":8080/QGzone/MessageChange",{jsonObject : JSON.stringify(info)}, function(data){
+		$.post("../MessageChange",{jsonObject : JSON.stringify(info)}, function(data){
 			console.log(data);
 			var state = data.state;
 			var message = data.message; 
@@ -210,6 +213,30 @@ URL_USER_ID = info.userId;
 	});
 
 //头像图片上传------------------------------------------------------------------------
+	var $input = $("#second").find("input[type=file]");
+	$("#second img").click(function(){
+		if($input[0]){
+			$input.click();
+		}
+	});
+	
+	$input.change(function(){
+		var fileList = this.files;
+		if(fileList.length>0){
+			if(fileList[0].type.indexOf('image')==-1){
+				alert("文件: 《"+ fileList[i].name +"》 不是图片文件,请上传图片格式的文件!");
+				return;
+			}
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var dataURL = reader.result;
+				$("#second img").attr("src",dataURL);
+			}
+			reader.readAsDataURL(fileList[0]);
+			$("#second input[type=button]").show();
+		}
+	});
+	
 	$("#second input[type='button']").click(function(){
 		var file = $(this).prev()[0].files[0];
 		console.log(file.type);
@@ -220,7 +247,7 @@ URL_USER_ID = info.userId;
 		var formData = new FormData();
 		formData.append("file",file);
 		$.ajax({
-			url:"http://"+IP+":8080/QGzone/UserUploadImage",
+			url:"../UserUploadImage",
 			type:"POST",
 			data: formData,
 			cache:false,
@@ -230,7 +257,6 @@ URL_USER_ID = info.userId;
 						console.log(data);
 						var state = data.state;
 						if(state=="171"){
-							alert("修改成功!"); 
 							sessionStorage["isChangeImg"]="true";
 							window.location.reload();
 							return ;
@@ -283,7 +309,7 @@ URL_USER_ID = info.userId;
 	$("#changePassword input[name='sure']").click(function(){
 		var oldPassword = $("#changePassword #oldPassword").val().trim();
 		var newPassword = $("#changePassword #newPassword").val().trim();
-		var rePassword = $("#changePassword #rePassword").val().trim();
+		//var rePassword = $("#changePassword #rePassword").val().trim();
 		var regPassword = /[^\da-zA-Z]/g; 
 		if(oldPassword == ""){
 			alert("旧密码不能为空!");
@@ -298,27 +324,27 @@ URL_USER_ID = info.userId;
 			$("#changePassword #rePassword").val("");
 			return ;
 		}
-		if(rePassword!=newPassword){
+		/*if(rePassword!=newPassword){
 			alert("两次输入的密码不一致!");
 			$("#changePassword #rePassword").val("");
 			return ;
-		}
+		}*/
 		$(this).parents("#changePassword").hide();
 
 		var info = {
 			oldPassword : oldPassword,
 			newPassword : newPassword,
 		};
-		$.post("http://"+IP+":8080/QGzone/UserChangePassword",{jsonObject: JSON.stringify(info)},function(data){
+		$.post("../UserChangePassword",{jsonObject: JSON.stringify(info)},function(data){
 			console.log(data);
 			var state = data.state;
 			if(state == "131"){
 				alert("修改成功!");
-				window.location.href="http://"+IP+":8080/QGzone/html/login.html";
+				//window.location.href="login.html";
 				return ;
 			}
 			if(state == "132" || state == undefined){
-				alert("服务器异常,操作失败!");
+				alert("密码有误，操作失败!");
 				return ;
 			}
 		},"json");
@@ -346,7 +372,7 @@ URL_USER_ID = info.userId;
 			newSecretId : newSecretId,
 			newAnswer : newSecretAnswer
 		};
-		$.post("http://"+IP+":8080/QGzone/UserChangeSecret",{jsonObject:JSON.stringify(info)},function(data){
+		$.post("../UserChangeSecret",{jsonObject:JSON.stringify(info)},function(data){
 			console.log(data);
 			var state = data.state;
 			if(state == "141"){
@@ -354,25 +380,24 @@ URL_USER_ID = info.userId;
 				return ;
 			}
 			if(state == "142" || state == undefined){
-				alert("服务器异常,操作失败!");
+				alert("答案有误,操作失败!");
 				return ;
 			}
 		},"json");
 	});
 
 	//点击眼睛看输入的密码-------------------------------
+	var initInput;
 	$("#changePassword .eye").mousedown(function(){
 		var val = $(this).parent().find("input").val();
 		var id = $(this).parent().find("input").attr("id");
-		var text = $('<input type="text" id='+id+' value='+val+' >');
-		$(this).parent().find("input").replaceWith(text);
+		var text = $('<input type="text" id="'+id+'" value="'+val+'" autocomplete="off">');
+		initInput = $(this).parent().find("input").detach();
+		text.appendTo($(this).parent().find("label"));
 	}).mouseup(function(){
-		var val = $(this).parent().find("input").val();
-		var id = $(this).parent().find("input").attr("id");
-		var text = $('<input type="password" id='+id+' value='+val+' >');
-		$(this).parent().find("input").replaceWith(text);
-	})
-
+		$(this).parent().find("input").remove();
+		initInput.appendTo($(this).parent().find("label"));
+	});
 
 //修改头像时刷新后跳到修改头像界面------------------------------------
 	if(sessionStorage["isChangeImg"]=="true"){

@@ -6,7 +6,12 @@ li{
 	text-align: center;
 }
 body{
-	font-family: "微软雅黑",sans-serif
+	font-family: "微软雅黑",sans-serif;
+	min-width: 830px;
+	background-image: url(../images/c_friend_background.jpg);
+	background-position: center center;
+	background-repeat:no-repeat; 
+	background-attachment:fixed
 }
 a{
 	text-decoration: none;
@@ -15,20 +20,147 @@ a{
 a:active{
 	color: white; 
 }
+.color_white{
+	background-color: rgba(255, 255, 255, 0.57);
+}
+#nev_1{
+    overflow: hidden;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 2;
+    color: white;
+    background-color: #6b6b6b;
+}
+.hide{
+	display: none;
+}
+#nevLeft{
+    float: left;
+    width: 56%;
+}
+#nevLeft li{
+    float: left;
+    padding: 18px 2.1%;
+}
+li a{
+	color: white;
+    font-size: 18px;	
+}
+
+#nevLeft .paddingLeft{
+    font-size: 24px;
+	padding: 12px 15.4% 13px 0;
+}
+#nevLeft .circle_1_paddingSmall{
+    padding: 9px 8% 0px 13.4%;
+}
+#nevLeft #circle_1{
+	height: 40px;
+}
+
+#nevRight{
+	float: right;
+    width: 44%;
+}
+
+#nevRight li{
+    float: right;
+    padding: 18px 4.2% 0;
+}
+
+#nevRight .diamonds_1_paddingSmall{
+	padding: 15px 0 0 0;
+}
+#nevRight .p_margin{
+    padding: 19px 9% 0 10px;
+}
+#nevRight #circle_2{
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+	overflow:hidden;
+}
+#circle_2 img{
+	height: 30px;
+	width: 30px;
+}
+
+#my_background{
+	position: fixed;
+    top: 318.19px;
+    left: 17%;
+    width: 66%;
+    height: 672px;
+    z-index: -1; 
+   	background-color: #cfeaf5;
+   
+}
+/*header-----------------------------------------------------------*/
+#header{
+	position: relative;
+    z-index: 1;
+    width: 66%;
+    margin: 60px 0 40px 17%;
+    padding: 0.1px;
+    height: 250px;
+    background-color: #b3e5fc;
+    text-align: center;
+}
+#header p{
+	margin-top: -34px;
+}
+#header #h_photo{
+	overflow: hidden;
+	width: 100px; 
+	height: 100px;
+	margin: 40px auto;
+	border-radius: 50%;
+}
+#h_photo img{
+	width: 100px; 
+	height: 100px;
+}
+
+#nev2{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background-color: #74c7ed;
+}
+#nev2 li{
+	display: inline-block;
+	padding: 11px 0;
+	width: 16%;
+	font-weight: bold;
+}
+#nev2 li.leftMargin{
+	margin-left: 18%;
+}
+#white_bar{
+    position: relative;
+    bottom: -82px;
+	z-index: 1;
+	height: 8px;
+	background-color: white;
+}
 
 .hide{
 	display: none;
 }
 
 #info_list{
-	overflow: hidden;
-	width: 76%;
-	margin: -40px auto 100px;
+    overflow: hidden;
+    width: 66%;
+    margin: -32px auto 100px;
+    background-color: #cfeaf5;
 }
 #info_list li{
-	margin-top: 40px;
-	overflow: hidden;
-	text-align: left;
+    margin: 38px auto 0;
+    overflow: hidden;
+    text-align: left;
+    border-radius: 12px;
+    width: 87%;
 }
 #info_list li.center{
 	text-align: center;
@@ -38,18 +170,18 @@ a:active{
 }
 #info_list .info_header{
 	overflow: hidden;
-	background-color: #f3f3f3;
+	background-color: #fbf9f9;
 }
 #info_list .friend_head_img{
-	margin: 10px 10px;
+    margin: 10px 10px 10px 40px;
 	float: left;
-	height: 50px;
-	width: 50px;
+    height: 65px;
+    width: 65px;
 	border-radius: 50%;
 }
 .info .rough_info{
 	float: left;
-	margin-top: 15px;
+    margin-top: 26px;
 	margin-left: 10px;
 	text-align: left;
 }
@@ -66,9 +198,22 @@ a:active{
 	float: right;
 	margin: 10px 30px 0 0;
 }
+.button .about-info{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url(../images/c_goto.png) no-repeat;
+}
+.button .delete{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url(../images/c_delete_info.png) no-repeat;
+}
 .info_content{
 	overflow: hidden;
-	background-color: #dee6ec;
+	padding-left: 47px;
+	background-color: #b8cad8;
 }
 .info_content .c_name{
 	float: left;

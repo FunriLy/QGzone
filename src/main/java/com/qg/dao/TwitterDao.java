@@ -40,7 +40,7 @@ public interface TwitterDao {
      * @return true false
      */
     public boolean deleteTwitter(int twitterId);
-    /***
+    /**
      * 该方法用于点赞
      * @param twitterId 对于的说说id
      * @return true false

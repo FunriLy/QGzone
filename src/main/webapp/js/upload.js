@@ -1,15 +1,9 @@
 $(function(){
 	var array = new Array();
-	var IP = "192.168.1.100";
+//	var IP = "192.168.43.138";
 	var hostId;
 
-	sessionStorage["friendId"]="1";
-	var friendId = sessionStorage["friendId"];
-	console.log(friendId);
-
-
-
-//获取url信息
+//获取url信息---------------------------------------------------------------------------------------------------------------------
 	function getUrlInformation(){
 		var qs = (location.search.length>0 ? location.search.substring(1) : "" ),
 			args = {},
@@ -28,6 +22,91 @@ $(function(){
 		return args;
 	}
 	var inf = getUrlInformation();
+	hostId = inf.userId;
+	var albumId = inf.albumId;
+	var status = inf.status;
+	var obj = {
+		userId : hostId,
+		albumId : albumId,
+		albumState : status
+	};
+	console.log("现在这个相册属于："+hostId);
+//获取当前用户ID--------------------------------------------------------------------------------------------------------------------------------
+	var currentId;
+	$.ajax({
+		url : "../MessageGet",
+		async : false,
+		success : function(data){
+					console.log(data);
+					var state = data.state;
+					if(state == undefined){
+						alert("服务器异常!");
+					}
+					if(state == "161"){
+						var message = data.message;
+						currentId = message.userId;
+						console.log("当前在线用户为："+currentId);
+						judge();
+					}
+					if(state == "162"){
+						alert("获取当前用户ID失败,请稍后重试!");
+					}
+				},
+		dataType:"json"
+	});
+	
+	//生成新图片-------------------------------------------------------------------------------------------------
+	var photoUrl = "../album";
+	function createPhoto(pId,aId,uId){
+		var phoThumbnail = "t_"+pId;
+		var photo = $('<div class="every_photo" photoId="'+pId+'">'+
+ 					  	'<div class="delete_btn"><img src="../images/p_list.png"></div>'+
+					  	'<div class="photo"><img src="../album/'+uId+'/'+aId+'/'+phoThumbnail+'.jpg'+'" class="pho">'+
+					  	'</div></div>');
+ 		var container = $("#contain_photo");
+ 		container.append(photo);
+	};
+	
+//加载页面-----------------------------------------------------------------------------------------
+	 function loadPage(){
+		if(status==0){
+				$.post("../CheckPublicAlbum",{albumId : albumId},function(object){
+					console.log(object);
+					var data = JSON.parse(object);
+					var state = data.state;
+					console.log("xxxxxxxxx"+data.jsonList[0]);
+					for(var i=data.jsonList.length;i>=0;i--){
+						var pId = data.jsonList[i];
+						if(pId!=undefined){
+							createPhoto(pId,albumId,hostId);
+						}else{
+							console.log("当前相册为空");
+						}
+					}
+						if(currentId!=hostId){
+							$(".function_bar").remove();
+						}
+				});
+		}else if(status==1){
+			$.post("../CheckPrivacyAlbum",{jsonObject : JSON.stringify(obj)},function(object){
+				var data = JSON.parse(object);
+				console.log("sssssssssss"+data.jsonList[0]);
+				for(var i=0;i<data.jsonList.length;i++){
+					var pId = data.jsonList[i];
+					if(pId!=undefined){
+						createPhoto(pId,albumId,hostId);
+					}else{
+						console.log("当前相册为空");
+					}
+				}
+				if(currentId!=hostId){
+					$(".function_bar").remove();
+				}
+			});
+		}
+	 }
+	 loadPage();
+	
 //通过链接模拟点击input file----------------------------------
 	$("#add").click(function(e){
 		if($("#input")[0]){
@@ -64,7 +143,7 @@ $(function(){
 		}
 		if(haveFile){
 			$.ajax({
-				url:"http://"+IP+":8080/QGzone/UserUploadImage",
+				url:"../UploadPhoto?albumId="+albumId,
 				type:"POST",
 				data:formData,
 				processData: false,
@@ -74,19 +153,21 @@ $(function(){
 					$("#dropbox").empty();
 					console.log(data);
 					alert("上传成功!");
+					var asHostId = inf.userId;
+					var albmId = inf.albumId;//拿到albumId
+					$("#upload_window").hide();
+					$("#contain_photo").show();
+					window.location.reload();
+					return ;
+					
+					
 				},
 				dataType:"json"
 			});
-			var asHostId = inf.userId;
-			var albmId = inf.albumId;//拿到albumId
-			// sessionStorage["isReloadPhoto"]="true";
-			var reAlbUrl = "innerAlbums.html?userId="+asHostId+"&albumId="+albmId;
-			window.location.href = reAlbUrl;
-			// window.location.reload();
-			return ;
+			
 		}
 	});
-//删除图片-----------------------------------------------------------
+//删除未完全上传的图片-----------------------------------------------------------
 	$("#dropbox").click(function(e){
 		var e = $(e.target);
 		if(e[0].nodeName.toUpperCase() != "SPAN"){
@@ -153,83 +234,31 @@ $(function(){
 		}
 	}
 
-	// if(sessionStorage["isReloadPhoto"]=="true"){
-	// 	$("#container_1 #change").click();
-	// 	$("#c2_left ul :nth-child(2)").click();
-	// 	sessionStorage.removeItem("isReloadPhoto");
-	// }
-
-
-
-	function getUrlInformation(){
-		var qs = (location.search.length>0 ? location.search.substring(1) : "" ),
-			args = {},
-			items = qs.length ? qs.split("&") : [],
-			item = null,
-			name = null,
-			value = null;
-		for(var i=0 ; i<items.length; i++){
-			item = items[i].split("=");
-			name = decodeURIComponent(item[0]);
-			value = decodeURIComponent(item[1]);
-			if(name.length){
-				args[name]=value;
-			}
-		}
-		return args;
-	}
-	var host = getUrlInformation();
-	hostId = host.userId;
-	console.log("主人用户ID是"+hostId);
-
-	function cancel(){
-		$(".alb_name").val("相册名称，最多10字");
-		$(".alb_name_change").val("");
-		$(".password").val("");
-		$(".password_new").val("");
-		$("#create_alb").hide();
-		$(".change_container").hide();
-		$(".clear_container").hide();
-		$(".delete_container").hide();
-		// $(".nameErr1").detach();
-		$(".nameErr2").detach();
-		$(".pwErr1").detach();
-		$(".pwErr2").detach();
-	}
-
-	//相册内------------------------------------------------------------------------------------------------
-	//生成新图片-------------------------------------------------------------------------------------------------
-	var photoUrl = "http://"+IP+":8080/QGzone/album";
-	function createPhoto(pId,aId,uId){
-		var phoThumbnail = "t_"+pId;
-		var photo = $('<div class="every_photo" photoId="'+pId+'">'+
- 					  	'<div class="delete_btn"><img src="../img/p_list.png"></div>'+
-					  	'<div class="photo"><img src="'+photoId+'/'+uId+'/'+aId+'/'+phoThumbnail+'.jpg'+'" class="pho">'+
-					  	'</div></div>');
- 		var container = $(".contain_photo");
- 		container.prepend(photo);
-	}
+//相册内------------------------------------------------------------------------------------------------
+	
 	//上传图片------------------------------------------------------------------------------------------
 	$(".btn_loadup").click(function(){
-		$(".contain_photo").hide();
+		$("#contain_photo").hide();
 		$("#upload_window").show();
-
-
 	});
+	
 	$(".cancel_upload").click(function(){
 		$("#upload_window").hide();
-		$(".contain_photo").show();
+		$("#contain_photo").show();
 		$(".file_img").remove();
-	})
+	});
 	
 	//查看大图------------------------------------------------------------------------------------------
-	// $(".photo").click(function(event){
-	// 	var tg = $(event.target);
-	// 	var pare = tg.parents(".every_photo");
-	// 	var picId = pare.attr("photoId");
-	// 	alert("我点到了图片哦~~~~~~~");
-	// });
-	function openNew(){
+	 function center(obj){
+         var width = $('body').width();
+         $(obj).css({   
+          "position": "absolute",   
+          "left": width/2-200,
+          "top":  '160px'   
+         });  
+        }
+
+	function openNew(hostId,albumId,getPho){
 	//获取页面的高度和宽度
 	var sWidth=document.body.scrollWidth;
 	var sHeight=document.body.scrollHeight;
@@ -244,16 +273,16 @@ $(function(){
 		document.body.appendChild(oMask);
 	var oEnlarge=document.createElement("div");
 		oEnlarge.id="enlarge";
-		oEnlarge.innerHTML="<div class='enlarge_con'>"+
+		oEnlarge.innerHTML="<div id='enlarge_con'>"+
 				"<div id='close'>点击关闭</div>"+
-				"<img src='"+getPho+".jpg'></div>";
-		document.body.appendChild(oEnlarge);
+				"<img src='../album/"+hostId+"/"+albumId+"/"+getPho+".jpg'></div>";
+	document.body.appendChild(oEnlarge);
 	//获取浮出层框的宽和高
 	var dHeight=oEnlarge.offsetHeight;
 	var dWidth=oEnlarge.offsetWidth;
 	//设置浮出层框的left和top
-		oEnlarge.style.left=sWidth/2-dWidth/2+"px";
-		oEnlarge.style.top=wHeight/2-dHeight/2+"px";
+		oEnlarge.style.left=sWidth/5-dWidth/5+"px";
+		oEnlarge.style.top=wHeight/5-dHeight/5+"px";
 	//点击关闭按钮
 	var oClose=document.getElementById("close");
 	
@@ -262,29 +291,31 @@ $(function(){
 					document.body.removeChild(oEnlarge);
 					document.body.removeChild(oMask);
 					};
-					};
+	};
 					
-		$(".pho").click(function(event){
-			var tg = $(event.target);
-			var pare = tg.parents(".every_photo");
-			var getPho = pare.attr("photoId");
-			console.log("我要打开大图了！"+getPho);
-			openNew();
-				// return false;
-		});
-		$("#close").click(function(){
-			$("#mask").remove();
-			$("#enlarge").remove();
-		});
-
+	$(document).on("click",".pho",function(event){
+		var tg = $(event.target);
+		var pare = tg.parents(".every_photo");
+		var getPho = pare.attr("photoId");
+		console.log("我要打开大图了！"+getPho);
+//		alert("hostId="+hostId+"---"+"albumId="+albumId+"---"+"getPho="+getPho);
+		openNew(hostId,albumId,getPho);
+			// return false;
+	});
+	$("#close").click(function(){
+		$("#mask").remove();
+		$("#enlarge").remove();
+	});
 
 	//删除图片------------------------------------------------------------------------------------------
 	$(".delete_btn").hide();
 	$(".btn_edit_pho").click(function(){
 		$(".delete_btn").toggle();
+		
 	});
 	var photoInfo = getUrlInformation();
-	$(".delete_btn").click(function(event){
+	$(document).on("click",".delete_btn",function(event){
+		console.log("我准备删除相片啦");
 		var tg = $(event.target);
 		var tgAlbId = photoInfo.albumId;
 		var phot = tg.parents(".every_photo");
@@ -293,7 +324,10 @@ $(function(){
 			albumId : tgAlbId,
 			photoId : photId
 		};
-		$.post("http://"+IP+":8080/QGzone/DeletePhoto",obj,function(state){
+		$.post("../DeletePhoto",{photo : JSON.stringify(obj)},function(object){
+			var data = JSON.parse(object);
+			var state = data.state;
+			console.log("你先拿到"+data+"然后再拿到state"+state);
 			if(state==undefined){
 				alert("服务器异常");
 			}else if(state==602){
@@ -304,6 +338,4 @@ $(function(){
 			}
 		});
 	});
-
-
 });

@@ -1,9 +1,7 @@
 $(document).ready(function(){
-	var IP = "192.168.1.109";
-	sessionStorage["par1"]="123";
 
 	var lo = $($("#option").children()[0]);
-	var ro = $($("#option").children()[1]);
+	var ro = $($("#option").children()[2]);
 	var fg = $("#forget");
 	var login = $("#login");
 	var register = $("#register");
@@ -15,8 +13,8 @@ $(document).ready(function(){
 		forget.hide();
 		lo.removeClass("fade");
 		ro.removeClass("fade");
-		ro.removeClass("white");
-		$(this).addClass("white");
+		ro.removeClass("be_select");
+		$(this).addClass("be_select");
 	});
 
 	ro.click(function(){
@@ -25,15 +23,17 @@ $(document).ready(function(){
 		forget.hide();
 		lo.removeClass("fade");
 		ro.removeClass("fade");
-		lo.removeClass("white");
-		$(this).addClass("white");
+		lo.removeClass("be_select");
+		$(this).addClass("be_select");
+		$("#username").val("");
+		$("#r_password").val("");
 	});
 
 	fg.click(function(){
 		forget.show();
 		register.hide();
 		login.hide();
-		lo.removeClass("white");
+		lo.removeClass("be_select");
 		lo.addClass("fade");
 		ro.addClass("fade");
 	});
@@ -45,35 +45,37 @@ $(document).ready(function(){
 		var account = $("#l_account").val().trim();
 		var reg = /[^\d{5,8}]/; 
 		if(account == ""){
-			$(this).next().text("账号不能为空!");
+			$(this).parent().find("p").text("账号不能为空!");
 		}else if(account.length>8 || account.length<5|| reg.test(account)){
-			$(this).next().text("账号格式不正确!");
+			$(this).parent().find("p").text("账号格式不正确!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var account = $("#l_account").val().trim();
 		var reg = /[^\d{5,8}]/; 
 		if(account == ""){
-			$(this).next().text("账号不能为空!");
+			$(this).parent().find("p").text("账号不能为空!");
 		}else if(account.length>8 || account.length<5|| reg.test(account)){
-			$(this).next().text("账号格式不正确!");
+			$(this).parent().find("p").text("账号格式不正确!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	});
 
-	$("#l_password").blur(function(){
+	$("#l_password").keyup(function(){
 		var password = $("#l_password").val().trim();
 		if(password ==""){
-			$(this).next().text("密码不能为空!");
+			$(this).parent().find("p").text("密码不能为空!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
-	}).keyup(function(){
+	}).blur(function(){
 		var password = $("#l_password").val().trim();
-		if(password!=""){
-			$(this).next().text("");
+		if(password ==""){
+			$(this).parent().find("p").text("密码不能为空!");
+		}else{
+			$(this).parent().find("p").text("");
 		}
 	});
 
@@ -85,12 +87,12 @@ $(document).ready(function(){
 			password : password
 		}
 		/*console.log(info);*/
-		var p = $("#l_password").next().text().trim()+
-				$("#l_account").next().text().trim();
+		var p = $("#l_password").parent().find("p").text().trim()+
+				$("#l_account").parent().find("p").text().trim();
 		if(p!=""||account==""||password==""){
 			alert("填写格式错误!");
 		}else{
-			$.post("http://"+IP+":8080/QGzone/UserSignIn",{jsonObject:JSON.stringify(info)},function(data){
+			$.post("../UserSignIn",{jsonObject:JSON.stringify(info)},function(data){
 				 var state = data.state;
 				 var user = data.user;
 				 console.log(data);
@@ -102,7 +104,7 @@ $(document).ready(function(){
 				 	var user = data.user;
 				 	var userId = user.userId;
 				 	console.log("success:"+userId);
-				 	window.location.href="http://"+IP+":8080/QGzone/html/selfIndex.html?userId="+userId;
+				 	window.location.href="selfIndex.html?userId="+userId;
 				 	return ;
 				 }
 				 if(state=="112"){
@@ -120,73 +122,44 @@ $(document).ready(function(){
 		var username = $("#username").val().trim();
 		var reg = /[^\w\u4e00-\u9fa5]/g; 
 		if(username == ""){
-			$(this).next().text("用户名不能为空!");
+			$(this).parent().find("p").text("用户名不能为空!");
 		}else if( reg.test(username)){
-			$(this).next().text("昵称只能由中文，英文，数字和下划线组成");
+			$(this).parent().find("p").text("昵称只能由中文，英文，数字和下划线组成");
 		}else if(username.length>12){
-			$(this).next().text("用户名只能由1-12个字符组成");
+			$(this).parent().find("p").text("用户名只能由1-12个字符组成");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var username = $("#username").val().trim();
 		var reg = /[^\w\u4e00-\u9fa5]/g; 
 		if(username == ""){
-			$(this).next().text("用户名不能为空!");
+			$(this).parent().find("p").text("用户名不能为空!");
 		}else if( reg.test(username)){
-			$(this).next().text("昵称只能由中文，英文，数字和下划线组成");
+			$(this).parent().find("p").text("昵称只能由中文，英文，数字和下划线组成");
 		}else if(username.length>12){
-			$(this).next().text("用户名只能由1-12个字符组成");
+			$(this).parent().find("p").text("用户名只能由1-12个字符组成");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	});
 
 	$("#r_password").keyup(function(){
 		var password = $("#r_password").val().trim();
-		var repassword = $("#r_repassword").val().trim();  
 		var reg = /[^\da-zA-Z]/g; 
-		if(repassword!=""){
-			var password = $("#r_password").val().trim();
-			var repassword = $("#r_repassword").val().trim(); 
-			if(repassword == ""){
-				$("#r_repassword").next().text("密码不能为空!");
-			}else if(repassword!=password){
-				$("#r_repassword").next().text( "两次输入的密码不一致!");
-			}else{
-				$("#r_repassword").next().text("");
-			};
-		}
 		if(password == ""){
-			$(this).next().text("密码不能为空!");
+			$(this).parent().find("p").text("密码不能为空!");
 		}else if( reg.test(password)){
-			$(this).next().text("密码只能由数字，英文组成!");
+			$(this).parent().find("p").text("密码只能由数字，英文组成!");
 		}else if(password.length>15||password.length<6){
-			$(this).next().text("密码只能有6-15位");
+			$(this).parent().find("p").text("密码只能有6-15位");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var password = $("#r_password").val().trim();
 		if(password == ""){
-			$(this).next().text("密码不能为空!");
-		}
-	});
-
-	$("#r_repassword").keyup(function(){
-		var password = $("#r_password").val().trim();
-		var repassword = $("#r_repassword").val().trim(); 
-		if(repassword == ""){
-			$(this).next().text("密码不能为空!");
-		}else if(repassword!=password){
-			$(this).next().text("两次输入的密码不一致!");
-		}else{
-			$(this).next().text( "");
-		}
-	}).blur(function(){
-		var repassword = $("#r_repassword").val().trim();
-		if(repassword == ""){
-			$(this).next().text("确认密码不能为空!");
+			$(this).parent().find("p").text("密码不能为空!");
 		}
 	});
 
@@ -194,32 +167,31 @@ $(document).ready(function(){
 		var answer = $("#r_answer").val().trim();
 		var reg = /[^\u4e00-\u9fa5\da-zA-Z]/g; 
 		if(answer == ""){
-			$(this).next().text("密保答案不能为空!");
+			$(this).parent().find("p").text("密保答案不能为空!");
 		}else if( reg.test(answer)){
-			$(this).next().text("密保答案只能为中文、英文、数字!");
+			$(this).parent().find("p").text("密保答案只能为中文、英文、数字!");
 		}else if(answer.length>12){
-			$(this).next().text("密保答案只能由1-12个中文、英文、数字组成!");
+			$(this).parent().find("p").text("密保答案只能由1-12个中文、英文、数字组成!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var answer = $("#r_answer").val().trim();
 		var reg = /[^\u4e00-\u9fa5\da-zA-Z]/g;  
 		if(answer == ""){
-			$(this).next().text("密保答案不能为空!");
+			$(this).parent().find("p").text("密保答案不能为空!");
 		}else if( reg.test(answer)){
-			$(this).next().text("密保答案只能为中文、英文、数字!");
+			$(this).parent().find("p").text("密保答案只能为中文、英文、数字!");
 		}else if(answer.length>12){
-			$(this).next().text("密保答案只能由1-12个中文、英文、数字组成!");
+			$(this).parent().find("p").text("密保答案只能由1-12个中文、英文、数字组成!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	});
 
 	$("#reg").click(function(){
 		var username = $("#username").val().trim();
 		var password = $("#r_password").val().trim();
-		var repassword = $("#r_repassword").val().trim();
 		var question = $("#register .question").val().trim(); 
 		var answer = $("#r_answer").val().trim();
 	
@@ -229,15 +201,14 @@ $(document).ready(function(){
 			userSecretId : question,
 			userSecretAnswer : answer,
 		}
-		var p = $("#username").next().text().trim()+
-				$("#r_password").next().text().trim()+
-				$("#r_repassword").next().text().trim()+
-				$("#r_answer").next().text().trim();
+		var p = $("#username").parent().find("p").text().trim()+
+				$("#r_password").parent().find("p").text().trim()+
+				$("#r_answer").parent().find("p").text().trim();
 
-		if(p!=""||username==""||password==""||repassword==""||answer==""){
+		if(p!=""||username==""||password==""||answer==""){
 			alert("填写格式错误!");
 		}else{
-			$.post("http://"+IP+":8080/QGzone/UserSignUp",{jsonObject:JSON.stringify(info)},function(data){
+			$.post("../UserSignUp",{jsonObject:JSON.stringify(info)},function(data){
 				 var state = data.state;
 				 console.log(data);
 				 if(state==null){
@@ -247,6 +218,11 @@ $(document).ready(function(){
 				 if(state=="101"){
 				 	var userId = data.userId;
 				 	alert("注册成功,您的账号为:"+userId);
+				 	lo.click();
+				 	$("#l_account").val(userId);
+				 	$("#l_password").val("");
+				 	$("#l_account")[0].focus();
+				 	$("#l_password")[0].focus();
 				 	return ;
 				 }
 				 if(state=="102"){
@@ -264,21 +240,21 @@ $(document).ready(function(){
 		var account = $("#f_account").val().trim();
 		var reg = /[^\d{5,8}]/; 
 		if(account == ""){
-			$(this).next().text("账号不能为空!");
+			$(this).parent().find("p").text("账号不能为空!");
 		}else if(account.length>8 || account.length<5|| reg.test(account)){
-			$(this).next().text("账号格式不正确!");
+			$(this).parent().find("p").text("账号格式不正确!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var account = $("#f_account").val().trim();
 		var reg = /[^\d{5,8}]/; 
 		if(account == ""){
-			$(this).next().text("账号不能为空!");
+			$(this).parent().find("p").text("账号不能为空!");
 		}else if(account.length>8 || account.length<5|| reg.test(account)){
-			$(this).next().text("账号格式不正确!");
+			$(this).parent().find("p").text("账号格式不正确!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	});
 
@@ -286,25 +262,25 @@ $(document).ready(function(){
 		var answer = $("#f_answer").val().trim();
 		var reg = /[^\u4e00-\u9fa5\da-zA-Z]/g; 
 		if(answer == ""){
-			$(this).next().text("密保答案不能为空!");
+			$(this).parent().find("p").text("密保答案不能为空!");
 		}else if( reg.test(answer)){
-			$(this).next().text("密保答案只能为中文、英文、数字!");
+			$(this).parent().find("p").text("密保答案只能为中文、英文、数字!");
 		}else if(answer.length>12){
-			$(this).next().text("密保答案只能由1-12个中文、英文、数字组成!");
+			$(this).parent().find("p").text("密保答案只能由1-12个中文、英文、数字组成!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var answer = $("#f_answer").val().trim();
 		var reg = /[^\u4e00-\u9fa5\da-zA-Z]/g; 
 		if(answer == ""){
-			$(this).next().text("密保答案不能为空!");
+			$(this).parent().find("p").text("密保答案不能为空!");
 		}else if( reg.test(answer)){
-			$(this).next().text("密保答案只能为中文、英文、数字!");
+			$(this).parent().find("p").text("密保答案只能为中文、英文、数字!");
 		}else if(answer.length>12){
-			$(this).next().text("密保答案只能由1-12个中文、英文、数字组成!");
+			$(this).parent().find("p").text("密保答案只能由1-12个中文、英文、数字组成!");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	});
 
@@ -312,54 +288,25 @@ $(document).ready(function(){
 		var password = $("#f_password").val().trim();
 		var repassword = $("#f_repassword").val().trim();  
 		var reg = /[^\da-zA-Z]/g; 
-		if(repassword!=""){
-			var password = $("#f_password").val().trim();
-			var repassword = $("#f_repassword").val().trim(); 
-			if(repassword == ""){
-				$("#f_repassword").next().text("密码不能为空!");
-			}else if(repassword!=password){
-				$("#f_repassword").next().text( "两次输入的密码不一致!");
-			}else{
-				$("#f_repassword").next().text("");
-			};
-		}
 		if(password == ""){
-			$(this).next().text("密码不能为空!");
+			$(this).parent().find("p").text("密码不能为空!");
 		}else if( reg.test(password)){
-			$(this).next().text("密码只能由数字，英文组成!");
+			$(this).parent().find("p").text("密码只能由数字，英文组成!");
 		}else if(password.length>15||password.length<6){
-			$(this).next().text("密码只能有6-15位");
+			$(this).parent().find("p").text("密码只能有6-15位");
 		}else{
-			$(this).next().text("");
+			$(this).parent().find("p").text("");
 		}
 	}).blur(function(){
 		var password = $("#f_password").val().trim();
 		if(password == ""){
-			$(this).next().text("密码不能为空!");
-		}
-	});
-
-	$("#f_repassword").keyup(function(){
-		var password = $("#f_password").val().trim();
-		var repassword = $("#f_repassword").val().trim(); 
-		if(repassword == ""){
-			$(this).next().text("密码不能为空!");
-		}else if(repassword!=password){
-			$(this).next().text("两次输入的密码不一致!");
-		}else{
-			$(this).next().text( "");
-		}
-	}).blur(function(){
-		var repassword = $("#f_repassword").val().trim();
-		if(repassword == ""){
-			$(this).next().text("确认密码不能为空!");
+			$(this).parent().find("p").text("密码不能为空!");
 		}
 	});
 
 	$("#sure").click(function(){
 		var account = $("#f_account").val().trim();
 		var password = $("#f_password").val().trim();
-		var repassword = $("#f_repassword").val().trim();
 		var question = $("#forgetPassword .question").val().trim(); 
 		var answer = $("#f_answer").val().trim();
 
@@ -369,15 +316,14 @@ $(document).ready(function(){
 			oldSecretId : question,
 			oldAnswer : answer,
 		}
-		var p = $("#f_account").next().text().trim()+
-				$("#f_password").next().text().trim()+
-				$("#f_repassword").next().text().trim()+
-				$("#f_answer").next().text().trim();
+		var p = $("#f_account").parent().find("p").text().trim()+
+				$("#f_password").parent().find("p").text().trim()+
+				$("#f_answer").parent().find("p").text().trim();
 
-		if(p!=""||account==""||password==""||repassword==""||answer==""){
+		if(p!=""||account==""||password==""||answer==""){
 			alert("填写格式错误!");
 		}else{
-			$.post("http://"+IP+":8080/QGzone/UserForgetPassword",{jsonObject:JSON.stringify(info)},function(data){
+			$.post("../UserForgetPassword",{jsonObject:JSON.stringify(info)},function(data){
 					var state = data.state;
 					 console.log(data);
 					if(state==null){
@@ -395,4 +341,26 @@ $(document).ready(function(){
 			},"json");
 		}
 	});
-})
+
+//眼睛------------------------------------------------------
+	var initInput;
+	$(".form .eye").mousedown(function(){
+		var val = $(this).parent().find("input").val();
+		var placeholder = $(this).parent().find("input").attr("placeholder");
+		var id = $(this).parent().find("input").attr("id");
+		var text = $('<input type="text" id="'+id+'" class="search" value="'+val+'" placeholder="'+placeholder+'" maxlength="16">');
+		initInput = $(this).prev().detach();
+		text.prependTo($(this).parent());
+	}).mouseup(function(){
+		$(this).parent().find("input").remove();
+		initInput.prependTo($(this).parent());
+	});
+
+//回车提交表单----------------------------------------------
+	 $("body").keydown(function(event) {
+		var button = $(".form").parent("div:visible").find("input[type=button]");
+	    if (event.keyCode == "13") {//keyCode=13是回车键
+	         button.click();
+		}
+	 });
+});

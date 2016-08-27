@@ -31,7 +31,6 @@ import com.qg.model.UserModel;
 import com.qg.service.MessageService;
 import com.qg.service.TwitterService;
 import com.qg.service.UserService;
-import com.qg.servlet.llh.TwitterAdd;
 import com.qg.util.ImgCompress;
 import com.qg.util.JsonUtil;
 import com.qg.util.Level;
@@ -110,7 +109,6 @@ public class UserUploadImage extends HttpServlet {
 					}
 					System.out.println("文件上传项："+filename);
 					InputStream in = new BufferedInputStream(fileItem.getInputStream());
-					// 若不是文本，判断名字是否为空后（是否上传文件），图片数自增+1
 					String fileEnd = fileItem.getName().toLowerCase();
 					if (!(fileEnd.endsWith(".jpg") || fileEnd.endsWith(".png") || fileEnd.endsWith(".bmp")
 							|| fileEnd.endsWith(".swf") || fileEnd.endsWith(".jpeg") || fileEnd.endsWith(".jpeg2000")

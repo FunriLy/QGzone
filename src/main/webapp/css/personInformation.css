@@ -1,70 +1,31 @@
 
-#nev2{
-/* 	border-top: 1px solid black; */
-	overflow: hidden;
-	margin-top: 75px;
-	height: 230px;
-	background-color: #999999;
-}
 
-#diamonds_2 img{
-	float: left;
-	margin: 50px 0 0 50px;
-	height: 120px;
-	width: 120px;
-}
-
-#n_name{
-	float: left;
-	margin-top: 55px;
-	margin-left: 10px;
-}
-
-#nev2 #option{
-	margin-top: 170px;
-	text-align: center;
-}
-
-#nev2 ul{
-	display: inline;
-}
-#nev2 .marginSmall{
-	margin-left: 0;
-}
-#nev2 li{
-	display: inline;
-	color: white;
-	font-size: 30px;
-	margin-left: 14%;
-	font-family: "微软雅黑";
-}
-
-#nev2 a{
-	text-decoration: none;
-	color: white;
-}
-#nev2 a:active{
-	color: black; 
-}
 /*--------------------------------------------------------------------------------*/
 #container_1{
-	overflow: hidden;
-	width: 76%;
-	margin: 10px auto 0;
-	background-color: #f2f2f2;
+	position: relative;
+    overflow: hidden;
+    margin: 6px auto 0;
 }
 
 #container_1 #photo_2{
-	float: left;
-	width: 200px;
-	height: 200px;
-	margin: 40px 50px;
+    float: left;
+    width: 50%;
+    height: 200px;
+    margin: 48px 25%;
 }
-
+#container_1 #c1_left{
+    float: left;
+    width: 22%;
+    height: 659px;
+    margin-left: 17%;
+    background-color: rgba(167,214,236,0.56);
+}
 #container_1 #c1_right{
-	float: left;
-	height: 630px;
-	border-left: 1px solid black; 
+    float: left;
+    width: 43.7%;
+    height: 659px;
+    margin-left: 0.3%;
+    background-color: rgb(205, 232, 244);
 }
 
 #container_1 p{
@@ -73,8 +34,8 @@
 }
 
 #container_1 ul{
-	float: left;
-	margin-left: 20px;
+    float: left;
+    margin-left: 41px;
 }
 #container_1 li{
 	line-height: 40px;
@@ -87,10 +48,11 @@
 }
 
 #container_1 #change{
-	float: right;
-	margin: 50px;
-	text-decoration: none;
-	cursor: pointer;
+    position: absolute;
+    right: 19%;
+    text-decoration: none;
+    cursor: pointer;
+    color: #38afe6;
 }
 
 #container_1 #val{
@@ -101,27 +63,30 @@
 /*--------------------------------------------------------------------------------*/
 #container_2{
 	position: relative;
-	overflow: hidden;
-	width: 76%;
-	margin: 10px auto 0;
-	background-color: #f2f2f2;
+    overflow: hidden;
+    margin: 6px auto 0;
 }
 
 #container_2 #c2_left{
-	float: left;
-	width: 26%;
+    float: left;
+    margin-left: 17%;
+    width: 22%;
+    height: 659px;
+    background-color: rgba(167,214,236,0.56);
 }
 #c2_left span{
 	position: relative;
 	top: 20px;
 	padding: 2px;
 	font-size: 30px;
-	background-color: #f2f2f2;
+	background-color: rgb(205, 232, 244);
 }
+
 #c2_left div{
-	margin-bottom: 100px;
-	text-align: center;
-	border-bottom: 1px solid black;
+    margin: 19px auto 70px;
+    width: 96%;
+    text-align: center;
+    border-bottom: 1px solid #868585;
 }
 
 #c2_left li{
@@ -130,14 +95,15 @@
 	cursor: pointer;
 }
 .color_white{
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.57);
 }
 
 #c2_right{
-	float: left;
-	width: 70%;
-	height: 630px;
-	border-left: 1px solid black;
+    margin-left: 0.3%;
+    float: left;
+    width: 43.7%;
+    height: 659px;
+    background-color: #cfeaf5;
 }
 
 #select_sex{
@@ -177,6 +143,7 @@
 	line-height: 44px;
 	margin-right: 20px;
 	cursor: pointer;
+	color: #38afe6;
 }
 .whiteDiv{
 	margin: 10px auto;
@@ -201,74 +168,120 @@
 /* ::-webkit-clear-button {
      -webkit-appearance: none; 
 } */
+#second{
+    position: relative;
+}
 #second img{
 	height: 220px;
 	width: 220px;
 	margin: 0 0 0 30px;
+	cursor: pointer;
 }
-
+#tip{
+    margin: 5px 0 0 10%;
+    color: darkcyan;
+}
+#second input[type="file"]{
+	position : absolute;
+	left: -10000px;
+}
+#second input[type="button"]{
+    display: none;
+    position: absolute;
+    top: 237px;
+    left: 32%;
+    width: 74px;
+    height: 40px;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 7px;
+    background: #ff9e74;
+}
 #changePassword{
-	position: absolute;
-	top: 130px;
-	left: 40%;
-	background-color: rgba(153, 153, 153, 0.78);
-	width: 500px;
+    position: absolute;
+    top: 130px;
+    left: 42%;
+    background-color: #ffffff;
+    width: 34%;
 }
 
 .p2{
-	font-size: 24px;
-	padding-left: 10px;
-	line-height: 40px;
-	background-color: rgba(153, 153, 153, 0.80); 
+    font-size: 24px;
+    padding: 5px 20px;
+    line-height: 40px;
+    background-color: #f2f0f1;
 }
 
 #changePassword label{
-	font-size: 18px;
+    font-size: 18px;
+    margin-left: 17px;
 }
 
 #changePassword input[type="password"]{
-	width: 60%;
-	height: 25px;
+	width: 66%;
+    height: 38px;
+    font-size: 18px;
+    padding-left: 10px;
+    border: 0.1px solid #cccccc;
 }
 #changePassword input[type="text"]{
-	width: 60%;
-	height: 25px;
+	width: 66%;
+    height: 38px;
+    font-size: 18px;
+    padding-left: 10px;
+    border: 0.1px solid #cccccc;
 }
 #changePassword .eye{
     display: inline-block;
     position: relative;
-    top: 10px;
-    right: 35px;
-    width: 28px;
-    height: 28px;
-    background: url(../images/005.png) no-repeat 0 -0.5px;
-    background-size: cover;
+    top: 18px;
+    right: 43px;
+    width: 33px;
+    height: 29px;
+    background: url(../images/c_eye.png) no-repeat 0 0.5px;
+    background-size: 30px;
     cursor: pointer;
 }
 #changePassword div{
 	margin-left: 30px;
-	margin-top: 18px;
+    margin-top: 18px;
 }
+#change_button{
 
+}
 .right_button{
-	margin: 40px 30px 20px 0;
-	float: right;
-	width: 80px;
-	height: 40px;
+    margin: 40px 30px 20px 0;
+    float: right;
+    width: 74px;
+    height: 40px;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 7px;
+}
+.right_button[name="cancel"]{
+	margin-right: 10%;
+}
+.orange{
+    background: #ff9e74;
+}
+.gray{
+     background: #bdbdbd;
 }
 .closeButton{
-	float: right;
-	margin: 10px 30px 0 0;
-	width: 20px;
-	height: 20px;
+    float: right;
+    margin: 13px -3px 0 0;
+    width: 20px;
+    height: 20px;
+    background: url(../images/c_x_delete.png) no-repeat;
+    border: none;
 }
 #changeProblem{
-	position: absolute;
-	top: 130px;
-	left: 40%;
-	width: 500px;
-	font-size: 18px;
-	background-color: rgba(153, 153, 153, 0.78);
+    position: absolute;
+    top: 130px;
+    left: 42%;
+    width: 34%;
+    font-size: 18px;
+    background-color: #ffffff;
 }
 .hid{
 	display: block;
@@ -276,16 +289,16 @@
     overflow: hidden;
 }
 .question{
-	margin-top: 18px;
-	padding-left: 10px;
-	width: 61%;
-	height: 25px;
-	background-image: url(../images/001.png);
-	background-repeat: no-repeat;
-	background-size: 16px;
-	background-position: 323px -1px;
-	-webkit-appearance: none;
-    -moz-appearance: none;
+    margin-top: 18px;
+    padding-left: 10px;
+    width: 70%;
+    height: 38px;
+    font-size: 18px;
+    background-image: url(../images/001.png);
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-position: 100% -1px;
+    -webkit-appearance: none;
     text-indent: 0.01px;
     text-overflow: ' ';
 }
@@ -293,8 +306,11 @@
 	margin-left: 30px;
 }
 .left_space input[type="text"]{
-	margin-top: 18px;
-	width: 60%;
-	margin-left: 54px;
-	height: 25px;
+    margin-top: 18px;
+    margin-left: 54px;
+    padding-left: 10px;
+    width: 68%;
+    height: 38px;
+    font-size: 18px;
+    border: 0.1px solid #cccccc;
 }

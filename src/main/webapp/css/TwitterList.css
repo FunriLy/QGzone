@@ -1,44 +1,23 @@
-
-/*header-----------------------------------------------------------*/
-#header{
-	width: 76%;
-	margin: 54px auto ;
-	position: relative;
-	padding: 0.1px;
-	height: 222px;
-	background-color: #a3e7fd;
+#my_background{
+    position: fixed;
+    top: 0;
+    left: 17%;
+    width: 66%;
+    height: 100%;
+    z-index: -1;
+    background-color: #cde8f4;
 }
-
-#header #h_photo{
-	overflow: hidden;
-	width: 100px; 
-	height: 100px;
-	margin: 40px auto;
-	border-radius: 50%;
+#white_bar{
+    width: 66%;
+    margin: auto;
+    height: 8px;
+    background-color: white;
 }
-#h_photo img{
-	width: 100px; 
-	height: 100px;	
-}
-#nev2{
-	position: absolute;
-	bottom: 0px;
-	width: 100%;
-	background-color: #98d9ec;
-}
-#nev2 li{
-	display: inline-block;
-	padding: 15px 0;
-	width: 24%;
-}
-  
   /***********TwitterList.css**********/
     a {
     text-decoration: none;
     }
-    a:hover {
-    text-decoration: underline;
-    }
+
     .clearfix:after {
     content:".";
     display:block;
@@ -53,14 +32,14 @@
     }
     /*发表说说样式*/
     #create-share{
-	position: relative;
+    position: relative;
     margin: auto;
-    margin-top: -41px;
-    width: 74.5%;
+    width: 65%;
     height: 152px;
-    padding: 11px;
+    padding: 11px 7px;
     background: #caebf4;
     background-size: cover;
+    border-bottom: 5px solid white;
     }
     #create-share .txt{
     border: 1px solid #eee;
@@ -134,7 +113,7 @@
     position: relative;
     margin: auto;
     margin-top: 9px;
-    width: 76.5%;
+    width: 66%;
     background: #f3f3f3;
     }  
     .photo-list .pic{
@@ -151,9 +130,11 @@
     #list {
     margin: 0 auto;
     text-align: left;
-    width: 82%;
+    width:63%;
     padding: 25px;
     font-size:16px;
+    margin-top:13px;
+    overflow:hidden;
     }
     .box {
  	border-top: 1px solid #caebf4;
@@ -162,6 +143,7 @@
     padding: 20px 0;
     margin: auto;
     margin-bottom: 60px;
+    border-bottom: 5px solid white;
     }
     .box:hover .close {
     display: block;
@@ -291,7 +273,7 @@
     .text-box .comment {
     border: 1px solid #eee;
     display: block;
-    height: 15px;
+    height: 20px;
     width: 97%;
     padding: 11px;
    	margin-top:16px;
@@ -299,6 +281,7 @@
     border:1px solid #323232;
     border-radius:7px;
     color:#323232;
+    margin-bottom: 22px;
     }
     .text-box .btn {
     font-size: 12px;

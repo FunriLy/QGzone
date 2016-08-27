@@ -7,98 +7,98 @@ li{
 }
 body{
 	font-family: "微软雅黑",sans-serif;
-	background:url('../images/indexbg.jpg') left top no-repeat;
-	background-size:cover;
+	min-width: 830px;
+	background-image: url(../images/c_friend_background.jpg);
+	background-position: 0 -90px;
+	background-repeat:no-repeat; 
+	background-attachment:fixed
 }
 a{
 	text-decoration: none;
-	color:white;
+	color: black;
 }
 a:active{
 	color: white; 
 }
-
+.color_white{
+	background-color: rgba(255, 255, 255, 0.57);
+}
 #nev_1{
-	position: fixed;
+    overflow: hidden;
+    position: fixed;
     top: 0px;
-    z-index: 1;
     width: 100%;
-	overflow: hidden;
-	background-color: #6a6964;
-	height:56px;
-	color:white!important;
+    z-index: 2;
+    color: white;
+    background-color: #6b6b6b;
 }
-
+.hide{
+	display: none;
+}
+#nevLeft{
+    float: left;
+    width: 56%;
+}
 #nevLeft li{
-	float: left;
-	padding: 18px 1.7%;
-	color:white;
+    float: left;
+    padding: 18px 2.1%;
 }
-#nevLeft li a{
-	color:white;
-}
-.borderRight{
-	margin-left:12%;
+li a{
+	color: white;
+    font-size: 18px;	
 }
 
 #nevLeft .paddingLeft{
-	padding-left: 0;
-	padding-right: 2.4%;
+    font-size: 24px;
+	padding: 12px 15.4% 13px 0;
 }
 #nevLeft .circle_1_paddingSmall{
-	padding: 17px 8px 10px 3.7%;
+    padding: 9px 8% 0px 13.4%;
+}
+#nevLeft #circle_1{
+	height: 40px;
 }
 
 #nevRight{
 	float: right;
-	color:white;
+    width: 44%;
 }
 
 #nevRight li{
-	float: right;
-	padding:16px 14px 16px 11px;
+    float: right;
+    padding: 18px 4.2% 0;
 }
-#nevRight li p{
-	margin:3px 20px 3px -52px;
-	color:white;
-}
+
 #nevRight .diamonds_1_paddingSmall{
-	padding:8px 57px 0px 0px;
+	padding: 15px 0 0 0;
 }
-#nevRight #diamonds_1{
-	height: 40px;
-	width: 40px;
+#nevRight .p_margin{
+    padding: 19px 9% 0 10px;
+}
+#nevRight #circle_2{
+	height: 30px;
+	width: 30px;
 	border-radius: 50%;
 	overflow:hidden;
-	
 }
- #diamonds_1 img{
- 	height: 40px;
-	width: 40px;
- }
+#circle_2 img{
+	height: 30px;
+	width: 30px;
+}
 #whiteLine{
 	clear: both;
 	height: 3px;
 	background-color: white;
 	border-top: 1px solid black;
 }
-#nevLeft #circle_1{
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
-}
-#circle_1 img{
-	margin-top: -9px;
-}
-    
+
 /*nev2-----------------------------------------------------------------------------------------*/
-#nev_2{
-/* 	border-top: 1px solid black; */
-	overflow: hidden;
-	margin-top: 78px;
-	height: 230px;
-	background-color: #999999;
-	color:white;
+#nev2{
+    overflow: hidden;
+    width: 66%;
+    margin: 60px auto 0;
+    height: 230px;
+    background-color: #74c7ed;
 }
 
 #diamonds_2 img{
@@ -114,18 +114,19 @@ a:active{
 	margin-left: 10px;
 }
 
-#nev_2 #option{
-	margin-top: 170px;
+#nev2 #option{
+    margin-top: 177px;
 	text-align: center;
 }
 
-#nev_2 ul{
-	display: inline;
+#nev2 ul{
+    display: inline;
+    margin-left: 18%;
 }
-#nev_2 .marginSmall{
+#nev2 .marginSmall{
 	margin-left: 0;
 }
-#nev_2 li{
+#nev2 li{
 	display: inline;
 	color: white;
 	font-size: 30px;
@@ -133,10 +134,12 @@ a:active{
 	font-family: "微软雅黑";
 }
 
-#nev_2 a{
+#nev2 a{
 	text-decoration: none;
 	color: white;
+    font-size: 20px;
+    font-weight: bold;
 }
-#nev_2 a:active{
+#nev2 a:active{
 	color: black; 
 }

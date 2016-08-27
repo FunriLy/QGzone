@@ -47,7 +47,6 @@ public class FriendMyFriends extends HttpServlet {
 			state = 301;
 		}
 		
-		System.out.println(getServletContext().getRealPath("/album/tmp/"));
 		
 		LOGGER.log(Level.DEBUG, "用户获取好友列表 用户: {0} 状态: {1}", userId, state);
 		

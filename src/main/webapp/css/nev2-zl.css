@@ -1,0 +1,142 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+ul{
+	list-style-type: none;
+}
+li{
+	text-align: center;
+}
+body{
+	font-family: "微软雅黑",sans-serif;
+	background:url('../images/indexbg.jpg') left top no-repeat;
+	background-size:cover;
+}
+a{
+	text-decoration: none;
+	color:white;
+}
+a:active{
+	color: white; 
+}
+
+#nev_1{
+	position: fixed;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+	overflow: hidden;
+	background-color: #6a6964;
+	height:56px;
+	color:white!important;
+}
+
+#nevLeft li{
+	float: left;
+	padding: 18px 1.7%;
+	color:white;
+}
+#nevLeft li a{
+	color:white;
+}
+.borderRight{
+	margin-left:12%;
+}
+
+#nevLeft .paddingLeft{
+	padding-left: 0;
+	padding-right: 2.4%;
+}
+#nevLeft .circle_1_paddingSmall{
+	padding: 17px 8px 10px 3.7%;
+}
+
+#nevRight{
+	float: right;
+	color:white;
+}
+
+#nevRight li{
+	float: right;
+	padding:16px 14px 16px 11px;
+}
+#nevRight li p{
+	margin:3px 20px 3px -52px;
+	color:white;
+}
+#nevRight .diamonds_1_paddingSmall{
+	padding:8px 57px 0px 0px;
+}
+#nevRight #diamonds_1{
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+	overflow:hidden;
+	
+}
+ #diamonds_1 img{
+ 	height: 40px;
+	width: 40px;
+ }
+#whiteLine{
+	clear: both;
+	height: 3px;
+	background-color: white;
+	border-top: 1px solid black;
+}
+#nevLeft #circle_1{
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+}
+#circle_1 img{
+	margin-top: -9px;
+}
+    
+/*nev2-----------------------------------------------------------------------------------------*/
+#nev_2{
+/* 	border-top: 1px solid black; */
+	overflow: hidden;
+	margin-top: 78px;
+	height: 230px;
+	background-color: #999999;
+	color:white;
+}
+
+#diamonds_2 img{
+	float: left;
+	margin: 50px 0 0 50px;
+	height: 120px;
+	width: 120px;
+}
+
+#n_name{
+	float: left;
+	margin-top: 55px;
+	margin-left: 10px;
+}
+
+#nev_2 #option{
+	margin-top: 170px;
+	text-align: center;
+}
+
+#nev_2 ul{
+	display: inline;
+}
+#nev_2 .marginSmall{
+	margin-left: 0;
+}
+#nev_2 li{
+	display: inline;
+	color: white;
+	font-size: 30px;
+	margin-left: 14%;
+	font-family: "微软雅黑";
+}
+
+#nev_2 a{
+	text-decoration: none;
+	color: white;
+}
+#nev_2 a:active{
+	color: black; 
+}

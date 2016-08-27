@@ -8,6 +8,10 @@ li{
 body{
 	font-family: "微软雅黑",sans-serif;
 	min-width: 830px;
+	background-image: url(../images/c_friend_background.jpg);
+	background-position: 0 -90px;
+	background-repeat:no-repeat; 
+	background-attachment:fixed
 }
 a{
 	text-decoration: none;
@@ -16,75 +20,85 @@ a{
 a:active{
 	color: white; 
 }
+.color_white{
+	background-color: rgba(255, 255, 255, 0.57);
+}
 #nev_1{
-	position: fixed;
-    top: 2px;
-    z-index: 2;
+    overflow: hidden;
+    position: fixed;
+    top: 0px;
     width: 100%;
-	overflow: hidden;
-	background-color: #f3f3f3;
+    z-index: 2;
+    color: white;
+    background-color: #6b6b6b;
 }
 .hide{
 	display: none;
 }
-#nevLeft li{
-	float: left;
-	padding: 25px 3.7%;
+#nevLeft{
+    float: left;
+    width: 56%;
 }
-.borderRight{
-	border-right: 1px solid black;
+#nevLeft li{
+    float: left;
+    padding: 18px 2.1%;
+}
+li a{
+	color: white;
+    font-size: 18px;	
 }
 
 #nevLeft .paddingLeft{
-	padding-left: 0;
-	padding-right: 2.4%;
+    font-size: 24px;
+	padding: 12px 15.4% 13px 0;
 }
 #nevLeft .circle_1_paddingSmall{
-	padding: 17px 8px 10px 3.7%;
+    padding: 9px 8% 0px 13.4%;
 }
 #nevLeft #circle_1{
 	height: 40px;
-	width: 40px;
-	background-color: white;
-	border-radius: 50%;
 }
 
 #nevRight{
 	float: right;
+    width: 44%;
 }
 
 #nevRight li{
-	float: right;
-	padding: 16px 10px;
+    float: right;
+    padding: 18px 4.2% 0;
 }
 
 #nevRight .diamonds_1_paddingSmall{
 	padding: 15px 0 0 0;
 }
-#nevRight #circle_2{
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
-	background-color: white;
-	border: 0.5px solid black;
+#nevRight .p_margin{
+    padding: 19px 9% 0 10px;
 }
-#whiteLine{
-	clear: both;
-	height: 3px;
-	background-color: white;
-	border-top: 1px solid black;
+#nevRight #circle_2{
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+	overflow:hidden;
+}
+#circle_2 img{
+	height: 30px;
+	width: 30px;
 }
 /*header-----------------------------------------------------------*/
 #header{
 	position: fixed;
-	z-index: 1;
-	width: 76%;
-	margin: 78px 0 0 12%;
-	padding: 0.1px;
-	height: 250px;
-	background-color: #999999;
+    z-index: 1;
+    width: 66%;
+    margin: 60px 0 0 17%;
+    padding: 0.1px;
+    height: 250px;
+    background-color: #b3e5fc;
+    text-align: center;
 }
-
+#header p{
+	margin-top: -34px;
+}
 #header #h_photo{
 	overflow: hidden;
 	width: 100px; 
@@ -92,56 +106,76 @@ a:active{
 	margin: 40px auto;
 	border-radius: 50%;
 }
+#h_photo img{
+	width: 100px; 
+	height: 100px;
+}
 
 #nev2{
 	position: absolute;
 	bottom: 0px;
 	width: 100%;
-	background-color: #f3f3f3;
+	background-color: #74c7ed;
 }
 #nev2 li{
 	display: inline-block;
-	padding: 15px 0;
-	width: 24%;
+	padding: 11px 0;
+	width: 16%;
+	font-weight: bold;
+}
+#nev2 li.leftMargin{
 }
 #white_bar{
     position: relative;
-    bottom: -70px;
+    bottom: -82px;
 	z-index: 1;
-	height: 25px;
+	height: 8px;
 	background-color: white;
 }
 /*side_bar--------------------------------------------------*/
 #side_bar{
 	position: fixed;
 	padding: 0.1px;
-	margin-left: 12%;
-	margin-top: 353px;
-	width: 23%;
-	height: 600px;
-	background-color: #f3f3f3;
+	margin-left: 17%;
+	margin-top: 318.19px;
+	width: 22%;
+	height: 662px;
+	background-color: rgba(167,214,236,0.56);
 }
 #side_bar ul{
-	margin-top: 3px;
+	margin-top: 50px;
 }
 #side_bar li{
-	padding: 20px;
-	font-size: 22px;
-	cursor: pointer;
-}
-.color_white{
-	background-color: white;
+	padding: 11px;
+    letter-spacing: 9px;
+    font-size: 24px;
+    font-family: "Microsoft YaHei";
+    cursor: pointer;
+    color: #576673;
 }
 
 /*friend_list------------------------------------------------------*/
 #wrap{
 	float: left;
-	margin-top: 353px;
-	margin-left: 35.1%;
-	width: 53%;
-	padding-bottom: 460px;
-	border-left: 1px solid black;
-	background-color: #f3f3f3;
+	margin-top: 318.19px;
+	margin-left: 39.4%;
+	width: 43.6%;
+	z-index: 1;	
+}
+
+#my_background{
+	position: fixed;
+    top: 318.19px;
+    left: 39.4%;
+    width: 43.6%;
+    height: 672px;
+    z-index: -1; 
+   	background-color: #cde8f4;
+   
+}
+.no_results{
+	background: url(../images/no-results.png) no-repeat 0 -39px;
+ 	background-size: 100%;
 }
 
 #friend_list{
@@ -149,51 +183,67 @@ a:active{
 
 #find_my_friend{
 	position: relative;
-	height: 140px;
 }
 
-#find_my_friend input{
-	float: right;
-	margin: 20px 30px 0 0;
-	width: 180px;
-	height: 35px;
+.find_input{
+    display: block;
+	margin: 44px auto;
+    padding-left: 10px;
+    width: 90%;
+    height: 39px;
+    border-radius: 5px;
+    border: 0;
+    font-family: "微软雅黑";
 }
 #find_my_friend #glass{
 	position: absolute;
-	top: 21px;
-	right: 30px;
-	width: 38px;
-	height: 38px;
-	background-image: url(../images/004.png);
-	background-size: cover;
+    top: 0px;
+    right: 5%;
+    width: 38px;
+    height: 38px;
+    background: url(../images/c_find1.png) no-repeat;
+    background-size: 23px;
+    background-position: center;
+    cursor: pointer;
+}
+#friend_list img{
 	cursor: pointer;
 }
 #friend_list #friends{
 	position: relative;
 }
 .border_bottom li{
-	border-bottom: 1px solid black;
+	/* border-bottom: 1px solid black; */
 }
 .border_top li{
-	border-top: 1px solid black;
+	/* border: 1px solid black; */
 }
 #find_result_list .border_none{
 	border: none;
 }
 .friend{
+	overflow: hidden;
  	text-align: left;
  }
 .friend_head_img{
-	margin: 10px 15px 10px 50px;
-	width: 100px;
-	height: 100px;
+	float: left;
+    margin: 22px 15px 22px 50px;
+    width: 80px;
+    height: 80px;
 	border-radius: 50%;
+	border: 3px solid white;
 }
 .friend_info{
-    position: relative;
-    bottom: 50px
+    float: left;
+	margin: 42px 0 0 10px;
 }
-
+.friend_info .name{ 
+	font-size: 20px;
+}
+.friend_info .accound{ 
+	color: #576673;
+}
+    
 /*add_friend------------------------------------------------------*/
 #add_friend{
 
@@ -201,49 +251,53 @@ a:active{
 #add_friend #search{
 	text-align: center;
 }
-#option_button span{
-	display: inline-block;
-	padding: 20px 35px;
-	margin: 20px 0 15px 0;
-	font-size: 20px;
-	color: white;
-	border-radius: 50px;
-	cursor: pointer;
-	background-color: #cccccc;
+#option_button{
+	overflow: hidden;
+    margin-bottom: -40px;
 }
-#option_button .haveChouce {
-	color: #cccccc;
+#option_button span{
+	overflow: hidden;
+	float: left;
+    display: block;
+    padding: 13px 27px;
+    margin: 20px 0 15px 0;
+    font-size: 16px;
+	color: #c9d7e0;
+	border-radius: 5px;
+	cursor: pointer;
 	background-color: white;
 }
+#option_button .haveChouce {
+	color: #64818e;
+	background-color: #a8d6ed;
+}
 #add_friend #option_button #of_name{
-	margin-right: 32%;
+	margin: 20px 1% 0 4.4%;
 }
 #add_friend #find{
 	position: relative;
 	margin: 0 auto 10px;
 }
-#add_friend #find input[type='text']{
-	width: 88%;
-	height: 50px;
-}
 #add_friend #find span{
 	display: inline-block;
 	position: absolute;
-	right: 6%;
-	top: 3px;
-	padding: 12px 20px;
-	cursor: pointer;
-	background-color: white;
-	border-left: 1px solid black;
+	right: 5%;
+	top:0;
+    width: 38px;
+	height: 38px;
+    background: url(../images/c_find1.png) no-repeat;
+    background-size: 23px;
+    background-position: center;
 }
 #find_result_list .add{
-	display: inline-block;
-	float: right;
-	margin: 35px 50px;
-	width: 50px;
-	height: 50px;
-	cursor: pointer;
-	background-image: url(../images/003.png);
+    display: inline-block;
+    float: right;
+    margin: 44px 5% 0 0;
+    width: 61px;
+    height: 31px;
+    cursor: pointer;
+    background: url(../images/c_add.png) no-repeat;
+    background-position: center;
 }
 .not_find{
 	padding: 50px;
@@ -253,18 +307,32 @@ a:active{
 #add_request .agree{
 	display: inline-block;
 	float: right;
-	margin: 35px 50px 0 0;
-	width: 50px;
-	height: 50px;
+	margin: 44px 5% 0 0;
+	width: 61px;
+    height: 31px;
 	cursor: pointer;
-	border: 1px solid blue;
+	background: url(../images/c_agree.png) no-repeat;
 }
 .delete{
 	display: inline-block;
 	float: right;
-	margin: 35px 20px 0 0;
-	width: 50px;
-	height: 50px;
+	margin: 44px 5% 0 0;
+	width: 61px;
+    height: 31px;
 	cursor: pointer;
-	border: 1px solid blue;
+	background: url(../images/c_delete.png) no-repeat;
+}
+.x_delete{
+	display: inline-block;
+    float: right;
+    margin: 44px 5% 0 0;
+    width: 25px;
+    height: 31px;
+    cursor: pointer;
+    background: url(../images/c_x_delete.png) no-repeat;
+    background-position: center;
+}
+
+#add_request li .haveAgree{
+	background: url(../images/c_haveAgree.png) no-repeat 19px;
 }

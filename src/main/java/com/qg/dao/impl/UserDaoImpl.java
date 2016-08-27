@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.catalina.User;
 
+import com.mysql.jdbc.Statement;
 import com.qg.dao.UserDao;
 import com.qg.model.UserModel;
 import com.qg.util.ConnectionPool;
@@ -28,6 +29,7 @@ public class UserDaoImpl implements UserDao{
 	//获得连接池
 	ConnectionPool pool = ConnectionPool.getInstance();
 	
+
 	/**
 	 * 类中公用关闭流的方法
 	 */
@@ -223,4 +225,85 @@ public class UserDaoImpl implements UserDao{
 		else 
 			return null;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void main(String[] args) {
+		UserDaoImpl dao = new UserDaoImpl();
+		UserModel user = new UserModel();
+		user.setPassword("123456");user.setUserId(1234467);user.setUserName("linhange");
+		user.setUserSecretAnswer("livid");user.setUserSecretId(1);
+//		dao.addUserTest(user);
+		dao.getPasswordByUserId(1234467);
+	}
+	
+	
+	
+	public boolean addUserTest(UserModel user) {
+		conn = pool.getConnection();
+		try {
+			sql=conn.prepareStatement("insert into user"+" "+"values(?,?,?,?,?)"
+		,Statement.RETURN_GENERATED_KEYS);
+			sql.setInt(1, user.getUserId());
+			sql.setString(2, user.getUserName());
+			sql.setString(3, user.getPassword());
+			sql.setInt(4, user.getUserSecretId());
+			sql.setString(5,user.getUserSecretAnswer());
+			sql.executeUpdate();
+			rs = sql.getGeneratedKeys();
+			flag = true;
+			System.out.println("saveUser is running");
+			if(rs.next()){
+				System.out.println(rs.getInt(1));
+				LOGGER.log(Level.DEBUG, "注册用户成功 用户id:{0}", user.getUserId()+"");
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.ERROR, "添加用户发生异常！", e);
+		}finally {
+			daoClose();
+		}
+		if(flag){
+			flag=false;
+			return true;
+		}
+		else 
+			return false;
+	}
+	public void getPasswordByUserId(int userId){
+		try {
+			conn = pool.getConnection();
+			String strSql = "select * from user where user_id=?";
+			sql = conn.prepareStatement(strSql);
+			sql.setInt(1, userId);
+			ResultSet rSet = sql.executeQuery();
+			if(rSet.next()){
+				System.out.println(rSet.getString("user_id"));
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.ERROR, "获取相册密码实现类发送异常！", e);
+		}
+		
+	}
+	
 }

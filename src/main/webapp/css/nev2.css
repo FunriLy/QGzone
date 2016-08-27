@@ -1,0 +1,129 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+ul{
+	list-style-type: none;
+}
+li{
+	text-align: center;
+}
+body{
+	font-family: "微软雅黑",sans-serif;
+	min-width: 830px;
+	background-image: url(../images/c_friend_background.jpg);
+	background-position: center center;
+	background-repeat:no-repeat; 
+	background-attachment:fixed;
+	word-break: break-all;
+	
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+a:active{
+	color: white; 
+}
+.color_white{
+	background-color: rgba(255, 255, 255, 0.57);
+}
+#nev_1{
+    overflow: hidden;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 2;
+    color: white;
+    background-color: #6b6b6b;
+}
+.hide{
+	display: none;
+}
+#nevLeft{
+    float: left;
+    width: 56%;
+}
+#nevLeft li{
+    float: left;
+    padding: 18px 2.1%;
+}
+li a{
+	color: white;
+    font-size: 18px;	
+}
+
+#nevLeft .paddingLeft{
+    font-size: 24px;
+	padding: 12px 15.4% 13px 0;
+}
+#nevLeft .circle_1_paddingSmall{
+    padding: 9px 8% 0px 13.4%;
+}
+#nevLeft #circle_1{
+	height: 40px;
+}
+
+#nevRight{
+	float: right;
+    width: 44%;
+}
+
+#nevRight li{
+    float: right;
+    padding: 18px 4.2% 0;
+}
+
+#nevRight .diamonds_1_paddingSmall{
+	padding: 15px 0 0 0;
+}
+#nevRight .p_margin{
+    padding: 19px 9% 0 10px;
+}
+#nevRight #circle_2{
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+	overflow:hidden;
+}
+#circle_2 img{
+	height: 30px;
+	width: 30px;
+}
+/*header-----------------------------------------------------------*/
+#header{
+	position: relative;
+    z-index: 1;
+    width: 66%;
+    margin: 60px 0 0 17%;
+    padding: 0.1px;
+    height: 250px;
+    background-color: #b3e5fc;
+    text-align: center;
+}
+#header p{
+	margin-top: -34px;
+}
+#header #h_photo{
+	overflow: hidden;
+	width: 100px; 
+	height: 100px;
+	margin: 40px auto;
+	border-radius: 50%;
+}
+#h_photo img{
+	width: 100px; 
+	height: 100px;
+}
+
+#nev2{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background-color: #74c7ed;
+}
+#nev2 li{
+	display: inline-block;
+	padding: 11px 0;
+	width: 16%;
+	font-weight: bold;
+}
+#nev2 li.leftMargin{
+}

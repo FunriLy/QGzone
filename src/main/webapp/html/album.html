@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<title>图片上传</title>
 	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
-	<script type="text/javascript" src="../js/upload.js"></script>
 </head>
 <style type="text/css">
 div, img, span {
@@ -14,24 +13,24 @@ div, img, span {
 #input{
 	display: none;
 }
-#upload{
+#sure{
 	display: none;
 }
 #dropbox{
-	margin: 50px auto 0;
-	width: 800px;
-	height: 540px;
-	border: 1px dotted #b6c3ca;
+	margin: 50px auto;
+	width: 610px;
+	height: 400px;
+	border: 1px solid blue;
 }
 #dropbox div{
 	position: relative;
 	float: left;
 	width: 200px;
-	height: 180px;
+	height: 200px;
 }
 #dropbox img{
 	width: 200px;
-	height: 180px;
+	height: 200px;
 }
 #dropbox span{
 	display: inline-block;
@@ -39,36 +38,25 @@ div, img, span {
     right: 0;
     width: 40px;
     height: 40px;
-    background-image: url(../images/delete.png);
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: yellow;
     cursor: pointer;
-}
-#upload{
-	display: none;
-	margin: 10px auto;
-	width: 80px;
-	padding: 20px;
-	font-size: 30px;
-	border-radius: 20px;
-	background-color: #a29e9e;
-	text-align: center;
-	cursor: pointer;
 }
 </style>
 <body>
 	<input type="file" id="input" multiple="multiple" accept="image/*">
+	<a href="#" id="fileSelect">选择文件</a>
+	<button id="sure">上传</button>
 	<div id="dropbox">
-		<div id="add"><img src="../images/add.png"></div>
+		
 	</div>
-	<div id="upload">上传</div>
+
 </body>
 <script type="text/javascript">
 $(function(){
 
 	var array = new Array();
 //通过链接模拟点击input file----------------------------------
-	$("#add").click(function(e){
+	$("#fileSelect").click(function(e){
 		if($("#input")[0]){
 			$("#input").click();
 		}
@@ -80,22 +68,17 @@ $(function(){
 		var fileList = this.files;
 		if(fileList.length>0){
 			for(var i=0;i<fileList.length;i++){
-				if(fileList[i].type.indexOf('image')==-1){
-					alert("文件: 《"+ fileList[i].name +"》 不是图片文件,请上传图片格式的文件!");
-					continue;
-				}
 				array.push(fileList[i]);
 				showPhoto(fileList[i]);
 			}
 			console.log(array);
-			console.log($("#dropbox").children().length);
-			$("#upload").show();
+			$("#sure").show();
 		}
 	});
 
 
 //点击上传按钮上传文件---------------------------------------------
-	$("#upload").click(function(){
+	$("#sure").click(function(){
 		var formData = new FormData();
 		var haveFile = false;
 		for(var i=0; i<array.length; i++){
@@ -131,13 +114,7 @@ $(function(){
 		}
 		var filename = e.parent().attr("filename");
 		deleteFile(filename);
-		e.parent().animate({ width:'0',opacity: '0'},1000,function(){
-			e.parent().remove();
-			if($("#dropbox").children().length<=1){
-				$("#upload").hide();
-			}
-		});
-		
+		e.parent().remove();
 	})
 
 	function deleteFile(filename){
@@ -155,11 +132,10 @@ $(function(){
 		reader.onload = function (e) {
 			var dataURL = reader.result;
 			var img = $('<div filename='+file.name+'><img src='+dataURL+' /><span></span></div>');
-			img.insertBefore($("#add")[0]);
+			$("#dropbox").append(img)
 		}
 		reader.readAsDataURL(file);
 	}
-		
 
 //图片拖拽---------------------------------------------------------
 	
@@ -182,16 +158,15 @@ $(function(){
 
 		var dt = e.dataTransfer;
 		var fileList = dt.files;
+		console.log(fileList.length);
+		console.log(fileList);
 		if(fileList.length>0){
 			for(var i=0; i<fileList.length; i++){
-				if(fileList[i].type.indexOf('image')==-1){
-					alert("文件: 《"+ fileList[i].name +"》 不是图片文件,请上传图片格式的文件!");
-					continue;
-				}
+				console.log(i);
 				array.push(fileList[i]);
 				showPhoto(fileList[i]);
 			}
-			$("#upload").show();
+			$("#sure").show();
 		}
 	}
 

@@ -1,31 +1,32 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<html>
-<head>
-<title>using commons Upload to upload file </title>
-</head>
-<style>
-* { font-family: "宋体"; font-size: 14px }
-</style>
-<body>
-<p align="center"> 请您选择需要上传的文件</p>
-<form id="form1" name="form1" method="post" action="UploadPhoto" enctype="multipart/form-data">
- <table border="0" align="center">
-  <tr>
-   <td>上传人：</td>
-   <td>
-    <input name="name" type="text" id="name" size="20" ></td>
-  </tr>   
-  <tr>
-   <td>上传文件：</td>
-   <td><input name="file" type="file" size="20" ></td>
-  </tr>    
-  <tr>   
-   <td></td><td>
-    <input type="submit" name="submit" value="提交" >
-    <input type="reset" name="reset" value="重置" >
-   </td>
-  </tr>
- </table>
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>上传界面</title>
+		<link type="text/css" href="/QG/css/signup.css" rel="stylesheet" />
+		<!--  <script type="text/javascript" src="js/signUp.js"></script>-->
+	</head>
+	<body>
+	<div class="box">
+	<h1>上传头像</h1>
+	<h2 style="color:red;">${message}</h2>
+	<!--  <form action="com/servlet/BeanUtilsServlet"  onsubmit="return validate_form(this);" method="post">-->
+	<form action="TwitterAdd"   method="post" enctype="multipart/form-data">
+	<tr>
+		<th>上传照片: </th>
+		<td>
+			上传照片 <input type="file" multiple name="upload"/><br/>
+		</td>
+	</tr>
+
+			<input type="submit" value=" 提交" class="submitbutton"/>
 </form>
-</body>
+	</div>
+	</body>
 </html>

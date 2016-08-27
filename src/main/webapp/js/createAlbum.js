@@ -1,11 +1,9 @@
 $(function(){
-	// var IP = "localhost";
-	var IP = "192.168.1.100";
-	var hostId;
 
-	// sessionStorage["friendId"]="1";
-	// var friendId = sessionStorage["friendId"];
-	// console.log(friendId);
+	var IP = "192.168.43.138";
+	var hostId;
+//	var loadUrl = "http://"+IP+":8080/QGzone/html/innerAlbums.html?userId="+hostId;
+
 	//获取主人ID-----------------------------------------------------------------------------------------------------------
 	function getUrlInformation(){
 		var qs = (location.search.length>0 ? location.search.substring(1) : "" ),
@@ -26,36 +24,37 @@ $(function(){
 	}
 	var host = getUrlInformation();
 	hostId = host.userId;
-	userId = "1";
-	hostId = "1";
 	console.log("主人用户ID是"+hostId);
 
 	//当前在线的用户id--------------------------------------------------------------------------------
 	var currentId;
-	// var img_url;
-	$.post("http://"+IP+":8080/QGzone/MessageGet",function(data){
-		console.log(data);
-		var state = data.state;
-		if(state == undefined){
-			alert("服务器异常!");
-		}
-		if(state == "161"){
-			var message = data.message;
-			currentId = message.userId;
-			// img_url = HEAD_IMG_URL + message.userImage;
-			// username = message.userName;
-		}
-		if(state == "162"){
-			alert("获取个人资料失败,请稍后重试!");
-		}
-	},"json");
-
+	$.ajax({
+		url : "../MessageGet",
+		async : false,
+		success : function(data){
+					console.log(data);
+					var state = data.state;
+					if(state == undefined){
+						alert("服务器异常!");
+					}
+					if(state == "161"){
+						var message = data.message;
+						currentId = message.userId;
+						console.log("当前在线用户为："+currentId);
+						judge();
+					}
+					if(state == "162"){
+						alert("获取当前用户ID失败,请稍后重试!");
+					}
+				},
+		dataType:"json"
+	});
+	
 	//判断当前访问人与相册的关系-----------------------------------------------------------------------------------------
-	// var zoneUrl = "http://192.168.1.100:8080/QGzone/html/pirvate_album.html";
 	function judge(){
 		if(hostId!=null){
 			if(currentId==hostId){
-				$.post("http://"+IP+":8080/QGzone/Albums",{admit:"-1"},function(data){
+				$.post("../Albums",{userId:hostId},function(data){
 					console.log(data);
 					var state = data.state;
 					if(state==undefined){
@@ -67,16 +66,16 @@ $(function(){
 						console.log("加载相册页面出错");
 						return ;
 					}else if(state==601){
-						for(var i=jsonList.length;i>=0;i--){
-							var id = jsonList[i].albumId;
-							var name = jsonList[i].albumName;
-							var status = jsonList[i].albumState;
-							var time = jsonList[i].albumUploadTime;
-							var count = jsonList[i].photoCount;
-							if(statue==1){
-								createPrivateAlbum(albumId,status,count,name);
+						for(var i=0;i<data.jsonList.length;i++){
+							var id = data.jsonList[i].albumId;
+							var name = data.jsonList[i].albumName;
+							var status = data.jsonList[i].albumState;
+							var time = data.jsonList[i].albumUploadTime;
+							var count = data.jsonList[i].photoCount;
+							if(status==1){
+								createPrivateAlbum(id,status,count,name);
 							}else if(status==0){
-								createAlbum(albumId,status,count,name);
+								createAlbum(id,status,count,name);
 							}else{
 								console.log(albumName+"相册加载出错");
 								return ;
@@ -86,7 +85,9 @@ $(function(){
 				},"json");
 			}
 			else if(currentId!=hostId){
-				$.post("http://"+IP+":8080/QGzone/Albums?",{hostId},function(data){
+				alert("我要看主人的相册！！！！");
+				$(".function_bar").remove();
+				$.post("../Albums?",{userId : hostId},function(data){
 					console.log(data);
 					var state = data.state;
 					if(state==undefined){
@@ -98,14 +99,14 @@ $(function(){
 						console.log("加载相册页面出错");
 						return ;
 					}else if(state==601){
-						alert("现在是好友访问界面！！！！！！！！！！！！！");
+						console.log("现在是好友访问界面！！！！！！！！！！！！！");
 						$(".function_bar").remove();
-						for(var i=jsonList.length;i>=0;i--){
-							var id = jsonList[i].albumId;
-							var name = jsonList[i].albumName;
-							var status = jsonList[i].albumState;
-							// var time = jsonList[i].albumUploadTime;
-							var count = jsonList[i].photoCount;
+						for(var i=data.jsonList.length;i>=0;i--){
+							var id = data.jsonList[i].albumId;
+							var name = data.jsonList[i].albumName;
+							var status = data.jsonList[i].albumState;
+							// var time = data.jsonList[i].albumUploadTime;
+							var count = data.jsonList[i].photoCount;
 							if(statue==1){
 								createPrivateAlbum(albumId,status,count,name);
 							}else if(status==0){
@@ -117,26 +118,23 @@ $(function(){
 						}
 					}
 				},"json");
-				$(".btn_cre_alb").hide();
-				$(".btn_edit").hide();
 			}
 		}
 	}
 
-	judge();
-	console.log("我判断过是谁进来相册了！！！！");
+
 //隐藏元素--------------------------------------------------------------
-	// $(".nameErr1").hide();
-	// $(".pwErr").hide();
-	$("#create_alb").hide();
-	// $(".box").hide();
-	// $(".click").hide();
-	$(".list").hide();
-	// $(".list_btn").hide();
-	$(".list_detail").hide();
-	$(".change_container").hide();
-	$(".clear_container").hide();
-	$(".delete_container").hide();
+	// // $(".nameErr1").hide();
+	// // $(".pwErr").hide();
+	// $("#create_alb").hide();
+	// // $(".box").hide();
+	// // $(".click").hide();
+	// $(".list").hide();
+	// // $(".list_btn").hide();
+	// $(".list_detail").hide();
+	// $(".change_container").hide();
+	// $(".clear_container").hide();
+	// $(".delete_container").hide();
 
 
 //全局变量------------------------------------------------------------
@@ -148,64 +146,43 @@ $(function(){
 	var $err4 = $(".pwErr2").detach();
 	var $pwFill ;
 	var $pwFill1;
-	var id;
-	var status;
-	var name;
-	var count;
-	var albPw;
-
-//当前在线的用户id--------------------------------------------------------------------------------
-	var currentId;
-	// var img_url;
-	$.post("http://"+IP+":8080/QGzone/MessageGet",function(data){
-		console.log(data);
-		var state = data.state;
-		if(state == undefined){
-			alert("服务器异常!");
-		}
-		if(state == "161"){
-			var message = data.message;
-			currentId = message.userId;
-			// img_url = HEAD_IMG_URL + message.userImage;
-			// username = message.userName;
-		}
-		if(state == "162"){
-			alert("获取个人资料失败,请稍后重试!");
-		}
-	},"json");
+	var myId;
+	var myStatus;
+	var myName;
+	var myCount;
+	var albPw = "";
 
 //生成新相册节点--------------------------------------------------------------------------------
- 	function createAlbum(albumId,status,count,name){
+ 	function createPrivateAlbum(albumId,status,count,name){
  		var album = $('<div class="every_album" albumId="'+albumId+'" status="'+status+'">'+
- 					  	'<div class="list"><img src="../img/p_list.png" class="list_btn">'+
+ 					  	'<div class="list"><img src="../images/p_list.png" class="list_btn">'+
 	 					  	'<div class="list_detail">'+
 		 					  	'<p class="change">修改相册信息</p><hr>'+
 		 					  	'<p class="clear">清空相册</p><hr>'+
 		 					  	'<p class="delete">删除相册</p>'+
 		 					'</div>'+
 	 					'</div>'+
-					  	'<div class="alb_cov">+<img src="../img/alb_cov.png" class="pic">'+
+					  	'<div class="alb_cov"><img src="../images/alb_cov.png" class="pic">'+
 					  		'<h1 class="pho_count">'+count+'</h1>'+
 					  	'</div>'+
 					  	'<span class="name_alb">'+name+'</span>'+
-			  			'<img src="../img/lock.png" class="lock">'+
+			  			'<img src="../images/lock.png" class="lock">'+
 				  	'</div>');
- 		var container = $(".contain_album");
- 		container.prepend(album);
+ 		var container = $("#contain_album");
+ 		container.append(album);
  	}
 
- 	function createPrivateAlbum(albumId,status,count,name){
+ 	function createAlbum(albumId,status,count,name){
  		var album = $('<div class="every_album" albumId="'+albumId+'" status="'+status+'">'+
- 					  '<div class="list"><img src="../img/p_list.png" class="list_btn">'+
+ 					  '<div class="list"><img src="../images/p_list.png" class="list_btn">'+
  					  '<div class="list_detail"><p class="change">修改相册信息</p><hr>'+
  					  '<p class="clear">清空相册</p><hr><p class="delete">删除相册</p></div></div>'+
- 					  '<div class="alb_cov">+<img src="../img/alb_cov.png" class="pic">'+
- 					  '<h1 class="pho_count">'+count+'</h1>+</div>+<span class="name_alb">'+name+'</span></div>');
- 		var container = $(".container");
- 		container.prepend(album);
+ 					  '<div class="alb_cov"><img src="../images/alb_cov.png" class="pic">'+
+ 					  '<h1 class="pho_count">'+count+'</h1></div><span class="name_alb">'+name+'</span></div>');
+ 		var container = $("#contain_album");
+ 		container.append(album);
  	}
-	alert("我要创建新相册！！！！");
-	createPrivateAlbum(1,1,1,1);
+	
 
 //创建相册-----------------------------------------------------------
 	$(".btn_cre_alb").click(function(){
@@ -213,27 +190,28 @@ $(function(){
 	});
 		
 	function cancel(){
-		$(".alb_name").val("相册名称，最多10字");
-		$(".alb_name_change").val("");
-		$(".password").val("");
-		$(".password_new").val("");
-		$("#create_alb").hide();
-		$(".change_container").hide();
-		$(".clear_container").hide();
-		$(".delete_container").hide();
-		// $(".nameErr1").detach();
+		$("#alb_name").val("相册名称，最多10字");
+		$(".privacy_sel").val("0");
+		$("#alb_name_change").val("");
+		$("#password").val("");
+		$("#password_new").val("");
+		$(".nameErr1").detach();
 		$(".nameErr2").detach();
 		$(".pwErr1").detach();
 		$(".pwErr2").detach();
+		$(".inputarea_pw").detach();
+		$(".inputarea_pw_new").detach();
 	}
 	$(".cancel").click(function(){
 		cancel();
+		$(".click button").replaceWith('<button>显示密码</button>');
+		$(".inputarea_pw .box input").attr("type","password");
+		$("#create_alb").hide();
+		$("#change_container").hide();
 	});
 
 //对相册命名-----------------------------------------------------------
-	$(".alb_name").focus(function(){
-		// $(".nameErr1").hide();
-		// $(".nameErr1").detach();
+	$("#alb_name").focus(function(){
 		var txtValue = $(this).val();
 		if(txtValue=="相册名称，最多10字"){
 			$(this).val("");
@@ -243,7 +221,7 @@ $(function(){
 			var judAlbName = /[^\w\u4e00-\u9fa5]/g;
 			if(judAlbName.test(txtValue)){
 				if($(".nameErr1").is(":visible")!=true){
-					$err1.insertAfter(".alb_name");
+					$err1.insertAfter("#alb_name");
 				}
 				staName = 0;
 			}
@@ -253,7 +231,7 @@ $(function(){
 			}
 		});
 	});
-	$(".alb_name").blur(function(){
+	$("#alb_name").blur(function(){
 		var txtValue = $(this).val();
 		var judAlbName = /[^\w\u4e00-\u9fa5]/g;
 		if(txtValue==""){
@@ -261,7 +239,7 @@ $(function(){
 		}
 		else if(judAlbName.test(txtValue)){
 			if($(".nameErr1").is(":visible")!=true){
-					$err1.insertAfter(".alb_name");
+					$err1.insertAfter("#alb_name");
 				}
 			staName = 0;
 		}
@@ -270,19 +248,20 @@ $(function(){
 			staName = 1;
 		}
 		//异步检查命名-------------------------------------------------------------------
-		var name = $(".alb_name").val();
+		var nameA = $("#alb_name").val();
 		$.ajax({
 			type : "POST",
-			url : "http://"+IP+":8080/QGzone/DuplicationAlbum",
-			data : {albumName : name},
+			url : "../DuplicationAlbum",
+			data : {albumName : nameA},
 			success : function(data){
 				console.log(data);
+				console.log("我进入异步判断重名并且拿到返回值");
 				var state = data.state;
 				if(state==undefined){
 					console.log("异步判断重名时服务器异常");
 					return ;
-				}else if(state==603){
-					$err2.insertAfter(".alb_name");
+				}else if(state==602){
+					$err2.insertAfter("#alb_name");
 					staName = 0;
 				}
 			},
@@ -305,10 +284,10 @@ $(function(){
 
 //设置密码可见-----------------------------------------------------------------------------
 	$(document).on("click",".click",function(){
-		if ($(".password").attr("type")=="password")
+		if ($("#password").attr("type")=="password")
 		{
 			$(".click button").replaceWith('<button>隐藏密码</button>');
-			$(".password").attr("type","text");
+			$("#password").attr("type","text");
 			return ;
 		}
 		if ($(".inputarea_pw .box input").attr("type")=="text")
@@ -320,13 +299,14 @@ $(function(){
 	});
 
 //判断密码-------------------------------------------------------------
-	$("#last_bar .password").keyup(function(){
+	$("#password").keyup(function(){
 		var pwValue = $(this).val();
 		var judAlbPw = /[^\w]/g;
 		if(pwValue==""||judAlbPw.test(pwValue))
 		{
 			if($(".pwErr1").is(":visible")!=true){
 				$err3.insertAfter(".click");
+				$(".pwErr1").show();
 			}
 			staPw = 0;
 		}	
@@ -335,20 +315,21 @@ $(function(){
 			staPw = 1;
 		}
 	});
-	$("#last_bar .password").blur(function(){
+	$("#password").blur(function(){
 		var pwValue = $(this).val();
 		if(pwValue.length<6){
 			$err4.insertAfter(".click");
+			$(".pwErr2").show();
 			staPw = 0;
 		}else{
 			$(".pwErr2").detach();
 		}
 		albPw = pwValue;
+
 	});
 	$pwFill = $(".inputarea_pw").detach();
 //判断是否符合提交要求----------------------------------------------------
-	$(".sure").click(function(){
-		console.log("密码是2:"+albPw);
+	$(".sure").click(function(e){
 		if(staName!=1)
 		{
 			alert("相册名有误，请修改");
@@ -358,19 +339,31 @@ $(function(){
 		}
 		else{
 			$(".sure").attr("type","submit");
-			var name = $(".alb_name").val();
+			var name = $("#alb_name").val();
 			var status = $(this).parents("#last_bar").find(".privacy_sel").val();
-			var password =  $(this).parents("#last_bar").find(".password").val();
+			var password =  $(this).parents("#last_bar").find("#password").val();
+			if(password==undefined||status==0)
+			{
+				password = "";
+			}
 			var count = 0;
-			var obj = {
+			var album = {
 				albumName : name,
 				albumPassword : password,
 				albumState : status,
 				photoCount : count
 			};
-			$.post("http://"+IP+":8080/QGzone/CreateAlbum",obj,function(date){
+			
+			console.log("新相册数据："+album.albumName+"密码是"+album.albumPassword+"权限"+album.albumState+album.photoCount);
+			$.post("../CreateAlbum",{album:JSON.stringify(album)},function(data){
 				console.log(data);
+				var create_alb = $(e.target).parents("#create_alb");
+				create_alb.hide();
+				create_alb.find("#alb_name").val("相册名称，最多10字");
+				create_alb.find(".privacy_sel").val("0");
+				create_alb.find("#password").val("");
 				var state = data.state;
+				console.log(state);
 				if(state==undefined){
 					alert("服务器异常");
 				}else if(state==602){
@@ -380,14 +373,14 @@ $(function(){
 				}else if(state==604){
 					alert("相册重名，请修改");
 				}else if(state==601){
-					alert("创建成功");
-					// var userId = data.userId;
-					var albumId = data.albumId;
-					var name = data.albumName;
-					// var password = data.albumPassword;
-					var status = data.albumState;
-					var time = data.albumUploadTime;
-					var count = data.photoCount;
+					alert("恭喜你成功新建一个相册："+album.albumName);
+					// var userId = data.jsonObject.userId;
+					var albumId = data.jsonObject.albumId;
+					var name = data.jsonObject.albumName;
+					// var password = data.jsonObject.albumPassword;
+					var status = data.jsonObject.albumState;
+					var time = data.jsonObject.albumUploadTime;
+					var count = data.jsonObject.photoCount;
 					if(status==1)
 					{
 						createAlbum(albumId,status,count,name);
@@ -395,6 +388,12 @@ $(function(){
 						createPrivateAlbum(albumId,status,count,name);
 					}
 				}
+				$("#last_bar .inputarea_pw").detach();
+				$(".nameErr1").detach();
+				$(".nameErr2").detach();
+				$(".pwErr1").detach();
+				$(".pwErr2").detach();
+				cancel();
 			},"json");
 		}
 	});
@@ -404,38 +403,54 @@ $(function(){
 	$(".btn_edit").click(function(){
 		$(".list").toggle();
 	});
-	$(".list_btn").click(function(){
-		$(".list_detail").toggle();
+	$(document).on("click",".list_btn",function(event){
+		var curr = $(event.target);
+		var pare = curr.parents(".every_album");
+//		myId = pare.attr("albumId");
+//		myCount = pare.find(".pho_count").text();
+//		myName = pare.find(".name_alb").text();
+//		myStatus = pare.attr("status");
+		var listDe = pare.find(".list_detail");
+		listDe.toggle();
+//		console.log("我拿到了"+myId+myStatus+myName+myCount);
 	});
 
-	$(".change").click(function(event){
+//正确判断，现在先改
+//	$(document).on("click",".change",function(event){
+//		var tg = $(event.target);
+//		console.log(myId,myStatus,myName,myCount);
+//		$("#alb_name_change").val(myName);
+//		$(".privacy_sel").val(myStatus);
+//		if(myStatus==0){
+//			$(".inputarea_pw_new").detach();
+//		}else{
+//			$pwFill1.insertAfter("#bottom .inputarea_pri");
+//			$("#password_new").val("");
+//		}
+//		$("#change_container").show();
+//	});
+
+//强制改变相册权限
+	$(document).on("click",".change",function(event){
 		var tg = $(event.target);
-		// console.log(tg);
-		parent1 = tg.parents(".every_album");
-		parent2 = parent1.children(".alb_cov");
-		id = parent1.attr("albumId");
-		status = parent1.attr("status");
-		name = parent1.children(".name_alb").text();
-		count = parent2.children(".pho_count").text();
-		console.log(id,status,name,count);
-		$(".alb_name_change").val(name);
-		$(".privacy_sel").val(status);
+		var pare = tg.parents(".every_album");
+		myId = pare.attr("albumId");
+		myCount = pare.find(".pho_count").text();
+		myName = pare.find(".name_alb").text();
+		myStatus = pare.attr("status");
+		console.log(myId,myStatus,myName,myCount);
+		$("#alb_name_change").val(myName);
+		$(".privacy_sel").val("0");
 		$(".inputarea_pw_new").detach();
-		if(status==0){
-			$(".inputarea_pw_new").detach();
-		}else{
-			$pwFill1.insertAfter("#bottom .inputarea_pri");
-		}
-			$(".password_new").val("");
-		$(".change_container").show();
+		$("#change_container").show();
 	});
-
-	$(".alb_name_change").focus(function(name){
-		console.log(id,status,name,count);
-		$(".alb_name_change").val(name);	
+	
+	
+	$("#alb_name_change").focus(function(e){
+//		$("#alb_name_change").val(myName);	
 		$(".nameErr1").detach();
 		var txtValue = $(this).val();
-		if(txtValue==name){
+		if(txtValue==myName){
 			$(this).val("");
 		}
 		$(this).keyup(function(){
@@ -443,7 +458,7 @@ $(function(){
 			var judAlbName = /[^\w\u4e00-\u9fa5]/g;
 			if(judAlbName.test(txtValue)){
 				if($(".nameErr1").is(":visible")!=true){
-					$err1.insertAfter(".alb_name_change");
+					$err1.insertAfter("#alb_name_change");
 				}
 				staName = 0;
 			}
@@ -454,25 +469,26 @@ $(function(){
 		});
 	});
 	//无异步加载----------------------------------------------------------------------
-	$(".alb_name_change").blur(function(){
+	$("#alb_name_change").blur(function(){
 		var txtValue = $(this).val();
 		var judAlbName = /[^\w\u4e00-\u9fa5]/g;
 		if(txtValue==""){
-			$(this).val(name);
+			$(this).val(myName);
 		}
 		else if(judAlbName.test(txtValue)){
 			if($(".nameErr1").is(":visible")!=true){
-					$err1.insertAfter(".alb_name_change");
+					$err1.insertAfter("#alb_name_change");
 				}
 			staName = 0;
 		}
 		else{
 			$(".nameErr1").detach();
 			staName = 1;
-			name = txtValue;
+			myName = txtValue;
+			console.log("新的相册名是"+myName);
 		}
 	});
-	//修改权限------------------------------------------------------
+	//根据权限判断是否填密码---------------------------------------------
 	$("#bottom .privacy_sel").blur(function(){
 		var status = $(this).val();
 		console.log("sel:"+status);
@@ -486,41 +502,24 @@ $(function(){
 			}
 		}
 	});
-	//根据权限判断是否填密码---------------------------------------------
-		
-	$(".click_new").click(function(){
-		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		if ($(".inputarea_pw_new box input").attr("type")=="password")
-		{
-			$(".click_new button").replaceWith('<button>隐藏密码</button>');
-			$(".inputarea_pw_new .box input").attr("type","text");
-			return ;
-		}
-		if ($(".inputarea_pw_new .box input").attr("type")=="text")
-		{
-			$(".click_new button").replaceWith('<button>显示密码</button>');
-			$(".inputarea_pw_new .box input").attr("type","password");
-			return ;
-		}
-	});
 	//设置密码可见--------------------------------------------------------
 	$(document).on("click",".click_new",function(){
-		if ($(".password").attr("type")=="password")
+		if ($("#password_new").attr("type")=="password")
 		{
-			$(".click_new button").replaceWith('<button>隐藏密码</button>');
-			$(".password").attr("type","text");
+			$(this).replaceWith('<button>隐藏密码</button>');
+			$("#password_new").attr("type","text");
 			return ;
 		}
-		if ($(".inputarea_pw .box input").attr("type")=="text")
+		if ($("#password_new").attr("type")=="text")
 		{
-			$(".click_new button").replaceWith('<button>显示密码</button>');
-			$(".inputarea_pw .box input").attr("type","password");
+			$(this).replaceWith('<button>显示密码</button>');
+			$("#password_new").attr("type","password");
 			return ;
 		}
 	});
-
+		
 //判断密码-------------------------------------------------------------
-	$("#bottom .password_new").keyup(function(){
+	$("#password_new").keyup(function(){
 		var pwValue = $(this).val();
 		var judAlbPw = /[^\w]/g;
 		if(pwValue==""||judAlbPw.test(pwValue))
@@ -535,7 +534,7 @@ $(function(){
 			staPw = 1;
 		}
 	});
-	$("#bottom .password_new").blur(function(){
+	$("#password_new").blur(function(){
 		var pwValue = $(this).val();
 		if(pwValue.length<6){
 			$err4.insertAfter(".click_new");
@@ -546,29 +545,106 @@ $(function(){
 		albPw = pwValue;
 	});
 	$pwFill1 = $(".inputarea_pw_new").detach();
+	//上传修改相册信息---------------------------------------------------------------------------------------------
+//	$(".sure_change").click(function(){
+//		$("#change_container").hide();
+////		var name = $("#alb_name").val();
+//		var status = $("#bottom .privacy_sel").val();
+//		var albPw1 = $("#password_new").val();
+//		if(albPw1==undefined){
+//			albPw1 = "";
+//		}
+//		console.log("新的名字状态和密码是："+myName+status+albPw1);
+//		if(staName!=1){
+//			alert("新命名有误，请修改");
+//			return ;
+//		}
+//		if(staPw!=1){
+//			alert("密码格式有误，请修改");
+//			return ; 
+//		}
+//		else{
+//			var obj = {
+//				albumId : myId,
+//				albumName : myName,
+//				albumPassword : albPw1,
+//				albumState : status,
+//				photoCount : myCount
+//			}
+//			console.log(obj);
+//			$("#change_container").hide();
+//			$.post("http://"+IP+":8080/QGzone/AlterAlbumInformation",{jsonObject : JSON.stringify(obj)},function(data){
+//				console.log(data);
+//					var state = data.state;
+//					if(state==undefined){
+//						alert("服务器异常");
+//					}else if(state==607){
+//						alert("没有相应权限,修改失败");
+//					}else if(state==603){
+//						alert("格式错误，请修改");
+//					}else if(state==604){
+//						alert("相册重名，请修改");
+//					}else if(state==607){
+//						alert("您没有权限修改此相册");
+//					}else if(state==608){
+//						alert("相册不存在");
+//					}else if(state==601){
+//						console.log("更改成功，新的相册信息为"+obj.albumName+albumStatus);
+//						$tg = $("div[albumId=obj.albumId]");
+//						$tg.attr("status",obj.albumState);
+//						$tg.find(".name_alb").text(obj.albumName);//修改相册名
+//						$(".every_album[albumId='myId']").find(".name_alb").text(obj.albumName);
+//						var imgLock = $tg.find(".lock");
+//						imgLock.detach();
+//						if(obj.albumState==1){
+//							var nameBall = $tg.find(".name_alb")
+//							imgLock.insertAfter(nameBall);
+//						}else{
+//							$tg.find(".lock").detach();
+//						}
+//					}
+//			},"json");
+//		}
+//	});
+	//强制修改权限提示
+
 	$(".sure_change").click(function(){
-		// var name = $(".alb_name").val();
+		$("#change_container").hide();
 		var status = $("#bottom .privacy_sel").val();
-		var albPw = $("#bottom .password_new").val();
-		console.log("新的状态和密码是："+status+albPw);
+		var albPw1 = $("#password_new").val();
+		if(albPw1==undefined||albPw1==""){
+			if(status==1){
+				alert("你的密码为空，请确认权限信息，否则将强制变成公开相册(此次修改不成功)");
+				$("#password_new").detach();
+				$("#bottom option").val("0");
+				return false;
+			}
+			else{
+				albPw1 = "";
+			}
+		}
+		console.log("新的名字状态和密码是："+myName+status+albPw1);
 		if(staName!=1){
 			alert("新命名有误，请修改");
+			return ;
 		}
 		if(staPw!=1){
 			alert("密码格式有误，请修改");
+			return ; 
 		}
 		else{
 			var obj = {
-				albumId : id,
-				albumName : name,
-				albumPassword : albPw,
+				albumId : myId,
+				albumName : myName,
+				albumPassword : albPw1,
 				albumState : status,
-				photoCount : count
+				photoCount : myCount
 			}
 			console.log(obj);
-			$.post("http://"+IP+":8080/QGzone/AlterAlbumInformation",obj,function(state){
-				console.log(state);
-					// var state = data.state;
+			$("#change_container").hide();
+			$.post("../AlterAlbumInformation",{jsonObject : JSON.stringify(obj)},function(data){
+				console.log(data);
+					var state = data.state;
 					if(state==undefined){
 						alert("服务器异常");
 					}else if(state==607){
@@ -582,75 +658,88 @@ $(function(){
 					}else if(state==608){
 						alert("相册不存在");
 					}else if(state==601){
-						$tg = $("img[albumId=obj.albumId]");
+						if(obj.albumState==1){
+							alert("更改成功，新的相册信息为:相册名称为"+obj.albumName+",相册为私密，相册密码为"+obj.albumPassword+"，请务必牢记！");
+						}else{
+							alert("更改成功，新的相册信息为：相册名称为"+obj.albumName+"，相册为公开；如有误，请尽快重新修改相册信息！！");
+						}
+						$tg = $("div[albumId="+obj.albumId+"]");
 						$tg.attr("status",obj.albumState);
-						$tg.parents(".every_album").children(".name_alb").text(obj.albumName);
-						var imgLock = $tg.parents(".every_album").children("img");
+						$tg.find(".name_alb").text(obj.albumName);//修改相册名
+						$(".every_album[albumId='myId']").find(".name_alb").text(obj.albumName);
+						var imgLock = $tg.find(".lock");
 						imgLock.detach();
 						if(obj.albumState==1){
-							imgLock.insertAfter(".name_alb");
+							var nameBall = $tg.find(".name_alb")
+							imgLock.insertAfter(nameBall);
 						}else{
-							$tg.parents(".every_album").children("img").detach();
+							$tg.find(".lock").detach();
 						}
+						window.location.reload();
 					}
-			});
+//					window.location.herf = loadUrl;
+//					return ;
+			},"json");
 		}
 	});
+	
 	//清空相册-------------------------------------------------------------------------------------------
-	$(".clear").click(function(event){
+	$(document).on("click",".clear",function(event){
 		var tg = $(event.target);
-		parent1 = tg.parents(".every_album");
-		parent2 = parent1.children(".alb_cov");
+		var parent1 = tg.parents(".every_album");
+		var parent2 = parent1.children(".alb_cov");
 		var albumId = parent1.attr("albumId");
-		// status = parent1.attr("status");
-		name = parent1.children(".name_alb").text();
-		count = parent2.children(".pho_count").text();
-		// console.log(id,status,name,count);
+		var status = parent1.attr("status");
+		var name = parent1.children(".name_alb").text();
+		var count = parent2.children(".pho_count").text();
+		console.log("我现在清空的相册是"+myId,status,name,count);
 		console.log(albumId,name,count);
 		var alarm = confirm("你确定清空相册"+name+"？");
 		if(alarm){
 			parent2.children(".pho_count").text("0");
-			parent2.children(".pic").attr("src","../img/alb_cov.png");
-			$.post("http://"+IP+":8080/QGzone/EmptyAlbum",{albumId},function(state){
-				console.log(state);
+			parent2.children(".pic").attr("src","../images/alb_cov.png");
+			$.post("../EmptyAlbum",{albumId:albumId},function(data){
+				console.log(data);
+				var state = data.state;
 				if(status==undefined){
 					alert("服务器异常");
 				}else if(state==601){
 					parent2.children(".pho_count").text("0");
-					parent2.children(".pic").attr("src","../img/p_list.png");
+					parent2.children(".pic").attr("src","../images/alb_cov.png");
 					alert("清除相册成功");	
 				}else if(state==602){
-					alert("删除相册失败");
+					alert("清空相册"+name+"失败");
 				}else if(state==607){
-					alert("你没有删除此相册的权限");
+					alert("你没有清空此相册的权限");
 				}else if(state==608){
 					alert("此相册不存在");
 				}
 			},"json");
 		}else{
-			console.log("你取消删除相册");
+			console.log("你取消清空相册");
 		}
-	});	
+	});
+	
 	//删除相册-------------------------------------------------------------------------------------------
-	$(".delete").click(function(event){
+	$(document).on("click",".delete",function(event){
 		var tg = $(event.target);
-		parent1 = tg.parents(".every_album");
-		parent2 = parent1.children(".alb_cov");
+		var parent1 = tg.parents(".every_album");
+		var parent2 = parent1.children(".alb_cov");
 		var albumId = parent1.attr("albumId");
-		// status = parent1.attr("status");
-		name = parent1.children(".name_alb").text();
-		count = parent2.children(".pho_count").text();
-		// console.log(id,status,name,count);
-		console.log(albumId,count);
-		var alarm = confirm("你确定删除相册"+name+"？");
+		var status = parent1.attr("status");
+		var name = parent1.children(".name_alb").text();
+		var count = parent2.children(".pho_count").text();
+		console.log("现在删除相册的信息"+myId,status,name,count);
+		var alarm = confirm("你确定删除相册"+myName+"？");
 		if(alarm){
-			$.post("http://"+IP+":8080/QGzone/DeleteAlbum",{albumId},function(state){
-				console.log(state);
-				if(status==undefined){
+			$.post("../DeleteAlbum",{albumId},function(data){
+				console.log(data);
+				var state = data.state;
+				if(state==undefined){
 					alert("服务器异常");
 				}else if(state==601){
 					parent1.remove();
-					alert("删除相册成功");	
+					alert("删除相册"+name+"成功");	
 				}else if(state==602){
 					alert("删除相册失败");
 				}else if(state==607){
@@ -711,82 +800,67 @@ $(function(){
 		albPw = pwValue;
 	});
 
-// 	//生成新图片-------------------------------------------------------------------------------------------------
-// 	var photoUrl = "http://"+IP+":8080/QGzone/album";
-// 	function createPhoto(pId,aId,uId){
-// 		var phoThumbnail = "t_"+pId;
-// 		var photo = $('<div class="every_photo" photoId="'+pId+'">'+
-//  					  	'<div class="delete_btn"><img src="../img/p_list.png"></div>'+
-// 					  	'<div class="photo"><img src="'+photoId+'/'+uId+'/'+aId+'/'+phoThumbnail+'.jpg'+'" class="pho">'+
-// 					  	'</div></div>');
-//  		var container = $(".contain_photo");
-//  		container.prepend(photo);
-// 	}
 	//进入相册内--------------------------------------------------------------------------------------------------------------
 	$(document).on("click",".pic",function(event){
-		// console.log("当前相册属于好友："+hostId);
+		console.log("当前相册属于好友："+hostId);
 		var tg = $(event.target);
 		console.log(tg);
 		var idAlb = tg.parents(".every_album").attr("albumId");
-		// console.log("我现在正在访问的相册ID是："+idAlb);
+		 console.log("我现在正在访问的相册ID是："+idAlb);
 		var ss = tg.parents(".every_album").attr("status");
-		var albUrl = "innerAlbums.html?userId="+hostId+"&albumId="+idAlb+"status"+ss;
-		// console.log("我现在正在访问的相册权限是："+ss);
+		var albUrl = "innerAlbums.html?userId="+hostId+"&albumId="+idAlb+"&status="+ss;
+		 console.log("我现在正在访问的相册权限是："+ss);
 		if(ss==0){
-			// window.location.href="file:///C:/Users/hp/Desktop/project/html/innerAlbums.html?"+hostId+"&"+tg.albumId;
-			$.post("http://"+IP+":8080/QGzone/CheckPublicAlbum",{idAlb},function(data){
+			$.post("../CheckPublicAlbum",{albumId : idAlb},function(data){
 				console.log(data);
-				var state = data.state;
+				var object = JSON.parse(data);
+				var state = object.state;
+				console.log("我在进入相册"+state);
 				if(state==undefined){
 					alert("服务器异常");
 				}else if(state==607){
 					alert("您与此相册主人非好友关系，没有访问此相册的权限");
 				}else if(state==608){
 					alert("相册不存在");
-				}
-				else if(state==602){
-					console.log("加载相册页面出错");
+				}else if(state==605){
+					console.log("相册图片为0");
+					window.location.href = albUrl; 
 					return ;
 				}else if(state==601){
 					window.location.href = albUrl; 
-					for(var i=jsonList.length;i>=0;i--){
-						var pId = jsonList[i].photoId;
-						var pTime = jsonList[i].photoUploadTime;
-						createPhoto(pId,idAlb,userId);
-						}
-					}
+					return ;
+				}
 			});
-		}
-		else{
-			if(userId==hostId){
-				alert("主人查看私密相册中");
+		}else{
+			if(currentId==hostId){
+//				alert("主人查看私密相册中");
 				var obj = {
 					userId : hostId,
 					albumId : idAlb,
 					albumPassword : "",
 					albumState : ss
 				};
-				$.post("http://"+IP+":8080/QGzone/CheckPrivacyAlbum",obj,function(data){
-					var state = data.state;
+				$.post("../CheckPrivacyAlbum",{jsonObject : JSON.stringify(obj)},function(data){
+					console.log(data);
+					var object = JSON.parse(data);
+					var state = object.state;
+					console.log("我在进入相册"+state);
 					if(state==undefined){
 						alert("服务器异常");
 					}else if(state==602){
 						alert("密码错误");
 					}else if(state==605){
 						console.log("照片为0");
+						window.location.href = albUrl;
+						return ;
 					}else if(state==606){
 						alert("您与此相册主人非好友关系，没有访问此相册的权限");
 					}else if(state==601){
 						window.location.href = albUrl;
-						for(var i=jsonList.length;i>=0;i--){
-						var pId = jsonList[i].photoId;
-						var pTime = jsonList[i].photoUploadTime;
-						createPhoto(pId,idAlb,userId);
-						}
+						return ;
 					}
 				});
-			}
-			else{
+			}else{
 				alert("好友查看私密相册中");
 				$("#enter_pw").show();
 				//判断是否符合提交要求----------------------------------------------------
@@ -804,15 +878,18 @@ $(function(){
 							albumPassword : passwordCheck,
 							albumState : ss
 						};
-						$.post("http://"+IP+":8080/QGzone/InspectAlbum",obj,function(data){
-							var state = data.state;
+						$.post("../InspectAlbum",{jsonObject : JSON.stringify(obj)},function(data){
+							console.log(data);
+							var object = JSON.parse(data);
+							var state = object.state;
+							console.log("我在进入相册"+state);
 							if(state==undefined){
 								alert("服务器异常");
 							}else if(state==602){
 								alert("密码错误");
 							}else if(state==601){
 								console.log("密码正确！！！！");
-								$.post("http://"+IP+":8080/QGzone/CheckPrivacyAlbum",obj,function(data){
+								$.post("../CheckPrivacyAlbum",obj,function(data){
 									var state = data.state;
 									if(state==undefined){
 										alert("服务器异常");
@@ -820,17 +897,15 @@ $(function(){
 										alert("密码错误");
 									}else if(state==605){
 										console.log("照片为0");
+										window.location.href = albUrl;
+										return ;
 									}else if(state==606){
 										alert("您与此相册主人非好友关系，没有访问此相册的权限");
 									}else if(state==601){
-										window.location.href = albUrl;
-										// for(var i=jsonList.length;i>=0;i--){
-										// var pId = jsonList[i].photoId;
-										// var pTime = jsonList[i].photoUploadTime;
-										// createPhoto(pId,idAlb,userId);
-										// }
+										window.location.href = albUrl; 
+										return ;
 									}
-								});
+								},"json");
 							}
 						});
 						

@@ -44,8 +44,6 @@ public class TwitterAdd extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println(1);
-		
 		// 状态标志量
 		int state = 201;
 		// 图片张数

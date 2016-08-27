@@ -40,7 +40,7 @@
 			   		$('#nevRight li:eq(3) p').html(json.message.userName);
 			   		
 			   		
-			   		$('#diamonds_1 img').attr('src','../jpg/'+json.message.userImage);
+			   		$('#circle_2 img').attr('src','../jpg/'+json.message.userImage);
 			   		
 			   	},'json');
 			   	

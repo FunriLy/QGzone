@@ -56,11 +56,10 @@ public class RelatonGetDetails extends HttpServlet {
 		Object object = null;
 		//获取与我相关集合
 		if(user!=null){
-			if(relatedId==null||relationType==null
-					||(object = relationService.getRelationDetails(relationType,relatedId))!=null){
-				state = 422;//失败
+			if(relatedId==null||relationType==null||(relationService.getRelationDetails(relationType,relatedId)==null)){
 				}
 			else{
+				object = relationService.getRelationDetails(relationType,relatedId);
 				state = 421;//成功
 			}
 		}					

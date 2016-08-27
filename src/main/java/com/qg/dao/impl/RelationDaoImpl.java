@@ -49,7 +49,7 @@ public class RelationDaoImpl implements RelationDao{
 	@Override
 	public boolean addRelation(RelationModel relation) {
 		
-		
+		System.out.println("relation:"+relation);
 		conn = pool.getConnection();
 		try {
 			sql=conn.prepareStatement("insert into relation"

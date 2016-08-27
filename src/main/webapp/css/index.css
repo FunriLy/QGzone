@@ -1,11 +1,21 @@
-
-#wrap{
-	width: 76%;
-	margin: auto;
-	
+#my_background{
+    position: fixed;
+    top: 0;
+    left: 39.4%;
+    width: 43.6%;
+    height: 100%;
+    z-index: -1;
+    background-color: #cde8f4;
+   
 }
-a:hover {
-    text-decoration: underline;
+#white_bar{
+	width: 66%;
+	margin: auto;
+	height: 8px;
+	background-color: white;
+}
+#wrap{
+	
 }
 #header{
     position: relative;
@@ -46,45 +56,111 @@ a:hover {
 }
 
 #container #left{
-	float: left;
-	width: 26%;
-	margin: 20px 0;
+    float: left;
+    width: 22%;
+    margin-left: 17%;
 }
 
 #container .name{
-	text-align: left;
-	padding: 20px 0 20px 30px;
-	background:#caebf4;
-	border-bottom: 1px solid #6a6964;
+    text-align: left;
+    padding: 0px 0 20px 50px;
+    background: #eaf5fb;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 1px;
+}
+#a_photo{
+    height: 112px;
+    border-bottom: 1.5px solid #96b6dc;
+    background-color: #cfeaf5;
 }
 
 #container .more{
-	text-align: center;
-	margin-bottom: 20px;
-	padding: 5px 0 5px 0;
-	background:#caebf4;
+    margin-bottom: 8px;
+    padding: 5px 0 5px 0;
+    text-align: center;
+    color: #03a9f4;
+    background: #caebf4;
 	
 }
-#container .more {
-	color:black;
-}
-div#message textarea{
-	resize: none;
-    width: 98%;
-    height: 80px;
-    margin-top: 5px;
-}
-div#message input[type="button"]{
-	width: 50%;
-    height: 30px;
-    margin: 4px 20%;
-}
-#container #right{
-	float: right;
-    width: 70%;
-    margin:20px 0;
+#container .top_wire{
+    border-top: 1px solid #96b6dc;
 }
 
+div#message textarea{
+    resize: none;
+    width: 80%;
+    height: 100px;
+    margin: 16px 10% 6px;
+    border: 1px solid #caebf4;
+    background-color: #eff4fb;
+}
+#album img{
+	width:60px;
+	height:60px;
+}
+div#message input[type="button"]{
+    width: 50%;
+    height: 30px;
+    margin: auto;
+    display: block;
+}
+.bottom_padding{
+    padding-bottom: 5px;
+}
+#container #right{
+    float: left;
+    width: 42%;
+    margin: 6px 0 0 27px;
+}
+#message{
+	background: #caebf4;
+}
+#personFile{
+   background-color: #caebf4;
+}
+#personFile li{
+    padding: 8px 0 8px 112px;
+    text-align: left;
+    background-position: 36px 5px;
+    margin: 20px 0 20px 0;
+}
+.my_sex{
+	background: url(../images/c_my_sex.png) no-repeat;
+}
+.my_address{
+	background: url(../images/c_my_address.png) no-repeat;
+}
+.my_email{
+	background: url(../images/c_my_email.png) no-repeat;
+}
+#album span{
+	position: relative;
+    top: 18px;
+    right: 17px;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    background: url(../images/c_images.png) no-repeat;
+}
+#personFile span{
+    position: relative;
+    top: 13px;
+    right: 17px;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    background: url(../images/c_person.png) no-repeat;
+}
+#message span{
+    position: relative;
+    top: 13px;
+    right: 17px;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    background: url(../images/c_node.png) no-repeat;
+}
 .liuyan{
 	
 }
@@ -105,9 +181,7 @@ div#message input[type="button"]{
     }
     .box {
 	position: relative;
-    width: 97%;
-    margin: auto;
-    padding:10px;
+    width: 100%;
     margin-top:20px;
    /*	border-top: 1px solid #eee;*/
    	margin-bottom: 30px;

@@ -113,7 +113,6 @@ public class PhotoUpload extends HttpServlet{
 								while((len = in.read(b)) != -1){
 									out.write(b, 0, len);
 								}
-								System.out.println("id = "+id);
 								ImgCompress.ImageCompress(path + userId + "/" + albumId + "/", id);
 								albumService.changePhotoCount(success, albumId);
 								out.close();

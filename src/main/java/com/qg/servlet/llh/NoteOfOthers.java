@@ -51,7 +51,6 @@ public class NoteOfOthers extends HttpServlet {
 			targetId = Integer.parseInt(request.getParameter("userId"));
 			// 获取页码
 			String page = request.getParameter("page");
-
 			try {
 				/* 判断是否为好友以及是否是自己留言 */
 				if (new FriendService().isFriend(userId, targetId) == 1 || targetId == userId) {

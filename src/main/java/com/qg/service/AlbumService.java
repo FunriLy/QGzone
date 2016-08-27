@@ -400,8 +400,8 @@ public class AlbumService {
 				delAllFile(path + "/" + tempList[i]);
 				//再删除空文件夹
 				delFolder(path + "/" + tempList[i]);
-				result = success;
 			}
+			result = success;
 		}
 		return result;
 	}

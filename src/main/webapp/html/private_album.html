@@ -7,92 +7,53 @@
 	<link rel="stylesheet" type="text/css" href="../css/album.css">
 	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
 	<script type="text/javascript" src="../js/createAlbum.js"></script>
+	<script type="text/javascript" src="../js/nev2.js"></script>
 </head>
 <body>
 	<div id="nev_1">
-		<ul id="nevLeft">
-			<li class="circle_1_paddingSmall"><div id="circle_1"></div></li>
-			<li class="borderRight paddingLeft">QG空间</li>
-			<li class="borderRight"><a href="#">个人中心</a></li>
-			<li class="borderRight"><a href="#">我的主页</a></li>
-			<li class="borderRight"><a href="#">我的好友</a></li>
-		</ul>
-		<ul id="nevRight">
-			<li><a href="#"><img src="../images/002.png"></a></li>
-			<li><a href="#"><img src="../images/002.png"></a></li>
-			<li><a href="#"><img src="../images/002.png"></a></li>
-			<li><p>QGBB</p></li>
-			<li class="diamonds_1_paddingSmall"><img id="diamonds_1" src=""></li>
-		</ul>
-		<div id="whiteLine"></div>
-	</div>
-	<div id="nev_2">
-		<div id="diamonds_2"><img src=""></div>
-		<p id="n_name">QGBB</p>
-		<div id="option">
-			<ul>
-				<li class="marginSmall"><a href="#">说说</a></li>
-				<li><a href="file:///C:/Users/hp/Desktop/project/html/pirvate_album.htm?userId=3">相册</a></li>
-				<li><a href="#">留言板</a></li>
-				<li><a href="#">个人档</a></li>
-			</ul>
-		</div>
-	</div>
+        <ul id="nevLeft">
+            <li class="circle_1_paddingSmall"><img id="circle_1" src="../images/c_logo.png"></li>
+            <li class="color_white"><a href="selfIndex.html">个人中心</a></li>
+            <li><a href="index.html">我的主页</a></li>
+            <li><a href="friend.html">我的好友</a></li>
+        </ul>
+        <ul id="nevRight">
+            <li><a href="#"><img src="../images/c_exit.png"></a></li>
+            <li><a href="#"><img src="../images/c_user.png"></a></li>
+            <li><a href="me.html"><img src="../images/c_withMe.png"></a></li>
+            <li class="p_margin"><p>QGBB</p></li>
+            <li class="diamonds_1_paddingSmall"><div id="circle_2"><img src=""></div></li>
+        </ul>
+    </div>
+    <div id="nev2">
+        <div id="diamonds_2"><img src=""></div>
+        <p id="n_name">QGBB</p>
+        <div id="option">
+            <ul>
+                <li class="marginSmall"><a href="TwitterList.html">说说</a></li>
+            <li><a href="private_album.html">相册</a></li>
+            <li><a href="NoteList.html">留言板</a></li>
+            <li><a href="personInformation.html">个人档</a></li>
+            </ul>
+        </div>
+    </div>
 	<div class="container">
 <!-- 相册功能键 -->
 		<div class="function_bar">
 			<button class="btn_cre_alb" type="buttom">
-				创建新相册
 			</button>
 			&nbsp&nbsp&nbsp
 			<button class="btn_edit" type="buttom">
-				编辑相册
 			</button>
 		</div>
 <!-- 相册编辑功能 -->
-		<div class="contain_album">
+		<div id="contain_album">
 			<!-- 相册节点 -->
-			<div class="every_album" albumId="111111" status="1">
-				<div class="list">
-					<img src="../img/p_list.png" class="list_btn">
-					<div class="list_detail">
-						<a class="change">修改相册信息</a>
-						<hr>
-						<a class="clear">清空相册</a>
-						<hr>
-						<a class="delete">删除相册</a>
-					</div>
-				</div>
+			
 
-				<div class="alb_cov">
-					<img src="../img/alb_cov.png" class="pic">
-					<h1 class="pho_count">123</h1>
-				</div>
-				<span class="name_alb">125555</span>
-					<img src="../img/lock.png" class="lock">
-			</div>
-			<!-- 相册2 -->
-			<div class="every_album">
-				<div class="alb_cov">
-					<img src="../img/alb_cov.png" class="pic" albumId="111111" status="1">
-
-					<div>
-						<img src="../img/lock.png" class="lock">
-					</div>
-				</div>
-			</div>
-			<!-- 相册3 -->
-			<div class="every_album">
-				<div class="alb_cov">
-					<img src="../img/alb_cov.png" class="pic">
-					<div>
-						<img src="../img/lock.png" class="lock">
-					</div>
-				</div>
-			</div>
 		</div>
 <!-- 修改相册信息 -->
-		<div class="change_container">
+		<div id="change_container">
 			<div class="top_bar">
 				<span>
 					修改相册信息
@@ -101,7 +62,7 @@
 			<div id="bottom">
 				<div class="inputarea">
 					<label>相册新名称</label>
-					<input type="text" name="alb_name_change" class="alb_name_change" maxlength="10">
+					<input type="text" name="alb_name_change" id="alb_name_change" maxlength="10">
 					<!-- <span class="nameErr1">
 						格式错误
 					</span> -->
@@ -120,7 +81,7 @@
 				<div class="inputarea_pw_new">
 					<span class="box">
 						<label>输入密码</label>
-						<input type="password" name="password_new" class="password_new" placeholder="6-10位数字、字母或下划线" maxlength="10" minlength="6">
+						<input type="password" name="password_new" id="password_new" placeholder="6-10位数字、字母或下划线" maxlength="10" minlength="6">
 					</span>
 					<span class="click_new">
 						<button>显示密码</button>
@@ -147,7 +108,7 @@
 			<div id="last_bar">
 					<div class="inputarea">
 						<label>相册名称</label>
-						<input type="text" name="alb_name" class="alb_name" value="相册名称，最多10字" maxlength="10">
+						<input type="text" name="alb_name" id="alb_name" value="相册名称，最多10字" maxlength="10">
 						<span class="nameErr1">
 							格式错误
 						</span>
@@ -162,7 +123,7 @@
 					<div class="inputarea_pw">
 					<span class="box">
 						<label>输入密码</label>
-						<input type="password" name="password" class="password" placeholder="6-10位数字、字母或下划线" maxlength="10" minlength="6">
+						<input type="password" name="password" id="password" placeholder="6-10位数字、字母或下划线" maxlength="10">
 					</span>
 					<span class="click">
 						<button>显示密码</button>
@@ -174,7 +135,9 @@
 					<button class="sure">确认</button>
 					<button class="cancel" >取消</button>
 				</div>
-				<div id="enter_pw">
+
+			<!-- 进入私密相册 -->
+			<div id="enter_pw">
 			<div class="top_bar">
 				<span>
 					请输入相册密码
@@ -184,17 +147,16 @@
 				</button> -->
 			</div>
 			<div id="last_bar2">
-					<div class="inputarea_pw_check">
-					<span class="box">
-						<label>输入密码</label>
-						<input type="password" name="check_password" class="check_password" placeholder="6-10位数字、字母或下划线" maxlength="10" minlength="6">
-					</span>
-					<span id="review">
-						<button>显示密码</button>
-					</span>
-					<!-- <p class="pwErr1">格式错误</p>
-					<p class="pwErr2">密码长度少于6位</p> -->
-					</div>
+				<div class="inputarea_pw_check">
+				<span class="box">
+					<label>输入密码</label>
+					<input type="password" name="check_password" class="check_password" placeholder="6-10位数字、字母或下划线" maxlength="10">
+				</span>
+				<span id="review">
+					<button>显示密码</button>
+				</span>
+				
+				</div>
 				<div class="btn_bar">
 					<button id="check">确认</button>
 					<button id="cancel_check" >取消</button>

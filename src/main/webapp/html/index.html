@@ -4,72 +4,71 @@
 	<meta charset="UTF-8">
 	<title>个人主页</title>
 	<link rel="stylesheet" type="text/css" href="../css/index.css">
-	<link rel="stylesheet" type="text/css" href="../css/nev.css">
+	<link rel="stylesheet" type="text/css" href="../css/nev2.css">
 	<script type="text/javascript" src="../js/jquery-3.1.0.js"></script>
 	<script type="text/javascript" src="../js/TwitterOfOthers.js"></script>
 </head>
 <body>
 	<div id="nev_1">
 		<ul id="nevLeft">
-			<li class="circle_1_paddingSmall"><div id="circle_1"><img src="../images/c_logo.png"></div></li>
-			<li  class="borderRight"><a href="selfIndex.html" >个人中心</a></li>
-			<li style="background-color:#918e89;"><a href="index.html" >我的主页</a></li>
+			<li class="circle_1_paddingSmall"><img id="circle_1" src="../images/c_logo.png"></li>
+			<li><a href="selfIndex.html">个人中心</a></li>
+			<li  class="color_white"><a href="index.html">我的主页</a></li>
 			<li><a href="friend.html">我的好友</a></li>
 		</ul>
 		<ul id="nevRight">
-			<li class='a'><a href="#"><img src="../images/c_exit.png"></a></li>
-			<li><a href="#"><img src="../images/c_user.png"></a></li>
-			<li><a href="#"><img src="../images/c_withMe.png"></a></li>
-			<li><p></p></li>
-			<li class="diamonds_1_paddingSmall"><div id="diamonds_1"><img src="../images/head.jpg"></div></li>
+			<li><a href="login.html"><img src="../images/c_exit.png"></a></li>
+			<li><a href="personInformation.html"><img src="../images/c_user.png"></a></li>
+			<li><a href="me.html"><img src="../images/c_withMe.png"></a></li>
+			<li class="p_margin"><p>QGBB</p></li>
+			<li class="diamonds_1_paddingSmall"><div id="circle_2"><img src=""></div></li>
 		</ul>
-		<div id="whiteLine"></div>
 	</div>
 	<div id="header">
-			<div id="h_photo"><img src="../images/head.jpg"></div>
-			<ul id="nev2">
-				<li><a href="TwitterList.html">说说</a></li>
-				<li><a href="private_album.html">相册</a></li>
-				<li><a href="NoteList.html">留言板</a></li>
-				<li><a href="personInformation.html">个人档</a></li>
-			</ul>
+		<div id="h_photo">
+			<img src="../images/head.jpg">
+		</div>
+		<p>121321</p>
+		<ul id="nev2">
+			<li class="leftMargin"><a href="TwitterList.html">说说</a></li>
+			<li><a href="private_album.html">相册</a></li>
+			<li><a href="NoteList.html">留言板</a></li>
+			<li><a href="personInformation.html">个人档</a></li>
+		</ul>
 	</div>
+	<div id="white_bar"></div>
+	<div id="my_background"></div>
 	<div id="wrap">
 		<div id="container">
 			<div id="left">
 				<ul id="album">
-					<li class="name">相册</li>
-					<li id="a_photo" class="name">
+					<li class="name"><span></span>相册</li>
+					<li id="a_photo">
 						<img src="../images/head.jpg" alt='出错啦' />
 						<img src="../images/head.jpg" alt='出错啦' />
 					</li>
 					<a href="private_album.html"><li class="more">查看更多>></li></a>
 				</ul>
 				<ul id="personFile">
-					<li class="name">个人档</li>
-					<li class="name"></li>
-					<li class="name"></li>
-					<li class="name"></li>
-					<a href="personInformation.html"><li class="more">查看更多>></li></a>
+					<li class="name"><span></span>个人档</li>
+					<li class="my_sex"></li>
+					<li class="my_address"></li>
+					<li class="my_email"></li>
+					<a href="personInformation.html"><li class="more top_wire">查看更多>></li></a>
 				</ul>
 				<div id="message">
-					<div class="name">留言板</div>
+					<div class="name"><span></span>留言板</div>
 					<div><textarea placeholder=" 留下你的足迹吧..." class="neirong"></textarea></div>
-					<div><input type="button" value="发表" class="liuyan"></div>
+					<div class="bottom_padding"><input type="button" value="发表" class="liuyan"></div>
 				</div>
-				<a href="NoteList.html" ><div class="more">查看更多>></div></a>
+				<a href="NoteList.html" ><div class="more top_wire">查看更多>></div></a>
 			</div>
 			
 			<div id="right">
-			
-				<div id="wrapper">
-			    	
+				<div id="wrapper">	
 				    <div id="list">
-
 				   </div>
-				   
 			    </div>
-			    
 			</div>
 		</div>
 	</div>

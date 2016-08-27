@@ -1,52 +1,12 @@
-
-/*header-----------------------------------------------------------*/
-#header{
-	width: 76%;
-	margin: 54px auto ;
-	position: relative;
-	padding: 0.1px;
-	height: 222px;
-	background-color: #a3e7fd;
+#my_background{
+    position: fixed;
+    top: 0;
+    left: 17%;
+    width: 66%;
+    height: 100%;
+    z-index: -1;
+    background-color: #cde8f4;
 }
-
-#header #h_photo{
-	overflow: hidden;
-	width: 100px; 
-	height: 100px;
-	margin: 40px auto;
-	border-radius: 50%;
-}
-#h_photo img{
-	width: 100px; 
-	height: 100px;	
-}
-#nev2{
-	position: absolute;
-	bottom: 0px;
-	width: 100%;
-	background-color: #98d9ec;
-}
-#nev2 li{
-	display: inline-block;
-	padding: 15px 0;
-	width: 24%;
-}
-
-
-
-    a {
-    text-decoration: none;
-    }
-    a:hover {
-    text-decoration: underline;
-    }
-    .clearfix:after {
-    content:".";
-    display:block;
-    height:0;
-    clear:both;
-    visibility:hidden;
-    }
     /*****content******/
     #wrapper{
     width:100%;
@@ -56,12 +16,13 @@
     #create-note{
 	position: relative;
     margin: auto;
-    margin-top: -41px;
-    width: 74.5%;
+    margin-top: 13px;
+    width: 65%;
     height: 152px;
-    padding: 11px;
+    padding: 9.5px;
     background: #caebf4;
     background-size: cover;
+    border-bottom: 8px solid white;
     }
     #create-note .txt{
     border: 1px solid #eee;
@@ -103,16 +64,17 @@
     #list {
     margin: 0 auto;
     text-align: left;
-    width: 82%;
+    width: 63%;
     padding: 25px;
     font-size:16px;
+    margin-top:10px;
     }
     .box {
- 	border-top: 1px solid #caebf4;
     position: relative;
     width: 91%;
     padding: 20px 0;
     margin: auto;
+    margin-bottom:15px;
     }
     .box:hover .close {
     display: block;
@@ -160,6 +122,7 @@
     display: block;
     width:92%;
     margin: 13px;
+    word-break: break-all;
     }
     .pic {
 	margin: 2px 6px 8px 13px;
@@ -223,7 +186,7 @@
     .text-box .comment {
     border: 1px solid #eee;
     display: block;
-    height: 15px;
+    height: 20px;
     width: 97%;
     padding: 11px;
    	margin-top:16px;

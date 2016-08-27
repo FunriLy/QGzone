@@ -1,0 +1,69 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>留言列表</title>
+<link rel="stylesheet" href="NoteList.css">
+<script type="text/javascript" src="jquery-3.1.0.js"></script>
+<script type="text/javascript" src="NoteOfOthers.js"></script>
+</head>
+<body>
+	   <div id="nev_1">
+
+        <ul id="nevLeft">
+            <li class="circle_1_paddingSmall"><div id="circle_1"></div></li>
+            <li class="borderRight paddingLeft">QG空间</li>
+            <li class="borderRight"><a href="selfIndex.html">个人中心</a></li>
+            <li class="borderRight"><a href="index.html">我的主页</a></li>
+            <li class="borderRight"><a href="friend.html">我的好友</a></li>
+        </ul>
+
+        <ul id="nevRight">
+            <li><a href="#"><img src="images/002.png"></a></li>
+            <li><a href="#"><img src="images/002.png"></a></li>
+            <li><a href="#"><img src="images/002.png"></a></li>
+            <li><p>QGBB</p></li>
+            <li class="diamonds_1_paddingSmall"><div id="diamonds_1"></div></li>
+        </ul>
+
+        <div id="whiteLine"></div>
+
+    </div>
+
+    <div id="header">
+
+        <div id="h_photo"><img src="images/head.jpg"></div>
+        <p class="username">QGBB</p>
+
+        <ul id="nev2">
+            <li><a href="TwitterList.html">说说</a></li>
+            <li><a href="private_album.html">相册</a></li>
+            <li><a href="NoteList.html">留言板</a></li>
+            <li><a href="personInformation.html">个人档</a></li>
+        </ul>
+
+    </div>
+	
+ 		<div id="wrapper">
+			
+            <div id="create-note">
+
+                <form action="#" method="post" id="sharePost" enctype="multipart/form-data">
+
+                    <textarea class="txt" id="noteWord" name="noteWord" placeholder=" 说些什么吧..."></textarea>
+
+                    <span class="word">0/120</span>
+
+                    <input type="button" class="create-btn" value="发表" />
+
+                </form>   
+
+    		</div>
+    	
+	    <div id="list">
+	    
+	    </div>
+	    
+    </div>
+</body>
+</html>
